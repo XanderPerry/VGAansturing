@@ -101,3 +101,51 @@ uint8_t usart2_receive_char(void)
 
 // Optional: You would add interrupt functions here if you choose that method.
 // void USART2_IRQHandler(void) { ... }
+
+
+// -------------------------------------------------------------------
+// --- Interrupt-based Reception Functions ---
+// -------------------------------------------------------------------
+
+/**
+ * @brief Enables the Receive Not Empty (RXNE) interrupt for USART2
+ * and enables the corresponding interrupt in the NVIC.
+ */
+void usart2_enable_rx_interrupt(void)
+{
+    // 1. Enable the Receive Not Empty Interrupt (RXNEIE, Bit 5) in USART_CR1
+    // Note: The USART (UE) must be enabled first, which is done in usart2_init().
+    USART2->CR1 |= USART_CR1_RXNEIE;
+
+    // 2. Enable the USART2 interrupt in the NVIC
+    // The USART2 interrupt vector is number 38 (check the device reference manual)
+    NVIC_EnableIRQ(USART2_IRQn);
+    // If you don't use the standard CMSIS macro, you would use:
+    // NVIC->ISER[1] |= (1 << (USART2_IRQn - 32));
+}
+
+// --- Simple Global Buffer for Demonstration ---
+volatile uint8_t g_rx_data = 0; // Use volatile for global variables modified in an ISR
+
+/**
+ * @brief USART2 Interrupt Service Routine (ISR).
+ */
+void USART2_IRQHandler(void)
+{
+    // Check if the cause of the interrupt is the Read Data Register Not Empty (RXNE) flag (Bit 5 of SR)
+    if (USART2->SR & USART_SR_RXNE)
+    {
+        // Read the data from the Data Register (DR).
+        // This read operation clears the RXNE flag automatically.
+        g_rx_data = (uint8_t)(USART2->DR & 0xFF);
+
+        // At this point, you would typically:
+        // - Place the received data into a circular buffer (ring buffer).
+        // - Or set a flag to notify the main loop that new data is available.
+
+        // For this simple example, we just store it in a global variable.
+    }
+
+    // Optionally, check for other interrupts (e.g., Overrun Error ORE, Noise NE, Framing FE)
+    // and handle them if required. For example, reading SR then DR will clear ORE.
+}
