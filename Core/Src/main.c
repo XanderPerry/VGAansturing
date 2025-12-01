@@ -23,7 +23,7 @@ int main(void)
 
 	usart2_init(); // initialize UART
 
-	char rx_byte;	// RX buffer
+	usart2_enable_rx_interrupt(); // Enable UART the interrupt
 
 	UB_VGA_Screen_Init(); // Init VGA-Screen
 
@@ -31,13 +31,12 @@ int main(void)
 
   while(1)
   {
-	  // Example: Send a status message
-	  usart2_send_string("Ready. Send a character...\r\n");
-
-	  // Example: Wait for and echo a character
-	  rx_byte = usart2_receive_char();
-	  usart2_send_string("Received: ");
-	  usart2_send_char(rx_byte);
-	  usart2_send_string("\r\n");
+	  if (g_rx_data != 0)
+	  {
+		  // Process g_rx_data...
+		  // For example, echo the character back:
+		  usart2_send_char(g_rx_data);
+		  g_rx_data = 0; // Clear the flag/buffer
+	  }
   }
 }

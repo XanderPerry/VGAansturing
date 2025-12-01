@@ -29,8 +29,18 @@ void usart2_send_string(char *str);
  */
 uint8_t usart2_receive_char(void);
 
+// --- Interrupt Reception ---
+/**
+ * @brief Enables the Receive Not Empty (RXNE) interrupt for USART2.
+ */
+void usart2_enable_rx_interrupt(void);
 
-// Optional: For Interrupt-based reception later
-// void usart2_enable_rx_interrupt(void);
+/**
+ * @brief USART2 Interrupt Service Routine (ISR).
+ * This function must be defined in the startup file's vector table.
+ */
+void USART2_IRQHandler(void);
+
+extern volatile uint8_t g_rx_data;
 
 #endif /* __UART_H */
