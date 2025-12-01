@@ -25,18 +25,25 @@ int main(void)
 
 	usart2_enable_rx_interrupt(); // Enable UART the interrupt
 
+	char command_buffer[64]; // Create buffer for UART reception
+
 	UB_VGA_Screen_Init(); // Init VGA-Screen
 
-	UB_VGA_FillScreen(VGA_COL_GREEN);
+	UB_VGA_FillScreen(VGA_COL_GREEN); // Startup VGA screen with green background
 
   while(1)
   {
-	  if (g_rx_data != 0)
+	  // Check the flag raised by the ISR
+	  if (uart_rx_line_ready)
 	  {
-		  // Process g_rx_data...
-		  // For example, echo the character back:
-		  usart2_send_char(g_rx_data);
-		  g_rx_data = 0; // Clear the flag/buffer
+		  // Read the data from the UART buffer and reset the flag
+		  if (usart2_read_line(command_buffer, sizeof(command_buffer)))
+		  {
+			  // --- Process the received command line ---
+			  usart2_send_string("Received: ");
+			  usart2_send_string(command_buffer); // Echoes back the line, including the LF
+
+		  }
 	  }
   }
 }

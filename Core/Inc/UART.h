@@ -2,6 +2,20 @@
 #define __UART_H
 
 #include <stdint.h>
+#include <stdbool.h>
+
+// --- Configuration ---
+#define UART_RX_BUFFER_SIZE 64 // Define the size of the circular buffer
+
+// --- Global Variables (Extern Declarations) ---
+
+// Circular buffer storage and indices
+extern volatile uint8_t uart_rx_buffer[UART_RX_BUFFER_SIZE];
+extern volatile uint16_t uart_rx_head; // Index where the next received byte will be stored
+extern volatile uint16_t uart_rx_tail; // Index where the next byte will be read from
+
+// Flag to indicate a complete line has been received (ending with LF)
+extern volatile bool uart_rx_line_ready;
 
 // --- Initialization ---
 /**
@@ -41,6 +55,12 @@ void usart2_enable_rx_interrupt(void);
  */
 void USART2_IRQHandler(void);
 
-extern volatile uint8_t g_rx_data;
+/**
+ * @brief Reads all characters from the buffer up to the first LF or the buffer limit.
+ * @param dest Pointer to the destination string buffer.
+ * @param max_len Maximum length of the destination buffer (including null terminator).
+ * @return true if a line (terminated by LF) was successfully read, false otherwise.
+ */
+bool usart2_read_line(char *dest, uint16_t max_len);
 
 #endif /* __UART_H */
