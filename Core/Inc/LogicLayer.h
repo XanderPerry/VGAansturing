@@ -3,9 +3,13 @@
 
 #include "stm32f4xx.h"
 #include <stdint.h>
+#include <stdbool.h>
 
 // Define error codes
 #define ERROR_UNSUPPORTED_COMMAND 300
+#define ERROR_INVALID_PARAM_INPUT 301
+#define ERROR_X_OUT_OF_BOUND 302
+#define ERROR_Y_OUT_OF_BOUND 303
 
 
 /**
@@ -15,6 +19,25 @@
  */
 int CmdToFunc(char *cmd);
 
+/**
+ * @brief Translates a color string to a color code.
+ * @param cmd Pointer to the color string buffer.
+ * @return Color code if no errors occured, otherwise returns 1.
+ */
 uint8_t StrToCol (char *str);
+
+/**
+ * @brief Checks whether x coordinate is out of bounds.
+ * @param x coordinate.
+ * @return 0 if within bounds, 1 if out of bounds.
+ */
+bool XOutOfBound(uint16_t x);
+
+/**
+ * @brief Checks whether y coordinate is out of bounds.
+ * @param y coordinate.
+ * @return 0 if within bounds, 1 if out of bounds.
+ */
+bool YOutOfBound(uint16_t y);
 
 #endif /* __UART_H */
