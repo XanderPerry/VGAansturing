@@ -14,22 +14,40 @@
 #include "main.h"
 #include "stm32_ub_vga_screen.h"
 #include <math.h>
-//Test token
+
+#include "uart.h"
+
 
 int main(void)
 {
 	SystemInit(); // System speed to 168MHz
 
+	usart2_init(); // initialize UART
+
+	usart2_enable_rx_interrupt(); // Enable UART the interrupt
+
+	char command_buffer[64]; // Create buffer for UART reception
+
 	UB_VGA_Screen_Init(); // Init VGA-Screen
 
-	UB_VGA_FillScreen(VGA_COL_BLUE);
+	UB_VGA_FillScreen(VGA_COL_GREEN); // Startup VGA screen with green background
 
 	API_draw_line(20, 120, 50, 160, 12, VGA_COL_RED);//x_1, y_1, x_2, y_2, weight, color
 	API_draw_circle(30, 30, 30, VGA_COL_BLACK);
 
   while(1)
   {
+	  // Check the flag raised by the ISR
+	  if (uart_rx_line_ready)
+	  {
+		  // Read the data from the UART buffer and reset the flag
+		  if (usart2_read_line(command_buffer, sizeof(command_buffer)))
+		  {
+			  // --- Process the received command line ---
+			  usart2_send_string("Received: ");
+			  usart2_send_string(command_buffer); // Echoes back the line, including the LF
 
-
+		  }
+	  }
   }
 }
