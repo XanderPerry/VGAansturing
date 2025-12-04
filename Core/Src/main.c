@@ -16,7 +16,9 @@
 #include <math.h>
 
 #include "uart.h"
+#include "LogicLayer.h"
 
+#define CMD_BUFF_SIZE 64
 
 int main(void)
 {
@@ -26,7 +28,7 @@ int main(void)
 
 	usart2_enable_rx_interrupt(); // Enable UART the interrupt
 
-	char command_buffer[64]; // Create buffer for UART reception
+	char command_buffer[CMD_BUFF_SIZE]; // Create buffer for UART reception
 
 	UB_VGA_Screen_Init(); // Init VGA-Screen
 
@@ -43,9 +45,23 @@ int main(void)
 		  // Read the data from the UART buffer and reset the flag
 		  if (usart2_read_line(command_buffer, sizeof(command_buffer)))
 		  {
-			  // --- Process the received command line ---
+			  // Echo received message for debugging
 			  usart2_send_string("Received: ");
 			  usart2_send_string(command_buffer); // Echoes back the line, including the LF
+
+			  // Process error message
+			  int error = CmdToFunc(command_buffer);
+
+			  // Reply error message if applicable
+			  if(error)
+			  {
+				  char error_msg[12];
+				  sprintf(error_msg, "%d", error);
+
+				  usart2_send_string("ERROR: ");
+				  usart2_send_string(error_msg);
+				  usart2_send_string("\r\n");
+			  }
 
 		  }
 	  }
