@@ -1,8 +1,13 @@
-/*
- * drawline.h
+/**
+ * @file main.c
+ * @brief API library header file
  *
- *  Created on: Dec 3, 2025
- *      Author: tomfv
+ * This file contains the prototypes for all the
+ * different API functions, currently API_draw_circle and
+ * API_draw_line
+ *
+ * @author Tom Veldkamp
+ * @date 2025-12-03
  */
 
 #ifndef INC_API_LIB_H_
