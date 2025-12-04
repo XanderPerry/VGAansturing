@@ -10,6 +10,7 @@
 // Function : VGA_core DMA LIB 320x240, 8bit color
 //--------------------------------------------------------------
 
+#include <API_LIB.h>
 #include "main.h"
 #include "stm32_ub_vga_screen.h"
 #include <math.h>
@@ -30,6 +31,9 @@ int main(void)
 	UB_VGA_Screen_Init(); // Init VGA-Screen
 
 	UB_VGA_FillScreen(VGA_COL_GREEN); // Startup VGA screen with green background
+
+	API_draw_line(20, 120, 50, 160, 12, VGA_COL_RED);//x_1, y_1, x_2, y_2, weight, color
+	API_draw_circle(30, 30, 30, VGA_COL_BLACK);
 
   while(1)
   {
