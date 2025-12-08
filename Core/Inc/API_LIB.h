@@ -61,6 +61,25 @@ void API_draw_line(int x_1, int y_1, int x_2, int y_2, int weight, int color, in
  */
 void API_draw_circle(int x0, int y0, int radius, int color, int reserved);
 
+/**
+ * @brief Draws a rectangle on the VGA display.
+ *
+ * This function draws a rectangle defined by its top-left corner (x, y),
+ * width, and height. It can draw either an outline or a filled rectangle
+ * based on the 'filled' parameter.
+ *
+ * @param x         Starting X-coordinate (top-left corner) of the rectangle.
+ * @param y         Starting Y-coordinate (top-left corner) of the rectangle.
+ * @param width     Width of the rectangle in pixels.
+ * @param height    Height of the rectangle in pixels.
+ * @param color     8-bit color value used to draw the rectangle.
+ * @param filled    Flag indicating whether the rectangle should be filled (non-zero for filled, 0 for outline).
+ * @param reserved  Reserved variable (unused).
+ * @param reserved2 Reserved variable (unused).
+ *
+ * @note If 'filled' is 0, the function typically calls an API to draw four lines.
+ * If 'filled' is non-zero, the function typically iterates and calls an API to draw horizontal lines.
+ */
 int API_draw_rectangle (int x, int y, int width, int height, int color, int filled, int reserved, int reserved_1);
 // e.g.: weight, bordercolor
 
