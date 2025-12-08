@@ -6,6 +6,7 @@
 #include <stdbool.h>
 
 #include "stm32_ub_vga_screen.h"
+#include "API_LIB.h"
 
 /**
  * @brief Receives the command string from the CmdForwarder, extracts the required function and parameters and calls the corresponding API function.
@@ -42,6 +43,44 @@ int CmdToFunc (char *cmd)
 
 		UB_VGA_SetPixel (x, y, col);
 	}
+
+	else if (strcmp(token, "lijn") == 0)
+		{
+			uint16_t x_1 = atoi (strtok (NULL, delimiter));
+			if (XOutOfBound(x_1))
+			{
+				return ERROR_X_OUT_OF_BOUND;
+			}
+
+			uint16_t y_1 = atoi (strtok (NULL, delimiter));
+			if (YOutOfBound(y_1))
+			{
+				return ERROR_Y_OUT_OF_BOUND;
+			}
+
+			uint16_t x_2 = atoi (strtok (NULL, delimiter));
+			if (XOutOfBound(x_2))
+			{
+				return ERROR_X_OUT_OF_BOUND;
+			}
+
+			uint16_t y_2 = atoi (strtok (NULL, delimiter));
+			if (YOutOfBound(y_2))
+			{
+				return ERROR_Y_OUT_OF_BOUND;
+			}
+
+			uint8_t col = StrToCol (strtok (NULL, delimiter));
+			if (col==1)
+			{
+				return ERROR_INVALID_PARAM_INPUT;
+			}
+
+			uint16_t weight = atoi (strtok (NULL, delimiter));
+
+
+			API_draw_line(x_1, y_1, x_2, y_2, weight, col, 0);
+		}
 
 	else
 	{
