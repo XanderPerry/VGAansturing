@@ -61,4 +61,25 @@ void API_draw_line(int x_1, int y_1, int x_2, int y_2, int weight, int color, in
  */
 void API_draw_circle(int x0, int y0, int radius, int color, int reserved);
 
+/**
+ * @brief Draws a figure based on 5 coordinates
+ *
+ * @param x_1 		X-coordinate 1
+ * @param y_1 		Y-coordinate 1
+ * @param x_2 		X-coordinate 2
+ * @param y_2 		Y-coordinate 2
+ * @param x_3 		X-coordinate 3
+ * @param y_3 		Y-coordinate 3
+ * @param x_4 		X-coordinate 4
+ * @param y_4 		Y-coordinate 4
+ * @param x_5 		X-coordinate 5
+ * @param y_5		Y-coordinate 6
+ * @param color		Figure color
+ * @param reserved	Reserved for future extended functionality
+ *
+ * @return			0 if no errors occured, otherwise returns the error code.
+ *
+ */
+int API_draw_figure(int x_1, int y_1, int x_2, int y_2, int x_3, int y_3, int x_4, int y_4, int x_5, int y_5, int color, int reserved);
+
 #endif /* INC_API_LIB_H_ */
