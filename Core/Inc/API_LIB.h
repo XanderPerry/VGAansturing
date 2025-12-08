@@ -74,13 +74,13 @@ void API_draw_circle(int x0, int y0, int radius, int color, int reserved);
  * @param height    Height of the rectangle in pixels.
  * @param color     8-bit color value used to draw the rectangle.
  * @param filled    Flag indicating whether the rectangle should be filled (non-zero for filled, 0 for outline).
- * @param reserved  Reserved variable (unused).
- * @param reserved2 Reserved variable (unused).
+ * @param weight  Reserved variable (unused).
+ * @param bordercolor Reserved variable (unused).
  *
  * @note If 'filled' is 0, the function typically calls an API to draw four lines.
  * If 'filled' is non-zero, the function typically iterates and calls an API to draw horizontal lines.
  */
-int API_draw_rectangle (int x, int y, int width, int height, int color, int filled, int reserved, int reserved_1);
+int API_draw_rectangle (int x, int y, int width, int height, int color, int filled, int weight, int bordercolor);
 // e.g.: weight, bordercolor
 
 #endif /* INC_API_LIB_H_ */

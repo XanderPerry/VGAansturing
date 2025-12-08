@@ -129,24 +129,30 @@ void API_draw_line(int x_1, int y_1, int x_2, int y_2,
  * @param height    Height of the rectangle in pixels.
  * @param color     8-bit color value used to draw the rectangle.
  * @param filled    Flag indicating whether the rectangle should be filled (non-zero for filled, 0 for outline).
- * @param reserved  Reserved variable (unused).
- * @param reserved2 Reserved variable (unused).
+ * @param weight  Reserved variable (unused).
+ * @param bordercolor Reserved variable (unused).
  *
  * @note If 'filled' is 0, the function typically calls an API to draw four lines.
  * If 'filled' is non-zero, the function typically iterates and calls an API to draw horizontal lines.
  */
-int API_draw_rectangle (int x, int y, int width, int height, int color, int filled, int reserved, int reserved_1)
+int API_draw_rectangle (int x, int y, int width, int height, int color, int filled, int weight, int bordercolor)
 {
 
 	int xEnd = x + width - 1; 	/**< Calculate the second X coordinate. */
 	int yEnd = y + height - 1;	/**< Calculate the second Y coordinate. */
 
-
+	int i,j;
 
 	if(filled)
 	{
+		API_draw_line(x, y, x, yEnd, weight, bordercolor, 0); /**< Draw a borderline around the rectangle> */
+		API_draw_line(x, y, xEnd, y, weight, bordercolor, 0);
+		API_draw_line(xEnd, yEnd, x, yEnd, weight, bordercolor, 0);
+		API_draw_line(xEnd, yEnd, xEnd, y, weight, bordercolor, 0);
+
 		for( i = x; i <= xEnd; i++)
 		{
+
 			for(j = y; j <= yEnd; j++)
 			{
 				UB_VGA_SetPixel(i, j, color);
