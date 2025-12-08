@@ -61,4 +61,7 @@ void API_draw_line(int x_1, int y_1, int x_2, int y_2, int weight, int color, in
  */
 void API_draw_circle(int x0, int y0, int radius, int color, int reserved);
 
+int API_draw_rectangle (int x, int y, int width, int height, int color, int filled, int reserved, int reserved_1);
+// e.g.: weight, bordercolor
+
 #endif /* INC_API_LIB_H_ */

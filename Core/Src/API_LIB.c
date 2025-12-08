@@ -116,4 +116,62 @@ void API_draw_line(int x_1, int y_1, int x_2, int y_2,
     }
 }
 
+/**
+ * @brief Draws a rectangle on the VGA display.
+ *
+ * This function draws a rectangle defined by its top-left corner (x, y),
+ * width, and height. It can draw either an outline or a filled rectangle
+ * based on the 'filled' parameter.
+ *
+ * @param x         Starting X-coordinate (top-left corner) of the rectangle.
+ * @param y         Starting Y-coordinate (top-left corner) of the rectangle.
+ * @param width     Width of the rectangle in pixels.
+ * @param height    Height of the rectangle in pixels.
+ * @param color     8-bit color value used to draw the rectangle.
+ * @param filled    Flag indicating whether the rectangle should be filled (non-zero for filled, 0 for outline).
+ * @param reserved  Reserved variable (unused).
+ * @param reserved2 Reserved variable (unused).
+ *
+ * @note If 'filled' is 0, the function typically calls an API to draw four lines.
+ * If 'filled' is non-zero, the function typically iterates and calls an API to draw horizontal lines.
+ */
+int API_draw_rectangle (int x, int y, int width, int height, int color, int filled, int reserved, int reserved_1)
+{
+
+	int xEnd = x + width - 1; 	/**< Calculate the second X coordinate. */
+	int yEnd = y + height - 1;	/**< Calculate the second Y coordinate. */
+
+
+
+	if(filled)
+	{
+		for( i = x; i <= xEnd; i++)
+		{
+			for(j = y; j <= yEnd; j++)
+			{
+				UB_VGA_SetPixel(i, j, color);
+			}
+		}
+	}
+
+	else
+	{
+		// Draw horizontal lines (Top and Bottom)
+		for ( i = x; i <= xEnd; i++)
+		{
+			UB_VGA_SetPixel(i, y, color);        // Top edge
+			UB_VGA_SetPixel(i, yEnd, color);    // Bottom edge
+		}
+
+		// Draw vertical lines (Left and Right)
+		// We start/end at y+1 / y_end-1 to avoid drawing the corners twice
+		for (j = y + 1; j <= yEnd - 1; j++)
+		{
+			UB_VGA_SetPixel(x, j, color);        // Left edge
+			UB_VGA_SetPixel(xEnd, j, color);    // Right edge
+		}
+	}
+    return 0; // Return 0 on success
+}
+
 
