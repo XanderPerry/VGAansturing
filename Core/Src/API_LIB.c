@@ -145,11 +145,6 @@ int API_draw_rectangle (int x, int y, int width, int height, int color, int fill
 
 	if(filled)
 	{
-		API_draw_line(x, y, x, yEnd, weight, bordercolor, 0); /**< Draw a borderline around the rectangle> */
-		API_draw_line(x, y, xEnd, y, weight, bordercolor, 0);
-		API_draw_line(xEnd, yEnd, x, yEnd, weight, bordercolor, 0);
-		API_draw_line(xEnd, yEnd, xEnd, y, weight, bordercolor, 0);
-
 		for( i = x; i <= xEnd; i++)
 		{
 
@@ -158,26 +153,31 @@ int API_draw_rectangle (int x, int y, int width, int height, int color, int fill
 				UB_VGA_SetPixel(i, j, color);
 			}
 		}
+
+		API_draw_line(x, y, x, yEnd, weight, bordercolor, 0); /**< Draw a borderline around the rectangle> */
+		API_draw_line(x, y, xEnd, y, weight, bordercolor, 0);
+		API_draw_line(xEnd, yEnd, x, yEnd, weight, bordercolor, 0);
+		API_draw_line(xEnd, yEnd, xEnd, y, weight, bordercolor, 0);
 	}
 
 	else
 	{
-		// Draw horizontal lines (Top and Bottom)
+		/**<  Draw horizontal lines (Top and Bottom) */
 		for ( i = x; i <= xEnd; i++)
 		{
-			UB_VGA_SetPixel(i, y, color);        // Top edge
-			UB_VGA_SetPixel(i, yEnd, color);    // Bottom edge
+			UB_VGA_SetPixel(i, y, color);        /**<  Top edge */
+			UB_VGA_SetPixel(i, yEnd, color);    /**<  Bottom edge */
 		}
 
-		// Draw vertical lines (Left and Right)
-		// We start/end at y+1 / y_end-1 to avoid drawing the corners twice
+		/**< Draw vertical lines (Left and Right)
+		 We start/end at y+1 / y_end-1 to avoid drawing the corners twice */
 		for (j = y + 1; j <= yEnd - 1; j++)
 		{
-			UB_VGA_SetPixel(x, j, color);        // Left edge
-			UB_VGA_SetPixel(xEnd, j, color);    // Right edge
+			UB_VGA_SetPixel(x, j, color);        /**<  Left edge */
+			UB_VGA_SetPixel(xEnd, j, color);    /**< Right edge */
 		}
 	}
-    return 0; // Return 0 on success
+    return 0; /**<  Return 0 on success */
 }
 
 
