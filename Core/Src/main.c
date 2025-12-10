@@ -45,7 +45,6 @@ int main(void)
 			  // Echo received message for debugging
 			  usart2_send_string("Received: ");
 			  usart2_send_string(command_buffer); // Echoes back the line, including the LF
-			  API_draw_rectangle (10, 10, 100, 200, VGA_COL_RED, 1, 5, VGA_COL_CYAN);
 			  // Process error message
 			  int error = CmdToFunc(command_buffer);
 
