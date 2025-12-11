@@ -1,3 +1,13 @@
+/**
+ * @file LogicLayer.h
+ * @brief Logic layer library header file
+ *
+ * This file contains the prototypes for logic layer functions
+ *
+ * @author Xander Perry
+ * @date 2025-12-03
+ */
+
 #ifndef __LOGIC_LAYER_H
 #define __LOGIC_LAYER_H
 

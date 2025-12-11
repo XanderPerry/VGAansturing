@@ -1,12 +1,11 @@
 /**
- * @file main.c
+ * @file API_LIB.h
  * @brief API library header file
  *
  * This file contains the prototypes for all the
- * different API functions, currently API_draw_circle and
- * API_draw_line
+ * different API functions.
  *
- * @author Tom Veldkamp
+ * @author Tom Veldkamp, Xander Perry & Daniël Wit Arendza
  * @date 2025-12-03
  */
 
@@ -91,5 +90,104 @@ void API_draw_circle(int x0, int y0, int radius, int color, int reserved);
  */
 int API_draw_rectangle (int x, int y, int width, int height, int color, int filled, int weight, int bordercolor);
 // e.g.: weight, bordercolor
+ * @brief Draws a figure based on 5 coordinates
+ *
+ * This function draws a polygon based on 5 coordinates using the API_draw_line function.
+ * If infill is enabled the winding number algorithm is used to color pixels within the polygon.
+ *
+ * @param x_1 		X-coordinate 1
+ * @param y_1 		Y-coordinate 1
+ * @param x_2 		X-coordinate 2
+ * @param y_2 		Y-coordinate 2
+ * @param x_3 		X-coordinate 3
+ * @param y_3 		Y-coordinate 3
+ * @param x_4 		X-coordinate 4
+ * @param y_4 		Y-coordinate 4
+ * @param x_5 		X-coordinate 5
+ * @param y_5		Y-coordinate 5
+ * @param color		Figure color
+ * @param filled	Figure Fill
+ *
+ * @return			0 if no errors occured, otherwise returns the error code.
+ *
+ */
+int API_draw_figure(int x_1, int y_1, int x_2, int y_2, int x_3, int y_3, int x_4, int y_4, int x_5, int y_5, int color, int filled);
+
+/**
+ * @brief Returns smaller of two numbers
+ *
+ * @param a 		Number 1
+ * @param b 		Number 2
+ *
+ * @return			Smaller of the two numbers.
+ */
+int _Min(int a, int b);
+
+/**
+ * @brief Returns bigger of two numbers
+ *
+ * @param a 		Number 1
+ * @param b 		Number 2
+ *
+ * @return			Bigger of the two numbers.
+ */
+int _Max(int a, int b);
+
+/**
+ * @brief Calculates cross product of three coordinates.
+ *
+ * @param x_1 		X-coordinate 1
+ * @param y_1 		Y-coordinate 1
+ * @param x_2 		X-coordinate 2
+ * @param y_2 		Y-coordinate 2
+ * @param x_3 		X-coordinate 3
+ * @param y_3 		Y-coordinate 3
+ *
+ * @return			Cross prodcuct.
+ */
+int _CrossProduct(int x_1, int y_1, int x_2, int y_2, int x_3, int y_3);
+
+/**
+ * @brief determines if point is on segment 1-2.
+ *
+ * @param x_p 		X-coordinate of point
+ * @param y_p 		Y-coordinate of point
+ * @param x_1 		X-coordinate 1
+ * @param y_1 		Y-coordinate 1
+ * @param x_2 		X-coordinate 2
+ * @param y_2 		Y-coordinate 2
+ *
+ * @return			1 if on segment, 0 if not.
+ */
+int _IsOnSegment(int x_p, int y_p, int x_1, int y_1, int x_2, int y_2);
+
+/**
+ * @brief determines if point is on segment 1-2.
+ *
+ * @param x_p 		X-coordinate of point
+ * @param y_p 		Y-coordinate of point
+ * @param x_1 		X-coordinate 1
+ * @param y_1 		Y-coordinate 1
+ * @param x_2 		X-coordinate 2
+ * @param y_2 		Y-coordinate 2
+ * @param x_3 		X-coordinate 3
+ * @param y_3 		Y-coordinate 3
+ * @param x_4 		X-coordinate 4
+ * @param y_4 		Y-coordinate 4
+ * @param x_5 		X-coordinate 5
+ * @param y_5		Y-coordinate 5
+ *
+ * @return			1 if on segment, 0 if not.
+ */
+int _IsInPolygon(int x_p, int y_p, int x_1, int y_1, int x_2, int y_2, int x_3, int y_3, int x_4, int y_4, int x_5, int y_5);
+
+/**
+ * @brief Sets all pixels to given color.
+ *
+ * @param color		Screen color
+ *
+ * @return			0 if succesfull, otherwise error code
+ */
+int API_clearscreen (int color);
 
 #endif /* INC_API_LIB_H_ */
