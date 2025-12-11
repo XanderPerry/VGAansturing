@@ -152,4 +152,13 @@ int _IsOnSegment(int x_p, int y_p, int x_1, int y_1, int x_2, int y_2);
  */
 int _IsInPolygon(int x_p, int y_p, int x_1, int y_1, int x_2, int y_2, int x_3, int y_3, int x_4, int y_4, int x_5, int y_5);
 
+/**
+ * @brief Sets all pixels to given color.
+ *
+ * @param color		Screen color
+ *
+ * @return			0 if succesfull, otherwise error code
+ */
+int API_clearscreen (int color);
+
 #endif /* INC_API_LIB_H_ */

@@ -329,7 +329,18 @@ int _IsInPolygon(int x_p, int y_p, int x_1, int y_1, int x_2, int y_2, int x_3, 
 	return (winding_number != 0);
 }
 
-
+/**
+ * @brief Sets all pixels to given color.
+ *
+ * @param color		Screen color
+ *
+ * @return			0 if succesfull, otherwise error code
+ */
+int API_clearscreen (int color)
+{
+	UB_VGA_FillScreen(color);
+	return 0;
+}
 
 
 
