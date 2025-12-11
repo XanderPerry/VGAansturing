@@ -116,6 +116,93 @@ void API_draw_line(int x_1, int y_1, int x_2, int y_2,
 }
 
 /**
+ * @brief Draws a rectangle on the VGA display.
+ *
+ * This function draws a rectangle defined by its top-left corner (x, y),
+ * width, and height. It can draw either an outline or a filled rectangle
+ * based on the 'filled' parameter.
+ *
+ * @param x         Starting X-coordinate (top-left corner) of the rectangle.
+ * @param y         Starting Y-coordinate (top-left corner) of the rectangle.
+ * @param width     Width of the rectangle in pixels.
+ * @param height    Height of the rectangle in pixels.
+ * @param color     8-bit color value used to draw the rectangle.
+ * @param filled    Flag indicating whether the rectangle should be filled (non-zero for filled, 0 for outline).
+ * @param weight  Reserved variable (unused).
+ * @param bordercolor Reserved variable (unused).
+ *
+ * @note If 'filled' is 0, the function typically calls an API to draw four lines.
+ * If 'filled' is non-zero, the function typically iterates and calls an API to draw horizontal lines.
+ */
+int API_draw_rectangle (int x, int y, int width, int height, int color, int filled, int weight, int bordercolor)
+{
+
+	//!  Error handling
+	/*!
+	  Code block below handles errors. If the parameters get values which are out of bounds or wrong, return a corresponding error code.
+	*/
+	if (color != VGA_COL_BLACK &&
+	    color != VGA_COL_BLUE  &&
+	    color != VGA_COL_GREEN &&
+	    color != VGA_COL_RED   &&
+	    color != VGA_COL_WHITE &&
+	    color != VGA_COL_CYAN  &&
+	    color != VGA_COL_MAGENTA &&
+	    color != VGA_COL_YELLOW)
+		return ERR_COLOR_INVALID;
+
+	if (weight < 0) return ERR_WEIGHT_INVALID;
+//	if (x < 0 || x > VGA_DISPLAY_X) return ERROR_X_OUT_OF_BOUND;
+//	if (y < 0 || x > VGA_DISPLAY_Y) return ERROR_Y_OUT_OF_BOUND;
+	if (width < 0) return ERR_RECT_WIDTH_INVALID;
+	if (height < 0) return ERR_RECT_HEIGHT_INVALID;
+
+
+	int xEnd = x + width - 1; 	/**< Calculate the second X coordinate. */
+	int yEnd = y + height - 1;	/**< Calculate the second Y coordinate. */
+
+	if (xEnd > VGA_DISPLAY_X || yEnd > VGA_DISPLAY_Y) return ERR_OBJ_OUT_OF_BOUNDS;
+
+
+	int i,j;
+
+	if(filled)
+	{
+		for( i = x; i <= xEnd; i++)
+		{The width parameter is 0 or negative, resulting in an empty rectangle
+
+			for(j = y; j <= yEnd; j++)
+			{
+				UB_VGA_SetPixel(i, j, color);
+			}
+		}
+
+		API_draw_line(x, y, x, yEnd, weight, bordercolor, 0); /**< Draw a borderline around the rectangle> */
+		API_draw_line(x, y, xEnd, y, weight, bordercolor, 0);
+		API_draw_line(xEnd, yEnd, x, yEnd, weight, bordercolor, 0);
+		API_draw_line(xEnd, yEnd, xEnd, y, weight, bordercolor, 0);
+	}
+
+	else
+	{
+		/**<  Draw horizontal lines (Top and Bottom) */
+		for ( i = x; i <= xEnd; i++)
+		{
+			UB_VGA_SetPixel(i, y, color);        /**<  Top edge */
+			UB_VGA_SetPixel(i, yEnd, color);    /**<  Bottom edge */
+		}
+
+		/**< Draw vertical lines (Left and Right)
+		 We start/end at y+1 / y_end-1 to avoid drawing the corners twice */
+		for (j = y + 1; j <= yEnd - 1; j++)
+		{
+			UB_VGA_SetPixel(x, j, color);        /**<  Left edge */
+			UB_VGA_SetPixel(xEnd, j, color);    /**< Right edge */
+		}
+	}
+    return 0; /**<  Return 0 on success */
+}
+
  * @brief Draws a figure based on 5 coordinates
  *
  * @param x_1 		X-coordinate 1
