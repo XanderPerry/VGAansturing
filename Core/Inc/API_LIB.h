@@ -15,6 +15,15 @@
 
 #include <stdint.h>
 
+// API_draw_rectangle error codes
+#define ERR_RECT_WIDTH_INVALID            601  /**< The width parameter is 0 or negative, resulting in an empty rectangle. */
+#define ERR_RECT_HEIGHT_INVALID           602  /**< The height parameter is 0 or negative, resulting in an empty rectangle. */
+#define ERR_OBJ_OUT_OF_BOUNDS			  603
+#define ERR_COLOR_INVALID            	  604  /**< An unknown color value has been assigned to the function. (e.g. color > 255 for 8-bit) */
+#define ERR_WEIGHT_INVALID           	  605  /**< Weight is below 0, which is not possible for line thickness. */
+
+
+
 //function prototype
 /**
  * @brief Draws a line with adjustable thickness on the VGA display.
