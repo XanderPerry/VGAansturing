@@ -1,12 +1,11 @@
 /**
- * @file main.c
+ * @file API_LIB.h
  * @brief API library header file
  *
  * This file contains the prototypes for all the
- * different API functions, currently API_draw_circle and
- * API_draw_line
+ * different API functions.
  *
- * @author Tom Veldkamp
+ * @author Tom Veldkamp, Xander Perry & Daniël Wit Arendza
  * @date 2025-12-03
  */
 
@@ -91,7 +90,7 @@ int API_draw_figure(int x_1, int y_1, int x_2, int y_2, int x_3, int y_3, int x_
  * @param a 		Number 1
  * @param b 		Number 2
  *
- * @return			Smaller of the two numbers. *
+ * @return			Smaller of the two numbers.
  */
 int _Min(int a, int b);
 
@@ -101,7 +100,7 @@ int _Min(int a, int b);
  * @param a 		Number 1
  * @param b 		Number 2
  *
- * @return			Bigger of the two numbers. *
+ * @return			Bigger of the two numbers.
  */
 int _Max(int a, int b);
 
