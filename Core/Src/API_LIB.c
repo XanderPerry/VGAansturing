@@ -1,12 +1,11 @@
 /**
- * @file main.c
+ * @file API_LIB.c
  * @brief API library source file
  *
  * This file contains the source code for all the
- * different API functions, currently API_draw_circle and
- * API_draw_line
+ * different API functions.
  *
- * @author Tom Veldkamp
+ * @author Tom Veldkamp, Xander Perry & Daniël Wit Arendza
  * @date 2025-12-03
  */
 #include <API_LIB.h>
@@ -115,5 +114,235 @@ void API_draw_line(int x_1, int y_1, int x_2, int y_2,
         }
     }
 }
+
+/**
+ * @brief Draws a figure based on 5 coordinates
+ *
+ * @param x_1 		X-coordinate 1
+ * @param y_1 		Y-coordinate 1
+ * @param x_2 		X-coordinate 2
+ * @param y_2 		Y-coordinate 2
+ * @param x_3 		X-coordinate 3
+ * @param y_3 		Y-coordinate 3
+ * @param x_4 		X-coordinate 4
+ * @param y_4 		Y-coordinate 4
+ * @param x_5 		X-coordinate 5
+ * @param y_5		Y-coordinate 5
+ * @param color		Figure color
+ * @param filled	Figure Fill
+ *
+ * @return			0 if no errors occured, otherwise returns the error code.
+ *
+ * @note This function calls API_draw_line().
+ *
+ */
+int API_draw_figure(int x_1, int y_1, int x_2, int y_2, int x_3, int y_3, int x_4, int y_4, int x_5, int y_5, int color, int filled)
+{
+	// Draw outline
+	API_draw_line(x_1, y_1, x_2, y_2, 1, color, 0);
+	API_draw_line(x_2, y_2, x_3, y_3, 1, color, 0);
+	API_draw_line(x_3, y_3, x_4, y_4, 1, color, 0);
+	API_draw_line(x_4, y_4, x_5, y_5, 1, color, 0);
+	API_draw_line(x_5, y_5, x_1, y_1, 1, color, 0);
+
+	// Draw infill if needed
+	if(filled)
+	{
+		// Get coordinates for smallest box around polygon
+		int min_x = x_1;
+		if (x_2 < min_x)	min_x = x_2;
+		if (x_3 < min_x)	min_x = x_3;
+		if (x_4 < min_x)	min_x = x_4;
+		if (x_5 < min_x)	min_x = x_5;
+
+		int max_x = x_1;
+		if (x_2 > max_x)	max_x = x_2;
+		if (x_3 > max_x)	max_x = x_3;
+		if (x_4 > max_x)	max_x = x_4;
+		if (x_5 > max_x)	max_x = x_5;
+
+		int min_y = y_1;
+		if (y_2 < min_y)	min_y = y_2;
+		if (y_3 < min_y)	min_y = y_3;
+		if (y_4 < min_y)	min_y = y_4;
+		if (y_5 < min_y)	min_y = y_5;
+
+		int max_y = y_1;
+		if (y_2 > max_y)	max_y = y_2;
+		if (y_3 > max_y)	max_y = y_3;
+		if (y_4 > max_y)	max_y = y_4;
+		if (y_5 > max_y)	max_y = y_5;
+
+		// Check if pixels in smallest box are within polygon
+		for (int i = min_x; i <= max_x; i++)
+		{
+			for (int j = min_y; j <= max_y; j++)
+			{
+				if (_IsInPolygon(i, j, x_1, y_1, x_2, y_2, x_3, y_3, x_4, y_4, x_5, y_5))
+				{
+					// Color pixel if within polygon
+					UB_VGA_SetPixel(i, j, color);
+				}
+			}
+		}
+	}
+}
+
+/**
+ * @brief Returns smaller of two numbers
+ *
+ * @param a 		Number 1
+ * @param b 		Number 2
+ *
+ * @return			Smaller of the two numbers.
+ */
+int _Min(int a, int b)
+{
+	return a < b ? a : b;
+}
+
+/**
+ * @brief Returns bigger of two numbers
+ *
+ * @param a 		Number 1
+ * @param b 		Number 2
+ *
+ * @return			Bigger of the two numbers. *
+ */
+int _Max(int a, int b)
+{
+	return a > b ? a : b;
+}
+
+/**
+ * @brief Calculates cross product of three coordinates.
+ *
+ * @param x_1 		X-coordinate 1
+ * @param y_1 		Y-coordinate 1
+ * @param x_2 		X-coordinate 2
+ * @param y_2 		Y-coordinate 2
+ * @param x_3 		X-coordinate 3
+ * @param y_3 		Y-coordinate 3
+ *
+ * @return			Cross prodcuct.
+ */
+int _CrossProduct(int x_1, int y_1, int x_2, int y_2, int x_3, int y_3)
+{
+	return (x_2 - x_1) * (y_3 - y_1) - (y_2 - y_1) * (x_3 - x_1);
+}
+
+/**
+ * @brief determines if point is on segment 1-2.
+ *
+ * @param x_p 		X-coordinate of point
+ * @param y_p 		Y-coordinate of point
+ * @param x_1 		X-coordinate 1
+ * @param y_1 		Y-coordinate 1
+ * @param x_2 		X-coordinate 2
+ * @param y_2 		Y-coordinate 2
+ *
+ * @return			1 if on segment, 0 if not.
+ */
+int _IsOnSegment(int x_p, int y_p, int x_1, int y_1, int x_2, int y_2)
+{
+	// Check collinearity
+	if (_CrossProduct(x_1, y_1, x_p, y_p, x_2, y_2) != 0)
+	{
+		return 0;
+	}
+
+	// Check whether values are within bouding box
+	if (x_p >= _Min(x_1, x_2 ) && x_p <= _Max(x_1, x_2) &&
+		y_p >= _Min(y_1, y_2 ) && y_p <= _Max(y_1, y_2))
+	{
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+/**
+ * @brief determines if point is on segment 1-2.
+ *
+ * @param x_p 		X-coordinate of point
+ * @param y_p 		Y-coordinate of point
+ * @param x_1 		X-coordinate 1
+ * @param y_1 		Y-coordinate 1
+ * @param x_2 		X-coordinate 2
+ * @param y_2 		Y-coordinate 2
+ * @param x_3 		X-coordinate 3
+ * @param y_3 		Y-coordinate 3
+ * @param x_4 		X-coordinate 4
+ * @param y_4 		Y-coordinate 4
+ * @param x_5 		X-coordinate 5
+ * @param y_5		Y-coordinate 5
+ *
+ * @return			1 if on segment, 0 if not.
+ */
+int _IsInPolygon(int x_p, int y_p, int x_1, int y_1, int x_2, int y_2, int x_3, int y_3, int x_4, int y_4, int x_5, int y_5)
+{
+	// Make list of polygon coordinates for iteration
+	int poly_x[] = {x_1, x_2, x_3, x_4, x_5};
+	int poly_y[] = {y_1, y_2, y_3, y_4, y_5};
+
+	// Winding number tracker
+	int winding_number = 0;
+
+	// Loop over polygon sides
+	for (int i = 0; i < 5; i++)
+	{
+		// Get polygon side from current coordinate to next coordinate
+		int current_x = poly_x[i];
+		int current_y = poly_y[i];
+		int next_x = poly_x[(i+1)%5];
+		int next_y = poly_y[(i+1)%5];
+
+		// If point is on segment it is within polygon
+		if (_IsOnSegment(x_p, y_p, current_x, current_y, next_x, next_y))
+		{
+			return 1;
+		}
+
+		// Get cross product
+		int cross_product = _CrossProduct(current_x, current_y, next_x, next_y, x_p, y_p);
+
+		// Calculate winding number
+		if (current_y <= y_p)
+		{
+			if (next_y > y_p && cross_product > 0)
+			{
+				winding_number++;
+			}
+		}
+		else
+		{
+			if (next_y <= y_p && cross_product < 0)
+			{
+				winding_number--;
+			}
+		}
+	}
+
+	// Winding number is 0 if point is within polygon
+	return (winding_number != 0);
+}
+
+/**
+ * @brief Sets all pixels to given color.
+ *
+ * @param color		Screen color
+ *
+ * @return			0 if succesfull, otherwise error code
+ */
+int API_clearscreen (int color)
+{
+	UB_VGA_FillScreen(color);
+	return 0;
+}
+
+
+
 
 

@@ -1,3 +1,13 @@
+/**
+ * @file LogicLayer.h
+ * @brief Logic layer library header file
+ *
+ * This file contains the code for logic layer functions
+ *
+ * @author Xander Perry
+ * @date 2025-12-03
+ */
+
 #include "LogicLayer.h"
 #include "stm32f4xx.h"
 
