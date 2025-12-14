@@ -202,8 +202,40 @@ int API_draw_rectangle (int x, int y, int width, int height, int color, int fill
 	}
     return 0; /**<  Return 0 on success */
 }
+/**
+ * @brief Draws a bitmap on the screen at the specified upper-left position.
+ *
+ * This function takes a bitmap index from a global bitmap array and renders it
+ * at the given (x, y) coordinates on the screen. Each bitmap is expected to have
+ * the following format:
+ * - bmp[0] = height of the bitmap in pixels
+ * - bmp[1] = width of the bitmap in pixels
+ * - bmp[2..] = pixel color data (row-major order)
+ *
+ * @param x_lup The x-coordinate of the upper-left pixel where the bitmap will be drawn.
+ * @param y_lup The y-coordinate of the upper-left pixel where the bitmap will be drawn.
+ * @param bitnr The index of the bitmap in the global `bitmaps` array.
+ *
+ * @note The function assumes that the `bitmaps` array and `UB_VGA_SetPixel` function
+ *       are properly defined and accessible.
+ */
+void API_draw_bitmap(int x_lup, int y_lup, int bitnr)
+{
+	const char* bmp = bitmaps[bitnr];/**< Select bitmap from argument. */
+	uint8_t height = bmp[0];
+	uint8_t width  = bmp[1];
+	const uint8_t* pixels = &bmp[2];
 
- * @brief Draws a figure based on 5 coordinates
+    for (uint16_t y = 0; y < height; y++) /**< Move up y coordinate. */
+    {
+        for (uint16_t x = 0; x < width; x++) /**< Move up x coordinate. */
+        {
+            uint16_t color = pixels[y * width + x];
+            UB_VGA_SetPixel(x+x_lup, y+y_lup, color); /**< Color current pixel. */
+        }
+    }
+}
+ /* @brief Draws a figure based on 5 coordinates
  *
  * @param x_1 		X-coordinate 1
  * @param y_1 		Y-coordinate 1
@@ -428,6 +460,7 @@ int API_clearscreen (int color)
 	UB_VGA_FillScreen(color);
 	return 0;
 }
+
 
 
 

@@ -68,7 +68,24 @@ void API_draw_line(int x_1, int y_1, int x_2, int y_2, int weight, int color, in
  *          within the screen to avoid memory access errors.
  */
 void API_draw_circle(int x0, int y0, int radius, int color, int reserved);
-
+/**
+ * @brief Draws a bitmap on the screen at the specified upper-left position.
+ *
+ * This function takes a bitmap index from a global bitmap array and renders it
+ * at the given (x, y) coordinates on the screen. Each bitmap is expected to have
+ * the following format:
+ * - bmp[0] = height of the bitmap in pixels
+ * - bmp[1] = width of the bitmap in pixels
+ * - bmp[2..] = pixel color data (row-major order)
+ *
+ * @param x_lup The x-coordinate of the upper-left pixel where the bitmap will be drawn.
+ * @param y_lup The y-coordinate of the upper-left pixel where the bitmap will be drawn.
+ * @param bitnr The index of the bitmap in the global `bitmaps` array.
+ *
+ * @note The function assumes that the `bitmaps` array and `UB_VGA_SetPixel` function
+ *       are properly defined and accessible.
+ */
+void API_draw_bitmap(int x_lup, int y_lup, int bitnr);
 /**
  * @brief Draws a rectangle on the VGA display.
  *
@@ -90,7 +107,7 @@ void API_draw_circle(int x0, int y0, int radius, int color, int reserved);
  */
 int API_draw_rectangle (int x, int y, int width, int height, int color, int filled, int weight, int bordercolor);
 // e.g.: weight, bordercolor
- * @brief Draws a figure based on 5 coordinates
+ /* @brief Draws a figure based on 5 coordinates
  *
  * This function draws a polygon based on 5 coordinates using the API_draw_line function.
  * If infill is enabled the winding number algorithm is used to color pixels within the polygon.
