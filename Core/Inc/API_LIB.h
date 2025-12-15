@@ -109,7 +109,8 @@ int API_draw_bitmap(int x_lup, int y_lup, int bitnr);
  */
 int API_draw_rectangle (int x, int y, int width, int height, int color, int filled, int weight, int bordercolor);
 // e.g.: weight, bordercolor
- /* @brief Draws a figure based on 5 coordinates
+/*
+ * @brief Draws a figure based on 5 coordinates
  *
  * This function draws a polygon based on 5 coordinates using the API_draw_line function.
  * If infill is enabled the winding number algorithm is used to color pixels within the polygon.

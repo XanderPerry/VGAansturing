@@ -194,10 +194,10 @@ int API_draw_rectangle (int x, int y, int width, int height, int color, int fill
 
 	int i,j;
 
-	if(filled)
+	if(filled) // The width parameter is 0 or negative, resulting in an empty rectangle
 	{
 		for( i = x; i <= xEnd; i++)
-		{//The width parameter is 0 or negative, resulting in an empty rectangle
+		{
 
 			for(j = y; j <= yEnd; j++)
 			{
