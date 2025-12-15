@@ -88,6 +88,7 @@ void UB_VGA_FillScreen(uint8_t color)
 //--------------------------------------------------------------
 void UB_VGA_SetPixel(uint16_t xp, uint16_t yp, uint8_t color)
 {
+  if (color == 0x01) return;  // skip background pixel
   if(xp>=VGA_DISPLAY_X) xp=0;
   if(yp>=VGA_DISPLAY_Y) yp=0;
 

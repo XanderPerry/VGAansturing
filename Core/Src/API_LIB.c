@@ -11,6 +11,7 @@
 #include <API_LIB.h>
 #include <stdlib.h>
 #include "stm32_ub_vga_screen.h"
+#include "Bitmaps.h"
 /**
  * @brief Draws a filled circle on the VGA display.
  *
@@ -30,8 +31,22 @@
  * @warning No boundary checking is performed. Ensure the circle fits
  *          within the screen to avoid memory access errors.
  */
-void API_draw_circle(int x0, int y0, int radius, int color, int reserved)
+int API_draw_circle(int x0, int y0, int radius, int color, int reserved)
 {
+	if (color != VGA_COL_BLACK &&
+	    color != VGA_COL_BLUE  &&
+	    color != VGA_COL_GREEN &&
+	    color != VGA_COL_RED   &&
+	    color != VGA_COL_WHITE &&
+	    color != VGA_COL_CYAN  &&
+	    color != VGA_COL_MAGENTA &&
+	    color != VGA_COL_YELLOW)
+		return ERR_COLOR_INVALID;
+
+	if(x0+radius > VGA_DISPLAY_X||y0+radius >VGA_DISPLAY_Y||x0-radius<0||y0-radius<0)
+		return ERR_OBJ_OUT_OF_BOUNDS;
+	if(radius<0)
+		return ERR_CIR_RADIUS_INVALID;
     int x = radius;
     int y = 0;
     int decisionOver2 = 1 - x;  /**< Bresenham decision variable, distance between ideal circle. */
@@ -84,9 +99,22 @@ void API_draw_circle(int x0, int y0, int radius, int color, int reserved)
  * @warning No boundary checking is performed. Ensure that the line (including brush size)
  *          fits within the display memory region to avoid invalid pixel writes.
  */
-void API_draw_line(int x_1, int y_1, int x_2, int y_2,
+int API_draw_line(int x_1, int y_1, int x_2, int y_2,
                    int weight, int color, int reserved)
 {
+
+	if (color != VGA_COL_BLACK &&
+	    color != VGA_COL_BLUE  &&
+	    color != VGA_COL_GREEN &&
+	    color != VGA_COL_RED   &&
+	    color != VGA_COL_WHITE &&
+	    color != VGA_COL_CYAN  &&
+	    color != VGA_COL_MAGENTA &&
+	    color != VGA_COL_YELLOW)
+		return ERR_COLOR_INVALID;
+	if (weight < 0) return ERR_WEIGHT_INVALID;
+	if(x_2>VGA_DISPLAY_X||y_2>VGA_DISPLAY_Y||x_1<0||y_1<0) return ERR_OBJ_OUT_OF_BOUNDS;
+
     int dx = abs(x_2 - x_1); /**< Horizontal distance between points. */
     int dy = abs(y_2 - y_1); /**< Vertical distance between points. */
 
@@ -202,9 +230,53 @@ int API_draw_rectangle (int x, int y, int width, int height, int color, int fill
 	}
     return 0; /**<  Return 0 on success */
 }
+/**
+ * @brief Draws a bitmap on the screen at the specified upper-left position.
+ *
+ * This function takes a bitmap index from a global bitmap array and renders it
+ * at the given (x, y) coordinates on the screen. Each bitmap is expected to have
+ * the following format:
+ * - bmp[0] = height of the bitmap in pixels
+ * - bmp[1] = width of the bitmap in pixels
+ * - bmp[2..] = pixel color data (row-major order)
+ *
+ * @param x_lup The x-coordinate of the upper-left pixel where the bitmap will be drawn.
+ * @param y_lup The y-coordinate of the upper-left pixel where the bitmap will be drawn.
+ * @param bitnr The index of the bitmap in the global `bitmaps` array.
+ *
+ * @note The function assumes that the `bitmaps` array and `UB_VGA_SetPixel` function
+ *       are properly defined and accessible.
+ */
+int API_draw_bitmap(int x_lup, int y_lup, int bitnr)
+{
+	if(bitnr<0||bitnr>12)
+		return ERR_BITMAP_INVALID;
+	char bitmap_size;
+	if(bitnr<=5)
+	{
+		bitmap_size = 100;
+	}
+	else
+	{
+		bitmap_size = 32;
+	}
+	if(x_lup<0||x_lup+bitmap_size>VGA_DISPLAY_X||y_lup<0||y_lup+bitmap_size>VGA_DISPLAY_Y)
+		return ERR_OBJ_OUT_OF_BOUNDS;
+	const char* bmp = bitmaps[bitnr];/**< Select bitmap from argument. */
+	uint8_t height = bmp[0];
+	uint8_t width  = bmp[1];
+	const uint8_t* pixels = &bmp[2];
 
-/*
- * @brief Draws a figure based on 5 coordinates
+    for (uint16_t y = 0; y < height; y++) /**< Move up y coordinate. */
+    {
+        for (uint16_t x = 0; x < width; x++) /**< Move up x coordinate. */
+        {
+            uint16_t color = pixels[y * width + x];
+            UB_VGA_SetPixel(x+x_lup, y+y_lup, color); /**< Color current pixel. */
+        }
+    }
+}
+ /* @brief Draws a figure based on 5 coordinates
  *
  * @param x_1 		X-coordinate 1
  * @param y_1 		Y-coordinate 1
@@ -429,6 +501,7 @@ int API_clearscreen (int color)
 	UB_VGA_FillScreen(color);
 	return 0;
 }
+
 
 
 
