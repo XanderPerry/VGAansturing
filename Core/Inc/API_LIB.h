@@ -90,6 +90,7 @@ void API_draw_circle(int x0, int y0, int radius, int color, int reserved);
  */
 int API_draw_rectangle (int x, int y, int width, int height, int color, int filled, int weight, int bordercolor);
 // e.g.: weight, bordercolor
+/*
  * @brief Draws a figure based on 5 coordinates
  *
  * This function draws a polygon based on 5 coordinates using the API_draw_line function.
