@@ -17,9 +17,11 @@
 // API_draw_rectangle error codes
 #define ERR_RECT_WIDTH_INVALID            601  /**< The width parameter is 0 or negative, resulting in an empty rectangle. */
 #define ERR_RECT_HEIGHT_INVALID           602  /**< The height parameter is 0 or negative, resulting in an empty rectangle. */
-#define ERR_OBJ_OUT_OF_BOUNDS			  603
+#define ERR_OBJ_OUT_OF_BOUNDS			  603  /**< Part of the object is out of bounds*/
 #define ERR_COLOR_INVALID            	  604  /**< An unknown color value has been assigned to the function. (e.g. color > 255 for 8-bit) */
 #define ERR_WEIGHT_INVALID           	  605  /**< Weight is below 0, which is not possible for line thickness. */
+#define ERR_BITMAP_INVALID				  606  /**< Requested bitmap does not exist*/
+#define ERR_CIR_RADIUS_INVALID			  607  /**< Requested radius is 0 or negative*/
 
 
 
@@ -46,7 +48,7 @@
  * @warning No boundary checking is performed. Ensure that the line (including brush size)
  *          fits within the display memory region to avoid invalid pixel writes.
  */
-void API_draw_line(int x_1, int y_1, int x_2, int y_2, int weight, int color, int reserved);
+int API_draw_line(int x_1, int y_1, int x_2, int y_2, int weight, int color, int reserved);
 
 /**
  * @brief Draws a filled circle on the VGA display.
@@ -67,7 +69,7 @@ void API_draw_line(int x_1, int y_1, int x_2, int y_2, int weight, int color, in
  * @warning No boundary checking is performed. Ensure the circle fits
  *          within the screen to avoid memory access errors.
  */
-void API_draw_circle(int x0, int y0, int radius, int color, int reserved);
+int API_draw_circle(int x0, int y0, int radius, int color, int reserved);
 /**
  * @brief Draws a bitmap on the screen at the specified upper-left position.
  *
@@ -85,7 +87,7 @@ void API_draw_circle(int x0, int y0, int radius, int color, int reserved);
  * @note The function assumes that the `bitmaps` array and `UB_VGA_SetPixel` function
  *       are properly defined and accessible.
  */
-void API_draw_bitmap(int x_lup, int y_lup, int bitnr);
+int API_draw_bitmap(int x_lup, int y_lup, int bitnr);
 /**
  * @brief Draws a rectangle on the VGA display.
  *
