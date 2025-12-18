@@ -27,75 +27,261 @@ int CmdToFunc (char *cmd)
 {
 	const char delimiter[] = ",\r\n"; // Separation character
 	char *token;
+	uint16_t zero = 0; // All input array positions start pointing to zero
+	char * input_buffer[12] = {zero}; // Buffer for input processing
 
 	// Get requested function from command
 	token = strtok (cmd, delimiter);
 
 	if (strcmp(token, "pixel") == 0)
 	{
-		uint16_t x = atoi (strtok (NULL, delimiter));
-		if (XOutOfBound(x))
+		// Fill input_buffer[] with command parameters
+		char i = 0;
+		char * ptr = strtok (NULL, delimiter);
+		while(ptr != NULL)
 		{
-			return ERROR_X_OUT_OF_BOUND;
+			input_buffer[i++] = ptr;
+			ptr = strtok (NULL, delimiter);
 		}
 
-		uint16_t y = atoi (strtok (NULL, delimiter));
-		if (YOutOfBound(y))
-		{
-			return ERROR_Y_OUT_OF_BOUND;
-		}
+		uint16_t x = atoi (input_buffer[0]);
+		if (XOutOfBound(x)) return ERR_X_OUT_OF_BOUND;
 
-		uint8_t col = StrToCol (strtok (NULL, delimiter));
-		if (col==1)
-		{
-			return ERROR_INVALID_PARAM_INPUT;
-		}
+		uint16_t y = atoi (input_buffer[1]);
+		if (YOutOfBound(y)) return ERR_Y_OUT_OF_BOUND;
+
+		uint8_t col = StrToCol (input_buffer[2]);
+		if (col==1) return ERR_INVALID_COLOR_INPUT;
 
 		UB_VGA_SetPixel (x, y, col);
 	}
 
 	else if (strcmp(token, "lijn") == 0)
+	{
+		// Fill input_buffer[] with command parameters
+		char i = 0;
+		char * ptr = strtok (NULL, delimiter);
+		while(ptr != NULL)
 		{
-			uint16_t x_1 = atoi (strtok (NULL, delimiter));
-			if (XOutOfBound(x_1))
-			{
-				return ERROR_X_OUT_OF_BOUND;
-			}
-
-			uint16_t y_1 = atoi (strtok (NULL, delimiter));
-			if (YOutOfBound(y_1))
-			{
-				return ERROR_Y_OUT_OF_BOUND;
-			}
-
-			uint16_t x_2 = atoi (strtok (NULL, delimiter));
-			if (XOutOfBound(x_2))
-			{
-				return ERROR_X_OUT_OF_BOUND;
-			}
-
-			uint16_t y_2 = atoi (strtok (NULL, delimiter));
-			if (YOutOfBound(y_2))
-			{
-				return ERROR_Y_OUT_OF_BOUND;
-			}
-
-			uint8_t col = StrToCol (strtok (NULL, delimiter));
-			if (col==1)
-			{
-				return ERROR_INVALID_PARAM_INPUT;
-			}
-
-			uint16_t weight = atoi (strtok (NULL, delimiter));
-
-
-			API_draw_line(x_1, y_1, x_2, y_2, weight, col, 0);
+			input_buffer[i++] = ptr;
+			ptr = strtok (NULL, delimiter);
 		}
+
+		uint16_t x_1 = atoi (input_buffer[0]);
+		if (XOutOfBound(x_1))return ERR_X_OUT_OF_BOUND;
+
+		uint16_t y_1 = atoi (input_buffer[1]);
+		if (YOutOfBound(y_1)) return ERR_Y_OUT_OF_BOUND;
+
+		uint16_t x_2 = atoi (input_buffer[2]);
+		if (XOutOfBound(x_2)) return ERR_X_OUT_OF_BOUND;
+
+		uint16_t y_2 = atoi (input_buffer[3]);
+		if (YOutOfBound(y_2)) return ERR_Y_OUT_OF_BOUND;
+
+		uint8_t col = StrToCol (input_buffer[4]);
+		if (col==1) return ERR_INVALID_COLOR_INPUT;
+
+		uint16_t weight = atoi (input_buffer[5]);
+
+		uint16_t reserved = 0;
+		if (input_buffer[6])
+		{
+			reserved = atoi (input_buffer[6]);
+		}
+
+		int ErrorCode = API_draw_line(x_1, y_1, x_2, y_2, weight, col, reserved);
+		if (ErrorCode)
+		{
+			return ErrorCode;
+		}
+	}
+
+	else if (strcmp(token, "rechthoek") == 0)
+	{
+		// Fill input_buffer[] with command parameters
+		char i = 0;
+		char * ptr = strtok (NULL, delimiter);
+		while(ptr != NULL)
+		{
+			input_buffer[i++] = ptr;
+			ptr = strtok (NULL, delimiter);
+		}
+
+		uint16_t x = atoi (input_buffer[0]);
+		if (XOutOfBound(x))	return ERR_X_OUT_OF_BOUND;
+
+		uint16_t y = atoi (input_buffer[1]);
+		if (YOutOfBound(y))	return ERR_Y_OUT_OF_BOUND;
+
+		uint16_t width = atoi (input_buffer[2]);
+
+		uint16_t height = atoi (input_buffer[3]);
+
+		uint8_t color = StrToCol (input_buffer[4]);
+		if (color==1) return ERR_INVALID_COLOR_INPUT;
+
+		uint16_t filled = atoi (input_buffer[5]);
+
+		uint16_t weight = 1;
+		if (input_buffer[6])
+		{
+			weight = atoi (input_buffer[6]);
+		}
+
+		uint8_t bordercolor = color;
+		if (input_buffer[7])
+		{
+			bordercolor = StrToCol (input_buffer[7]);
+			if (bordercolor==1) return ERR_INVALID_COLOR_INPUT;
+		}
+
+		int ErrorCode = API_draw_rectangle(x, y, width, height, color, filled, weight, bordercolor);
+		if (ErrorCode)
+		{
+			return ErrorCode;
+		}
+	}
+
+	else if (strcmp(token, "bitmap") == 0)
+	{
+		// Fill input_buffer[] with command parameters
+		char i = 0;
+		char * ptr = strtok (NULL, delimiter);
+		while(ptr != NULL)
+		{
+			input_buffer[i++] = ptr;
+			ptr = strtok (NULL, delimiter);
+		}
+
+		uint16_t bitnr = atoi (input_buffer[0]);
+
+		uint16_t x_lup = atoi (input_buffer[1]);
+		if (XOutOfBound(x_lup)) return ERR_X_OUT_OF_BOUND;
+
+		uint16_t y_lup = atoi (input_buffer[2]);
+		if (YOutOfBound(y_lup))	return ERR_Y_OUT_OF_BOUND;
+
+		int ErrorCode = API_draw_bitmap(x_lup, y_lup, bitnr);
+		if (ErrorCode)
+		{
+			return ErrorCode;
+		}
+	}
+
+	else if (strcmp(token, "clearscherm") == 0)
+	{
+		// Fill input_buffer[] with command parameters
+		char i = 0;
+		char * ptr = strtok (NULL, delimiter);
+		while(ptr != NULL)
+		{
+			input_buffer[i++] = ptr;
+			ptr = strtok (NULL, delimiter);
+		}
+
+		uint8_t color = StrToCol (input_buffer[0]);
+		if (color==1) return ERR_INVALID_COLOR_INPUT;
+
+		API_clearscreen(color);
+	}
+
+	else if (strcmp(token, "cirkel") == 0)
+	{
+		// Fill input_buffer[] with command parameters
+		char i = 0;
+		char * ptr = strtok (NULL, delimiter);
+		while(ptr != NULL)
+		{
+			input_buffer[i++] = ptr;
+			ptr = strtok (NULL, delimiter);
+		}
+
+		uint16_t x0 = atoi (input_buffer[0]);
+		if (XOutOfBound(x0)) return ERR_X_OUT_OF_BOUND;
+
+		uint16_t y0 = atoi (input_buffer[1]);
+		if (YOutOfBound(y0)) return ERR_Y_OUT_OF_BOUND;
+
+		uint16_t radius = atoi (input_buffer[2]);
+
+		uint8_t color = StrToCol (input_buffer[3]);
+		if (color==1) return ERR_INVALID_COLOR_INPUT;
+
+		uint8_t reserved = 0;
+		if (input_buffer[4])
+		{
+			reserved = atoi (input_buffer[4]);
+		}
+
+		int ErrorCode = API_draw_circle(x0, y0, radius, color, reserved);
+		if (ErrorCode)
+		{
+			return ErrorCode;
+		}
+	}
+
+	else if (strcmp(token, "figuur") == 0)
+	{
+		// Fill input_buffer[] with command parameters
+		char i = 0;
+		char * ptr = strtok (NULL, delimiter);
+		while(ptr != NULL)
+		{
+			input_buffer[i++] = ptr;
+			ptr = strtok (NULL, delimiter);
+		}
+
+		uint16_t x_1 = atoi (input_buffer[0]);
+		if (XOutOfBound(x_1)) return ERR_X_OUT_OF_BOUND;
+
+		uint16_t y_1 = atoi (input_buffer[1]);
+		if (YOutOfBound(y_1)) return ERR_Y_OUT_OF_BOUND;
+
+		uint16_t x_2 = atoi (input_buffer[2]);
+		if (XOutOfBound(x_2)) return ERR_X_OUT_OF_BOUND;
+
+		uint16_t y_2 = atoi (input_buffer[3]);
+		if (YOutOfBound(y_2)) return ERR_Y_OUT_OF_BOUND;
+
+		uint16_t x_3 = atoi (input_buffer[4]);
+		if (XOutOfBound(x_3)) return ERR_X_OUT_OF_BOUND;
+
+		uint16_t y_3 = atoi (input_buffer[5]);
+		if (YOutOfBound(y_3)) return ERR_Y_OUT_OF_BOUND;
+
+		uint16_t x_4 = atoi (input_buffer[6]);
+		if (XOutOfBound(x_4)) return ERR_X_OUT_OF_BOUND;
+
+		uint16_t y_4 = atoi (input_buffer[7]);
+		if (YOutOfBound(y_4)) return ERR_Y_OUT_OF_BOUND;
+
+		uint16_t x_5 = atoi (input_buffer[8]);
+		if (XOutOfBound(x_5)) return ERR_X_OUT_OF_BOUND;
+
+		uint16_t y_5 = atoi (input_buffer[9]);
+		if (YOutOfBound(y_5)) return ERR_Y_OUT_OF_BOUND;
+
+		uint8_t color = StrToCol (input_buffer[10]);
+		if (color==1) return ERR_INVALID_COLOR_INPUT;
+
+		uint16_t filled = 0;
+		if (input_buffer[11])
+		{
+			filled = atoi (input_buffer[11]);
+		}
+
+		int ErrorCode = API_draw_figure(x_1, y_1, x_2, y_2, x_3, y_3, x_4, y_4, x_5, y_5, color, filled);
+		if (ErrorCode)
+		{
+			return ErrorCode;
+		}
+	}
 
 	else
 	{
 		// Return error for unsupported command.
-		return ERROR_UNSUPPORTED_COMMAND;
+		return ERR_UNSUPPORTED_COMMAND;
 	}
 
 	return 0;
@@ -117,7 +303,7 @@ uint8_t StrToCol (char *str)
 		return VGA_COL_GREEN;
 	else if (strcmp(str, "rood") == 0)
 		return VGA_COL_RED;
-	else if (strcmp(str, "zwart") == 0)
+	else if (strcmp(str, "wit") == 0)
 		return VGA_COL_WHITE;
 	else if (strcmp(str, "lichtcyaan") == 0)
 		return VGA_COL_CYAN;

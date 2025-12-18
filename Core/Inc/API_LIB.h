@@ -16,13 +16,13 @@
 #include <string.h> // Required for strcmp
 
 // API_draw_rectangle error codes
-#define ERR_RECT_WIDTH_INVALID            601  /**< The width parameter is 0 or negative, resulting in an empty rectangle. */
-#define ERR_RECT_HEIGHT_INVALID           602  /**< The height parameter is 0 or negative, resulting in an empty rectangle. */
-#define ERR_OBJ_OUT_OF_BOUNDS			  603  /**< Part of the object is out of bounds*/
-#define ERR_COLOR_INVALID            	  604  /**< An unknown color value has been assigned to the function. (e.g. color > 255 for 8-bit) */
-#define ERR_WEIGHT_INVALID           	  605  /**< Weight is below 0, which is not possible for line thickness. */
-#define ERR_BITMAP_INVALID				  606  /**< Requested bitmap does not exist*/
-#define ERR_CIR_RADIUS_INVALID			  607  /**< Requested radius is 0 or negative*/
+#define ERR_RECT_WIDTH_INVALID            600  /**< The width parameter is 0 or negative, resulting in an empty rectangle. */
+#define ERR_RECT_HEIGHT_INVALID           601  /**< The height parameter is 0 or negative, resulting in an empty rectangle. */
+#define ERR_OBJ_OUT_OF_BOUNDS			  602  /**< Part of the object is out of bounds*/
+#define ERR_COLOR_INVALID            	  603  /**< An unknown color value has been assigned to the function. (e.g. color > 255 for 8-bit) */
+#define ERR_WEIGHT_INVALID           	  604  /**< Weight is below 0, which is not possible for line thickness. */
+#define ERR_BITMAP_INVALID				  605  /**< Requested bitmap does not exist*/
+#define ERR_CIR_RADIUS_INVALID			  606  /**< Requested radius is 0 or negative*/
 
 
 

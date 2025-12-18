@@ -16,11 +16,11 @@
 #include <stdbool.h>
 
 // Define error codes
-#define ERROR_UNSUPPORTED_COMMAND 300
-#define ERROR_INVALID_PARAM_INPUT 301
-#define ERROR_X_OUT_OF_BOUND 302
-#define ERROR_Y_OUT_OF_BOUND 303
-
+#define ERR_UNSUPPORTED_COMMAND 300
+#define ERR_INVALID_PARAM_INPUT 301
+#define ERR_X_OUT_OF_BOUND 302
+#define ERR_Y_OUT_OF_BOUND 303
+#define ERR_INVALID_COLOR_INPUT 304
 
 /**
  * @brief Receives the command string from the CmdForwarder, extracts the required function and parameters and calls the corresponding API function.
