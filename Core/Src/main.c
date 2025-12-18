@@ -53,7 +53,6 @@ int main(void)
 			  {
 				  char error_msg[12];
 				  sprintf(error_msg, "%d", error);
-
 				  usart2_send_string("ERROR: ");
 				  usart2_send_string(error_msg);
 				  usart2_send_string("\r\n");

@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include "stm32_ub_vga_screen.h"
 #include "Bitmaps.h"
+#include "fonts.h"
 /**
  * @brief Draws a filled circle on the VGA display.
  *
@@ -273,6 +274,106 @@ int API_draw_bitmap(int x_lup, int y_lup, int bitnr)
         {
             uint16_t color = pixels[y * width + x];
             UB_VGA_SetPixel(x+x_lup, y+y_lup, color); /**< Color current pixel. */
+        }
+    }
+}
+
+/**
+ * @brief Draws a string of text on the VGA display with selectable fonts.
+ *
+ * This function iterates through a string and draws each character using a
+ * specific font array. It supports dynamic font switching and size scaling.
+ *
+ * @param x_lup     The x-coordinate of the upper-left pixel where text starts.
+ * @param y_lup     The y-coordinate of the upper-left pixel where text starts.
+ * @param color     8-bit color value used to draw the text.
+ * @param text      Pointer to the string of characters to be drawn.
+ * @param fontname  String representing the font name ("ComicSans" or "Consolas").
+ * @param fontsize  Multiplier for the font size (1 = original, 2 = double, etc.).
+ * @param fontstyle Reserved variable for future styles (bold/italic).
+ *
+ * @return 0 on success, or an error code if invalid parameters are passed.
+ */
+int API_draw_text(int x_lup, int y_lup, int color, char *text, char *fontname, int fontsize, int fontstyle)
+{
+    int current_x = x_lup;
+
+    // Default to Comic Sans if we don't know the name
+    const unsigned short *font_base = ComicSans;
+    int step_size = 17;
+
+    // Check which font the user wants
+    if (strcmp(fontname, "Consolas") == 0)
+    {
+        font_base = Consolas;
+        step_size = 13; // Counted from your array (1 width + 12 data bytes)
+    }
+    else if (strcmp(fontname, "ComicSans") == 0)
+    {
+        font_base = ComicSans;
+        step_size = 17;
+    }
+
+    while (*text != '\0')
+    {
+        uint8_t ascii_idx = (uint8_t)(*text - 32);
+
+        // USE THE VARIABLE STEP SIZE HERE!
+        const unsigned short *char_ptr = &font_base[ascii_idx * step_size];
+
+        uint8_t char_width = (uint8_t)char_ptr[0];
+
+        // Safety clamp
+        if (char_width == 0 || char_width > 16) char_width = 8;
+
+        _draw_glcd_char(current_x, y_lup, char_ptr, color, fontsize);
+
+        current_x += (char_width + 1) * fontsize;
+
+        if (current_x > VGA_DISPLAY_X) break;
+
+        text++;
+    }
+    return 0;
+}
+
+/**
+ * @brief Internal helper function to draw a single GLCD character.
+ *
+ * This function decodes the vertical-column format of MikroE GLCD fonts
+ * and renders the pixels to the screen.
+ *
+ * @param x         X-coordinate for the character.
+ * @param y         Y-coordinate for the character.
+ * @param data      Pointer to the character's data in the font array.
+ * @param color     Color of the pixels.
+ * @param fontsize  Scaling factor.
+ */
+void _draw_glcd_char(int x, int y, const unsigned short *data, int color, int fontsize)
+{
+    uint8_t width = (uint8_t)data[0];
+
+    for (int col = 0; col < width; col++)
+    {
+        // 1. Get the 16-bit vertical column (ignoring the padding)
+        // We combine the two shorts if the font is > 8 pixels high
+        unsigned int column_bits = data[(col * 2) + 1] | (data[(col * 2) + 2] << 8);
+
+        for (int row = 0; row < 9; row++)
+        {
+            // 2. Check each bit in the column
+            if (column_bits & (1 << row))
+            {
+                // 3. DRAWING LOGIC:
+                // If this still gives horizontal lines, swap (x + col) and (y + row)
+                if (fontsize <= 1) {
+                    UB_VGA_SetPixel(x + col, y + row, color);
+                } else {
+                    for(int i=0; i<fontsize; i++)
+                        for(int j=0; j<fontsize; j++)
+                            UB_VGA_SetPixel(x + (col*fontsize) + i, y + (row*fontsize) + j, color);
+                }
+            }
         }
     }
 }

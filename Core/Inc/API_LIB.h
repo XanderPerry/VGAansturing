@@ -13,6 +13,7 @@
 #define INC_API_LIB_H_
 
 #include <stdint.h>
+#include <string.h> // Required for strcmp
 
 // API_draw_rectangle error codes
 #define ERR_RECT_WIDTH_INVALID            601  /**< The width parameter is 0 or negative, resulting in an empty rectangle. */
@@ -141,6 +142,20 @@ int API_draw_figure(int x_1, int y_1, int x_2, int y_2, int x_3, int y_3, int x_
  *
  * @return			Smaller of the two numbers.
  */
+
+int API_draw_text(int x_lup, int y_lup, int color, char *text, char *fontname, int fontsize, int fontstyle);
+/**
+ * @brief Draws a string of text on the VGA display.
+ * * @param x_lup     Upper-left X-coordinate for the start of the text.
+ * @param y_lup     Upper-left Y-coordinate for the start of the text.
+ * @param color     Color of the text pixels.
+ * @param text      Pointer to the string of characters to be drawn.
+ * @param fontname  Name of the font (e.g., "Arial", "Consolas").
+ * @param fontsize  Size of the font (1 for small, 2 for large/doubled).
+ * @param fontstyle Style of the font (0 for normal, 1 for bold/italic).
+ * * @return 0 on success, or an error code if the text wanders off the screen.
+ */
+
 int _Min(int a, int b);
 
 /**
