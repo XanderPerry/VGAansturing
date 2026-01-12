@@ -76,6 +76,7 @@ int API_draw_circle(int x0, int y0, int radius, int color, int reserved)
             decisionOver2 += 2 * (y - x) + 1;
         }
     }
+    return 0;
 }
 
 /**
@@ -142,6 +143,7 @@ int API_draw_line(int x_1, int y_1, int x_2, int y_2,
             y_1 += sy;
         }
     }
+    return 0;
 }
 
 /**
@@ -276,6 +278,7 @@ int API_draw_bitmap(int x_lup, int y_lup, int bitnr)
             UB_VGA_SetPixel(x+x_lup, y+y_lup, color); /**< Color current pixel. */
         }
     }
+    return 0;
 }
 
 /**
@@ -447,6 +450,7 @@ int API_draw_figure(int x_1, int y_1, int x_2, int y_2, int x_3, int y_3, int x_
 			}
 		}
 	}
+	return 0;
 }
 
 /**
