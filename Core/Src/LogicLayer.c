@@ -278,6 +278,59 @@ int CmdToFunc (char *cmd)
 		}
 	}
 
+	else if (strcmp(token, "tekst") == 0)
+	{
+		// Fill input_buffer[] with command parameters
+		char i = 0;
+		char * ptr = strtok (NULL, delimiter);
+		while(ptr != NULL)
+		{
+			input_buffer[i++] = ptr;
+			ptr = strtok (NULL, delimiter);
+		}
+
+		// 1. Get X Coordinate
+		uint16_t x = atoi (input_buffer[0]);
+		if (XOutOfBound(x)) return ERR_X_OUT_OF_BOUND;
+
+		// 2. Get Y Coordinate
+		uint16_t y = atoi (input_buffer[1]);
+		if (YOutOfBound(y)) return ERR_Y_OUT_OF_BOUND;
+
+		// 3. Get Color
+		uint8_t color = StrToCol (input_buffer[2]);
+		if (color==1) return ERR_INVALID_COLOR_INPUT;
+
+		// 4. Get Text String
+		char *text_string = input_buffer[3];
+		// Basic safety check to ensure text exists
+		if (text_string == 0) return ERR_INVALID_PARAM_INPUT; // Ensure this error is defined, or return a generic error
+
+		// 5. Get Font Name
+		char *font_name = input_buffer[4];
+
+		// 6. Get Font Size (Optional, default to 1)
+		uint16_t fontsize = 1;
+		if (input_buffer[5])
+		{
+			fontsize = atoi (input_buffer[5]);
+		}
+
+		// 7. Get Font Style (Optional, default to 1 for Normal)
+		// 1 = Normal, 2 = Bold, 3 = Italic
+		uint16_t fontstyle = 1;
+		if (input_buffer[6])
+		{
+			fontstyle = atoi (input_buffer[6]);
+		}
+
+		// Call the API function
+		int ErrorCode = API_draw_text(x, y, color, text_string, font_name, fontsize, fontstyle);
+		if (ErrorCode)
+		{
+			return ErrorCode;
+		}
+	}
 	else
 	{
 		// Return error for unsupported command.

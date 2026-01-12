@@ -302,8 +302,8 @@ int API_draw_text(int x_lup, int y_lup, int color, char *text, char *fontname, i
     int current_x = x_lup;
 
     // Default to Comic Sans if we don't know the name
-    const unsigned short *font_base = ComicSans;
-    int step_size = 17;
+    const unsigned short *font_base = NULL;
+    int step_size = 0;
 
     // Check which font the user wants
     if (strcmp(fontname, "Consolas") == 0)
@@ -317,25 +317,38 @@ int API_draw_text(int x_lup, int y_lup, int color, char *text, char *fontname, i
         step_size = 17;
     }
 
+    else if (strcmp(fontname, "Arial") == 0)
+    {
+    	font_base = Arial;
+    	step_size = 21;
+    }
+
+    else
+    {
+    	return ERR_FONT_INVALID; // No font has been found with that name
+    }
     while (*text != '\0')
     {
-        uint8_t ascii_idx = (uint8_t)(*text - 32);
+    	uint8_t ascii_idx = (uint8_t)(*text - 32);
+		const unsigned short *char_ptr = &font_base[ascii_idx * step_size];
 
-        // USE THE VARIABLE STEP SIZE HERE!
-        const unsigned short *char_ptr = &font_base[ascii_idx * step_size];
+		uint8_t char_width = (uint8_t)char_ptr[0];
 
-        uint8_t char_width = (uint8_t)char_ptr[0];
+		// Safety clamp
+		if (char_width == 0 || char_width > 16) char_width = 8;
 
-        // Safety clamp
-        if (char_width == 0 || char_width > 16) char_width = 8;
+		// Pass fontstyle to the helper
+		_draw_glcd_char(current_x, y_lup, char_ptr, color, fontsize, fontstyle);
 
-        _draw_glcd_char(current_x, y_lup, char_ptr, color, fontsize);
+		// Advance cursor
+		// If BOLD (2), we add 1 extra pixel of spacing so the thickened letters don't touch
+		int bold_padding = (fontstyle == 2) ? 1 : 0;
 
-        current_x += (char_width + 1) * fontsize;
+		current_x += (char_width + 1 + bold_padding) * fontsize;
 
-        if (current_x > VGA_DISPLAY_X) break;
+		if (current_x > VGA_DISPLAY_X) break;
 
-        text++;
+		text++;
     }
     return 0;
 }
@@ -351,30 +364,52 @@ int API_draw_text(int x_lup, int y_lup, int color, char *text, char *fontname, i
  * @param data      Pointer to the character's data in the font array.
  * @param color     Color of the pixels.
  * @param fontsize  Scaling factor.
+ * @param fontstlye What style the text should be in (1=normal, 2=bold, 3=italic)
  */
-void _draw_glcd_char(int x, int y, const unsigned short *data, int color, int fontsize)
+void _draw_glcd_char(int x, int y, const unsigned short *data, int color, int fontsize, int fontstyle)
 {
     uint8_t width = (uint8_t)data[0];
 
     for (int col = 0; col < width; col++)
     {
-        // 1. Get the 16-bit vertical column (ignoring the padding)
-        // We combine the two shorts if the font is > 8 pixels high
+        // Combine 2 bytes to get the full column of pixels (up to 16px high)
         unsigned int column_bits = data[(col * 2) + 1] | (data[(col * 2) + 2] << 8);
 
-        for (int row = 0; row < 9; row++)
+        // Loop increased to 12 to ensure 10px high fonts (Arial) are fully drawn
+        for (int row = 0; row < 12; row++)
         {
-            // 2. Check each bit in the column
             if (column_bits & (1 << row))
             {
-                // 3. DRAWING LOGIC:
-                // If this still gives horizontal lines, swap (x + col) and (y + row)
-                if (fontsize <= 1) {
-                    UB_VGA_SetPixel(x + col, y + row, color);
-                } else {
-                    for(int i=0; i<fontsize; i++)
-                        for(int j=0; j<fontsize; j++)
-                            UB_VGA_SetPixel(x + (col*fontsize) + i, y + (row*fontsize) + j, color);
+                // --- Italic Logic ---
+                // Shift top rows right. (10-row) makes top shift more than bottom.
+                // Divide by 2 or 3 to control the angle.
+                int italic_shift = 0;
+                if (fontstyle == 3) {
+                    italic_shift = (10 - row) / 3;
+                    if (italic_shift < 0) italic_shift = 0;
+                }
+
+                // Calculate the actual screen coordinates
+                // We apply the italic shift to the column index
+                int px = x + ((col + italic_shift) * fontsize);
+                int py = y + (row * fontsize);
+
+                // --- Drawing Logic (Scaled) ---
+                if (fontsize == 1)
+                {
+                    UB_VGA_SetPixel(px, py, color);
+                    // Bold: Draw pixel again 1 to the right
+                    if (fontstyle == 2) UB_VGA_SetPixel(px + 1, py, color);
+                }
+                else
+                {
+                    for(int i = 0; i < fontsize; i++) {
+                        for(int j = 0; j < fontsize; j++) {
+                            UB_VGA_SetPixel(px + i, py + j, color);
+                            // Bold: Draw pixel again 1 to the right
+                            if (fontstyle == 2) UB_VGA_SetPixel(px + i + 1, py + j, color);
+                        }
+                    }
                 }
             }
         }

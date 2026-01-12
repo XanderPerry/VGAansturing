@@ -23,6 +23,8 @@
 #define ERR_WEIGHT_INVALID           	  604  /**< Weight is below 0, which is not possible for line thickness. */
 #define ERR_BITMAP_INVALID				  605  /**< Requested bitmap does not exist*/
 #define ERR_CIR_RADIUS_INVALID			  606  /**< Requested radius is 0 or negative*/
+#define ERR_FONT_INVALID				  613  /**< Requested font does not exist. */
+
 
 
 

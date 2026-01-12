@@ -42,21 +42,15 @@ int main(void)
 		  // Read the data from the UART buffer and reset the flag
 		  if (usart2_read_line(command_buffer, sizeof(command_buffer)))
 		  {
-			  // Echo received message for debugging
-			  usart2_send_string("Received: ");
-			  usart2_send_string(command_buffer); // Echoes back the line, including the LF
 			  // Process error message
 			  int error = CmdToFunc(command_buffer);
 
-			  // Reply error message if applicable
-			  if(error)
-			  {
-				  char error_msg[12];
-				  sprintf(error_msg, "%d", error);
-				  usart2_send_string("ERROR: ");
-				  usart2_send_string(error_msg);
-				  usart2_send_string("\r\n");
-			  }
+			  // Reply error message
+			  char error_msg[12];
+			  sprintf(error_msg, "%d", error);
+			  usart2_send_string("ERROR: ");
+			  usart2_send_string(error_msg);
+			  usart2_send_string("\r\n");
 
 		  }
 	  }
