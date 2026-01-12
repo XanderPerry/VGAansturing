@@ -297,27 +297,28 @@ int API_draw_bitmap(int x_lup, int y_lup, int bitnr)
  *
  * @return 0 on success, or an error code if invalid parameters are passed.
  */
-int API_draw_text(int x_lup, int y_lup, int color, char *text, char *fontname, int fontsize, int fontstyle)
+int API_draw_text(int x_lup, int y_lup, int color, char *text, char *fontname, int fontsize, char *fontstyle)
 {
     int current_x = x_lup;
+    int style = 1; // Normaal default
 
     // Default to Comic Sans if we don't know the name
     const unsigned short *font_base = NULL;
     int step_size = 0;
 
     // Check which font the user wants
-    if (strcmp(fontname, "Consolas") == 0)
+    if (strcmp(fontname, "consolas") == 0)
     {
         font_base = Consolas;
         step_size = 13; // Counted from your array (1 width + 12 data bytes)
     }
-    else if (strcmp(fontname, "ComicSans") == 0)
+    else if (strcmp(fontname, "comicsans") == 0)
     {
         font_base = ComicSans;
         step_size = 17;
     }
 
-    else if (strcmp(fontname, "Arial") == 0)
+    else if (strcmp(fontname, "arial") == 0)
     {
     	font_base = Arial;
     	step_size = 21;
@@ -327,6 +328,21 @@ int API_draw_text(int x_lup, int y_lup, int color, char *text, char *fontname, i
     {
     	return ERR_FONT_INVALID; // No font has been found with that name
     }
+
+
+    if (strcmp(fontstyle, "normaal") == 0)
+    {
+    	style = 1;
+    }
+    else if (strcmp(fontstyle, "vet") == 0)
+    {
+    	style = 2;
+    }
+    else if (strcmp(fontstyle, "cursief") == 0)
+    {
+    	style = 3;
+    }
+
     while (*text != '\0')
     {
     	uint8_t ascii_idx = (uint8_t)(*text - 32);
@@ -335,18 +351,18 @@ int API_draw_text(int x_lup, int y_lup, int color, char *text, char *fontname, i
 		uint8_t char_width = (uint8_t)char_ptr[0];
 
 		// Safety clamp
-		if (char_width == 0 || char_width > 16) char_width = 8;
+//		if (char_width == 0 || char_width > 16) char_width = 8;
 
 		// Pass fontstyle to the helper
-		_draw_glcd_char(current_x, y_lup, char_ptr, color, fontsize, fontstyle);
+		_draw_glcd_char(current_x, y_lup, char_ptr, color, fontsize, style);
 
 		// Advance cursor
 		// If BOLD (2), we add 1 extra pixel of spacing so the thickened letters don't touch
-		int bold_padding = (fontstyle == 2) ? 1 : 0;
+		int bold_padding = (style == 2) ? 1 : 0;
 
 		current_x += (char_width + 1 + bold_padding) * fontsize;
 
-		if (current_x > VGA_DISPLAY_X) break;
+//		if (current_x > VGA_DISPLAY_X) return 303;
 
 		text++;
     }

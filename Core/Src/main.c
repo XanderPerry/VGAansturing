@@ -18,7 +18,8 @@
 #include "uart.h"
 #include "LogicLayer.h"
 
-#define CMD_BUFF_SIZE 64
+#define CMD_BUFF_SIZE 512
+
 
 int main(void)
 {
@@ -28,7 +29,7 @@ int main(void)
 
 	usart2_enable_rx_interrupt(); // Enable UART the interrupt
 
-	char command_buffer[CMD_BUFF_SIZE]; // Create buffer for UART reception
+	char command_buffer[CMD_BUFF_SIZE] = {0}; // Create buffer for UART reception
 
 	UB_VGA_Screen_Init(); // Init VGA-Screen
 

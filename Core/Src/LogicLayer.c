@@ -318,11 +318,7 @@ int CmdToFunc (char *cmd)
 
 		// 7. Get Font Style (Optional, default to 1 for Normal)
 		// 1 = Normal, 2 = Bold, 3 = Italic
-		uint16_t fontstyle = 1;
-		if (input_buffer[6])
-		{
-			fontstyle = atoi (input_buffer[6]);
-		}
+		char *fontstyle = input_buffer[6];
 
 		// Call the API function
 		int ErrorCode = API_draw_text(x, y, color, text_string, font_name, fontsize, fontstyle);
