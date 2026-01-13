@@ -2,8 +2,19 @@
 
 \tableofcontents
 
+\section dev_sec Developers
+This project has been made by **Team 7** consisting of the following members: \n
+| Naam | Student nr | Geboortedatum |
+| :--- | :--- | :--- |
+| **Daniël Wit Ariza** | 1851291 | 1 Nov 2003 | 
+| **Tom Veldkamp** | 1837149 | 30 Sep 2004 | 
+| **Xander Perry** | 1835601 | 3 Jun 2003 | 
+
+
+This project has been finished on 13/01/2026
+
 \section intro_sec Introduction
-Welcome to the VGA Display Terminal documentation. This project utilizes an **STM32F4** to drive a VGA screen.
+Welcome to the VGA Display Terminal documentation. This project utilizes an **STM32F407GTx** to drive a VGA screen.
 The system operates as a serial terminal: it receives ASCII string commands via UART2 and renders graphics accordingly.
 
 \section arch_sec Architecture

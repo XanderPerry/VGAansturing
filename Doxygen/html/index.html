@@ -91,6 +91,9 @@ $(function(){ initResizable(false); });
 <div class="toc"><h3>Table of Contents</h3>
 <ul>
   <li class="level1">
+    <a href="#dev_sec">Developers</a>
+  </li>
+  <li class="level1">
     <a href="#intro_sec">Introduction</a>
   </li>
   <li class="level1">
@@ -126,9 +129,23 @@ $(function(){ initResizable(false); });
   </li>
 </ul>
 </div>
-<div class="textblock"><h1><a class="anchor" id="intro_sec"></a>
+<div class="textblock"><h1><a class="anchor" id="dev_sec"></a>
+Developers</h1>
+<p>This project has been made by <b>Team 7</b> consisting of the following members: <br  />
+</p><table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadLeft">Naam   </th><th class="markdownTableHeadLeft">Student nr   </th><th class="markdownTableHeadLeft">Geboortedatum    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyLeft"><b>Daniël Wit Ariza</b>   </td><td class="markdownTableBodyLeft">1851291   </td><td class="markdownTableBodyLeft">1 Nov 2003    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyLeft"><b>Tom Veldkamp</b>   </td><td class="markdownTableBodyLeft">1837149   </td><td class="markdownTableBodyLeft">30 Sep 2004    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyLeft"><b>Xander Perry</b>   </td><td class="markdownTableBodyLeft">1835601   </td><td class="markdownTableBodyLeft">3 Jun 2003   </td></tr>
+</table>
+<p>This project has been finished on 13/01/2026</p>
+<h1><a class="anchor" id="intro_sec"></a>
 Introduction</h1>
-<p>Welcome to the VGA Display Terminal documentation. This project utilizes an <b>STM32F4</b> to drive a VGA screen. The system operates as a serial terminal: it receives ASCII string commands via UART2 and renders graphics accordingly.</p>
+<p>Welcome to the VGA Display Terminal documentation. This project utilizes an <b>STM32F407GTx</b> to drive a VGA screen. The system operates as a serial terminal: it receives ASCII string commands via UART2 and renders graphics accordingly.</p>
 <h1><a class="anchor" id="arch_sec"></a>
 Architecture</h1>
 <p>The software is divided into three distinct layers:</p>
@@ -137,11 +154,8 @@ Architecture</h1>
 <li><b>Logic Layer</b>: Mathematical implementations of drawing algorithms (Bresenham lines, Midpoint circles).</li>
 <li><b>I/O Layer</b>: Hardware interface for UART interrupts and VGA pixel pushing.</li>
 </ol>
-<div class="image">
-<img src="architecture.jpeg" alt=""/>
-<div class="caption">
-Software Architecture Diagram</div></div>
-    <h1><a class="anchor" id="usage_sec"></a>
+<p><img src="architecture.jpeg" alt="Software Architecture Diagram" class="inline"/></p>
+<h1><a class="anchor" id="usage_sec"></a>
 Hardware &amp; Software Setup</h1>
 <p>To use the VGA Display Terminal, you need to set up the motherboard connections and configure a serial terminal on your PC.</p>
 <h2><a class="anchor" id="hw_req"></a>

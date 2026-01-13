@@ -32,19 +32,7 @@
 #define __CORE_CM4_H_GENERIC
 
 
-/** \mainpage CMSIS Cortex-M4
 
-  This documentation describes the CMSIS Cortex-M Core Peripheral Access Layer.
-  It consists of:
-
-     - Cortex-M Core Register Definitions
-     - Cortex-M functions
-     - Cortex-M instructions
-     - Cortex-M SIMD instructions
-
-  The CMSIS Cortex-M4 Core Peripheral Access Layer contains C and assembly functions that ease
-  access to the Cortex-M Core
- */
 
 /** \defgroup CMSIS_MISRA_Exceptions  CMSIS MISRA-C:2004 Compliance Exceptions
   CMSIS violates following MISRA-C2004 Rules:
