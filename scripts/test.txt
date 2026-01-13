@@ -1,0 +1,1 @@
+tekst,10,50,blauw,Beep boop ik ben een robot, consolas, 2, normaal
