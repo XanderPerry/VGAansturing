@@ -36,23 +36,18 @@ command to run if program contains helper info
 
 ## Authors
 
-Contributors names and contact info
-
-ex. Dominique Pizzie  
-ex. [@DomPizzie](https://twitter.com/dompizzie)
+Xander Perry
+Daniël Wit-Ariza
+Tom Veldkamp
 
 ## Version History
 
-* 0.2
-    * Various bug fixes and optimizations
-    * See [commit change]() or See [release history]()
-* 0.1
-    * Initial Release
+1.0
 
 ## License
 
-This project is licensed under the [NAME HERE] License - see the LICENSE.md file for details
+This project is licensed under the Hogeschool Utrecht License
 
 ## Acknowledgments
 
-Inspiration, code snippets, etc.
+Dominique Pizzie for the README template
