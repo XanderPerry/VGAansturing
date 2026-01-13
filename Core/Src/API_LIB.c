@@ -287,87 +287,102 @@ int API_draw_bitmap(int x_lup, int y_lup, int bitnr)
  * This function iterates through a string and draws each character using a
  * specific font array. It supports dynamic font switching and size scaling.
  *
- * @param x_lup     The x-coordinate of the upper-left pixel where text starts.
- * @param y_lup     The y-coordinate of the upper-left pixel where text starts.
- * @param color     8-bit color value used to draw the text.
- * @param text      Pointer to the string of characters to be drawn.
- * @param fontname  String representing the font name ("ComicSans" or "Consolas").
- * @param fontsize  Multiplier for the font size (1 = original, 2 = double, etc.).
- * @param fontstyle Reserved variable for future styles (bold/italic).
+ * @param x_lup     		The x-coordinate of the upper-left pixel where text starts.
+ * @param y_lup    			The y-coordinate of the upper-left pixel where text starts.
+ * @param color     		8-bit color value used to draw the text.
+ * @param text     		 	Pointer to the string of characters to be drawn.
+*  @param fontname 			String representing the font name ("ComicSans" or "Consolas").
+ * @param fontsize  		Multiplier for the font size (1 = original, 2 = double, etc.).
+ * @param fontstyle 		Variable for styles (bold/italic).
  *
  * @return 0 on success, or an error code if invalid parameters are passed.
  */
-int API_draw_text(int x_lup, int y_lup, int color, char *text, char *fontname, int fontsize, char *fontstyle)
+int API_draw_text(int x_lup, int y_lup, int color, char *text,
+                  char *fontname, int fontsize, char *fontstyle)
 {
     int current_x = x_lup;
-    int style = 1; // Normaal default
+    int current_y = y_lup;
+    int style = 1; // normaal
+    char font_size_average = 8;//not representative of actual font size
 
-    // Default to Comic Sans if we don't know the name
     const unsigned short *font_base = NULL;
     int step_size = 0;
 
-    // Check which font the user wants
-    if (strcmp(fontname, "consolas") == 0)
+    if (strcmp(fontname, "consolas") == 0||strcmp(fontname, " consolas")==0)
     {
         font_base = Consolas;
-        step_size = 13; // Counted from your array (1 width + 12 data bytes)
+        step_size = 13;
     }
-    else if (strcmp(fontname, "comicsans") == 0)
+    else if (strcmp(fontname, "comicsans") == 0||strcmp(fontname, " comicsans") == 0)
     {
         font_base = ComicSans;
         step_size = 17;
     }
-
-    else if (strcmp(fontname, "arial") == 0)
+    else if (strcmp(fontname, "arial") == 0||strcmp(fontname, " arial") == 0)
     {
-    	font_base = Arial;
-    	step_size = 21;
+        font_base = Arial;
+        step_size = 21;
     }
-
     else
     {
-    	return ERR_FONT_INVALID; // No font has been found with that name
+        return ERR_FONT_INVALID;
     }
 
+    if (strcmp(fontstyle, "vet") == 0||strcmp(fontstyle, " vet")==0)       style = 2;
+    else if (strcmp(fontstyle, "cursief") == 0||strcmp(fontstyle, " cursief")==0) style = 3;
 
-    if (strcmp(fontstyle, "normaal") == 0)
-    {
-    	style = 1;
-    }
-    else if (strcmp(fontstyle, "vet") == 0)
-    {
-    	style = 2;
-    }
-    else if (strcmp(fontstyle, "cursief") == 0)
-    {
-    	style = 3;
-    }
+
 
     while (*text != '\0')
     {
-    	uint8_t ascii_idx = (uint8_t)(*text - 32);
-		const unsigned short *char_ptr = &font_base[ascii_idx * step_size];
+        /**
+         * Word-wrap check:
+         * If we are at the start of a word, measure the full word width
+         * before drawing it. If it does not fit on the current line,
+         * move the cursor to the next line.
+         */
+        if (*text != ' ' && (text == (char *)text || *(text - 1) == ' '))
+        {
+            int word_width = 0;
+            char *peek = text;
+            int bold_padding = (style == 2) ? 1 : 0;
 
-		uint8_t char_width = (uint8_t)char_ptr[0];
+            /* Measure pixel width of the word */
+            while (*peek && *peek != ' ')
+            {
+                uint8_t idx = (uint8_t)(*peek - 32);
+                const unsigned short *ptr = &font_base[idx * step_size];
+                word_width += (ptr[0] + 1 + bold_padding) * fontsize;
+                peek++;
+            }
+            /*move to next line if does not fit*/
+            if (current_x + word_width > 320)
+            {
+                current_x = x_lup;
+                current_y += (step_size*fontsize/2) + 2;
 
-		// Safety clamp
-//		if (char_width == 0 || char_width > 16) char_width = 8;
+                if (current_y + (step_size) > 240)
+                    return ERR_OBJ_OUT_OF_BOUNDS;
+            }
+        }
 
-		// Pass fontstyle to the helper
-		_draw_glcd_char(current_x, y_lup, char_ptr, color, fontsize, style);
+        /* ---- Draw character ---- */
+        uint8_t ascii_idx = (uint8_t)(*text - 32);
+        const unsigned short *char_ptr = &font_base[ascii_idx * step_size];
+        uint8_t char_width = (uint8_t)char_ptr[0];
 
-		// Advance cursor
-		// If BOLD (2), we add 1 extra pixel of spacing so the thickened letters don't touch
-		int bold_padding = (style == 2) ? 1 : 0;
+        int bold_padding = (style == 2) ? 1 : 0;
+        int char_pixel_width = (char_width + 1 + bold_padding) * fontsize;
 
-		current_x += (char_width + 1 + bold_padding) * fontsize;
+        _draw_glcd_char(current_x, current_y, char_ptr, color, fontsize, style);
 
-//		if (current_x > VGA_DISPLAY_X) return 303;
-
-		text++;
+        current_x += char_pixel_width;
+        text++;
     }
+
     return 0;
 }
+
 
 /**
  * @brief Internal helper function to draw a single GLCD character.
