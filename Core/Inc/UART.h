@@ -5,7 +5,7 @@
 #include <stdbool.h>
 
 // --- Configuration ---
-#define UART_RX_BUFFER_SIZE 64 // Define the size of the circular buffer
+#define UART_RX_BUFFER_SIZE 512 // Define the size of the circular buffer
 
 // --- Global Variables (Extern Declarations) ---
 

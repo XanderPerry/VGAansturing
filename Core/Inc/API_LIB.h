@@ -23,6 +23,8 @@
 #define ERR_WEIGHT_INVALID           	  604  /**< Weight is below 0, which is not possible for line thickness. */
 #define ERR_BITMAP_INVALID				  605  /**< Requested bitmap does not exist*/
 #define ERR_CIR_RADIUS_INVALID			  606  /**< Requested radius is 0 or negative*/
+#define ERR_FONT_INVALID				  613  /**< Requested font does not exist. */
+
 
 
 
@@ -143,7 +145,7 @@ int API_draw_figure(int x_1, int y_1, int x_2, int y_2, int x_3, int y_3, int x_
  * @return			Smaller of the two numbers.
  */
 
-int API_draw_text(int x_lup, int y_lup, int color, char *text, char *fontname, int fontsize, int fontstyle);
+int API_draw_text(int x_lup, int y_lup, int color, char *text, char *fontname, int fontsize, char *fontstyle);
 /**
  * @brief Draws a string of text on the VGA display.
  * * @param x_lup     Upper-left X-coordinate for the start of the text.
