@@ -5,34 +5,31 @@
 
 This project contains the software to manage a VGA screen using an STM32F407G-disc microcontroller via UART.
 
-## Getting Started
-
-To use this project 
-
 ### Dependencies
 
-* Describe any prerequisites, libraries, OS version, etc., needed before installing program.
-* ex. Windows 10
+• STMCubeIDE version 1.19 or above
 
 ### Installing
 
-* How/where to download your program
-* Any modifications needed to be made to files/folders
+To install, download the .zip file from the latest master branch and import the extracted folder as project into your STMCubeIDE.
+Flash your program to desired microcontroller and connect said controller to a VGA screen and a UART interpreter (e.g. Termite)
 
 ### Executing program
 
-* How to run the program
-* Step-by-step bullets
-```
-code blocks for commands
-```
+Send any commands as listed below:
+(See doxygen documentation for specifics per command)
+• lijn, x, y, x’, y’, kleur, dikte
+• rechthoek, x_lup, y_lup, breedte, hoogte, kleur, gevuld (1,0)
+• tekst, x, y, kleur, tekst, fontnaam (arial, consolas), fontgrootte (1,2), fontstijl (normaal, vet, cursief)
+• bitmap, nr, x-lup, y-lup 
+• clearscherm, kleur
+• cirkel, x, y, radius, kleur
+• figuur, x1,y1, x2,y2, x3,y3, x4,y4, x5,y5, kleur
+
 
 ## Help
 
-Any advise for common problems or issues.
-```
-command to run if program contains helper info
-```
+See doxygen documentation for a list of error types 
 
 ## Authors
 
