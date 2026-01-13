@@ -348,18 +348,32 @@ uint8_t StrToCol (char *str)
 		return VGA_COL_BLACK;
 	else if (strcmp(str, "blauw") == 0)
 		return VGA_COL_BLUE;
+	else if (strcmp(str, "lichtblauw") == 0)
+		return VGA_COL_LIGHT_BLUE;
 	else if (strcmp(str, "groen") == 0)
 		return VGA_COL_GREEN;
+	else if (strcmp(str, "lichtgroen") == 0)
+		return VGA_COL_LIGHT_GREEN;
 	else if (strcmp(str, "rood") == 0)
 		return VGA_COL_RED;
+	else if (strcmp(str, "lichtrood") == 0)
+		return VGA_COL_LIGHT_RED;
 	else if (strcmp(str, "wit") == 0)
 		return VGA_COL_WHITE;
-	else if (strcmp(str, "lichtcyaan") == 0)
+	else if (strcmp(str, "cyaan") == 0)
 		return VGA_COL_CYAN;
+	else if (strcmp(str, "lichtcyaan") == 0)
+		return VGA_COL_LIGHT_CYAN;
 	else if (strcmp(str, "magenta") == 0)
 		return VGA_COL_MAGENTA;
+	else if (strcmp(str, "lichtmagenta") == 0)
+		return VGA_COL_LIGHT_MAGENTA;
 	else if (strcmp(str, "geel") == 0)
 		return VGA_COL_YELLOW;
+	else if (strcmp(str, "bruin") == 0)
+		return VGA_COL_BROWN;
+	else if (strcmp(str, "grijs") == 0)
+		return VGA_COL_GRAY;
 
 	// Return 1 if color not found.
 	else
