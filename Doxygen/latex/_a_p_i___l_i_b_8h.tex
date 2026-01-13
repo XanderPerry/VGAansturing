@@ -1,0 +1,652 @@
+\doxysection{Core/\+Inc/\+API\+\_\+\+LIB.h File Reference}
+\hypertarget{_a_p_i___l_i_b_8h}{}\label{_a_p_i___l_i_b_8h}\index{Core/Inc/API\_LIB.h@{Core/Inc/API\_LIB.h}}
+
+
+API library header file.  
+
+
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{_a_p_i___l_i_b_8h_a0f8602b05bfd73a0ac2f8f8bfeb8eb08}{ERR\+\_\+\+RECT\+\_\+\+WIDTH\+\_\+\+INVALID}}~600
+\item 
+\#define \mbox{\hyperlink{_a_p_i___l_i_b_8h_af40a67289a379d8427d8b7f6666f7c03}{ERR\+\_\+\+RECT\+\_\+\+HEIGHT\+\_\+\+INVALID}}~601
+\item 
+\#define \mbox{\hyperlink{_a_p_i___l_i_b_8h_a349dc88885b43e554d37465fc4d1c548}{ERR\+\_\+\+OBJ\+\_\+\+OUT\+\_\+\+OF\+\_\+\+BOUNDS}}~602
+\item 
+\#define \mbox{\hyperlink{_a_p_i___l_i_b_8h_a48fd98f10f19d69e99c844c37669ca09}{ERR\+\_\+\+COLOR\+\_\+\+INVALID}}~603
+\item 
+\#define \mbox{\hyperlink{_a_p_i___l_i_b_8h_a92372915c2803f97b29d78ea18c82ae9}{ERR\+\_\+\+WEIGHT\+\_\+\+INVALID}}~604
+\item 
+\#define \mbox{\hyperlink{_a_p_i___l_i_b_8h_a1900043b50ee410e93abc608f5cb6bab}{ERR\+\_\+\+BITMAP\+\_\+\+INVALID}}~605
+\item 
+\#define \mbox{\hyperlink{_a_p_i___l_i_b_8h_ac70cfad9a9322ac4cf2be2610c664526}{ERR\+\_\+\+CIR\+\_\+\+RADIUS\+\_\+\+INVALID}}~606
+\item 
+\#define \mbox{\hyperlink{_a_p_i___l_i_b_8h_a00158df574e52f6a444f2f9f58738aeb}{ERR\+\_\+\+FONT\+\_\+\+INVALID}}~613
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{_a_p_i___l_i_b_8h_a77fe59a28c36c982d8e744469b6f75a7}{API\+\_\+draw\+\_\+line}} (int x\+\_\+1, int y\+\_\+1, int x\+\_\+2, int y\+\_\+2, int weight, int color, int reserved)
+\begin{DoxyCompactList}\small\item\em Draws a line with adjustable thickness on the VGA display. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{_a_p_i___l_i_b_8h_a970082c425e5df1b713a39b66adbf37a}{API\+\_\+draw\+\_\+circle}} (int x0, int y0, int radius, int color, int reserved)
+\begin{DoxyCompactList}\small\item\em Draws a filled circle on the VGA display. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{_a_p_i___l_i_b_8h_a2ea495971b1f8a9158ff7c5a824eec5a}{API\+\_\+draw\+\_\+bitmap}} (int x\+\_\+lup, int y\+\_\+lup, int bitnr)
+\begin{DoxyCompactList}\small\item\em Draws a bitmap on the screen at the specified upper-\/left position. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{_a_p_i___l_i_b_8h_a62957deeb57f3a25c8d0727c8c9a8b40}{API\+\_\+draw\+\_\+rectangle}} (int x, int y, int width, int height, int color, int filled, int weight, int bordercolor)
+\begin{DoxyCompactList}\small\item\em Draws a rectangle on the VGA display. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{_a_p_i___l_i_b_8h_ab66114c6716ff8496f4bf615af6bd60e}{API\+\_\+draw\+\_\+figure}} (int x\+\_\+1, int y\+\_\+1, int x\+\_\+2, int y\+\_\+2, int x\+\_\+3, int y\+\_\+3, int x\+\_\+4, int y\+\_\+4, int x\+\_\+5, int y\+\_\+5, int color, int filled)
+\begin{DoxyCompactList}\small\item\em Draws a figure based on 5 coordinates. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{_a_p_i___l_i_b_8h_ae0803eadbc03323e0bd22ba2412340f5}{API\+\_\+draw\+\_\+text}} (int x\+\_\+lup, int y\+\_\+lup, int color, char \texorpdfstring{$\ast$}{*}text, char \texorpdfstring{$\ast$}{*}fontname, int fontsize, char \texorpdfstring{$\ast$}{*}fontstyle)
+\begin{DoxyCompactList}\small\item\em Returns smaller of two numbers. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{_a_p_i___l_i_b_8h_a55a53fc99041ea1658042d163f70c047}{\+\_\+\+Min}} (int a, int b)
+\begin{DoxyCompactList}\small\item\em Draws a string of text on the VGA display. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{_a_p_i___l_i_b_8h_a9b10cc36d1985a85f173670221b276b6}{\+\_\+\+Max}} (int a, int b)
+\begin{DoxyCompactList}\small\item\em Returns bigger of two numbers. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{_a_p_i___l_i_b_8h_aad2d416b1f2feac2fc202c198b9bffe2}{\+\_\+\+Cross\+Product}} (int x\+\_\+1, int y\+\_\+1, int x\+\_\+2, int y\+\_\+2, int x\+\_\+3, int y\+\_\+3)
+\begin{DoxyCompactList}\small\item\em Calculates cross product of three coordinates. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{_a_p_i___l_i_b_8h_aa447a2276c7f53432afd2124b73fd6cb}{\+\_\+\+Is\+On\+Segment}} (int x\+\_\+p, int y\+\_\+p, int x\+\_\+1, int y\+\_\+1, int x\+\_\+2, int y\+\_\+2)
+\begin{DoxyCompactList}\small\item\em determines if point is on segment 1-\/2. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{_a_p_i___l_i_b_8h_adb23c637c52a0d86c3c3879292eaebdb}{\+\_\+\+Is\+In\+Polygon}} (int x\+\_\+p, int y\+\_\+p, int x\+\_\+1, int y\+\_\+1, int x\+\_\+2, int y\+\_\+2, int x\+\_\+3, int y\+\_\+3, int x\+\_\+4, int y\+\_\+4, int x\+\_\+5, int y\+\_\+5)
+\begin{DoxyCompactList}\small\item\em determines if point is on segment 1-\/2. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{_a_p_i___l_i_b_8h_ac5d34bcb0d84db1190d4b876a3f65944}{API\+\_\+clearscreen}} (int color)
+\begin{DoxyCompactList}\small\item\em Sets all pixels to given color. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+API library header file. 
+
+This file contains the prototypes for all the different API functions.
+
+\begin{DoxyAuthor}{Author}
+Tom Veldkamp, Xander Perry \& Daniël Wit Arendza 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+2025-\/12-\/03 
+\end{DoxyDate}
+
+
+Definition in file \mbox{\hyperlink{_a_p_i___l_i_b_8h_source}{API\+\_\+\+LIB.\+h}}.
+
+
+
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{_a_p_i___l_i_b_8h_a1900043b50ee410e93abc608f5cb6bab}\index{API\_LIB.h@{API\_LIB.h}!ERR\_BITMAP\_INVALID@{ERR\_BITMAP\_INVALID}}
+\index{ERR\_BITMAP\_INVALID@{ERR\_BITMAP\_INVALID}!API\_LIB.h@{API\_LIB.h}}
+\doxysubsubsection{\texorpdfstring{ERR\_BITMAP\_INVALID}{ERR\_BITMAP\_INVALID}}
+{\footnotesize\ttfamily \label{_a_p_i___l_i_b_8h_a1900043b50ee410e93abc608f5cb6bab} 
+\#define ERR\+\_\+\+BITMAP\+\_\+\+INVALID~605}
+
+Requested bitmap does not exist 
+
+Definition at line \mbox{\hyperlink{_a_p_i___l_i_b_8h_source_l00024}{24}} of file \mbox{\hyperlink{_a_p_i___l_i_b_8h_source}{API\+\_\+\+LIB.\+h}}.
+
+\Hypertarget{_a_p_i___l_i_b_8h_ac70cfad9a9322ac4cf2be2610c664526}\index{API\_LIB.h@{API\_LIB.h}!ERR\_CIR\_RADIUS\_INVALID@{ERR\_CIR\_RADIUS\_INVALID}}
+\index{ERR\_CIR\_RADIUS\_INVALID@{ERR\_CIR\_RADIUS\_INVALID}!API\_LIB.h@{API\_LIB.h}}
+\doxysubsubsection{\texorpdfstring{ERR\_CIR\_RADIUS\_INVALID}{ERR\_CIR\_RADIUS\_INVALID}}
+{\footnotesize\ttfamily \label{_a_p_i___l_i_b_8h_ac70cfad9a9322ac4cf2be2610c664526} 
+\#define ERR\+\_\+\+CIR\+\_\+\+RADIUS\+\_\+\+INVALID~606}
+
+Requested radius is 0 or negative 
+
+Definition at line \mbox{\hyperlink{_a_p_i___l_i_b_8h_source_l00025}{25}} of file \mbox{\hyperlink{_a_p_i___l_i_b_8h_source}{API\+\_\+\+LIB.\+h}}.
+
+\Hypertarget{_a_p_i___l_i_b_8h_a48fd98f10f19d69e99c844c37669ca09}\index{API\_LIB.h@{API\_LIB.h}!ERR\_COLOR\_INVALID@{ERR\_COLOR\_INVALID}}
+\index{ERR\_COLOR\_INVALID@{ERR\_COLOR\_INVALID}!API\_LIB.h@{API\_LIB.h}}
+\doxysubsubsection{\texorpdfstring{ERR\_COLOR\_INVALID}{ERR\_COLOR\_INVALID}}
+{\footnotesize\ttfamily \label{_a_p_i___l_i_b_8h_a48fd98f10f19d69e99c844c37669ca09} 
+\#define ERR\+\_\+\+COLOR\+\_\+\+INVALID~603}
+
+An unknown color value has been assigned to the function. (e.\+g. color \texorpdfstring{$>$}{>} 255 for 8-\/bit) 
+
+Definition at line \mbox{\hyperlink{_a_p_i___l_i_b_8h_source_l00022}{22}} of file \mbox{\hyperlink{_a_p_i___l_i_b_8h_source}{API\+\_\+\+LIB.\+h}}.
+
+\Hypertarget{_a_p_i___l_i_b_8h_a00158df574e52f6a444f2f9f58738aeb}\index{API\_LIB.h@{API\_LIB.h}!ERR\_FONT\_INVALID@{ERR\_FONT\_INVALID}}
+\index{ERR\_FONT\_INVALID@{ERR\_FONT\_INVALID}!API\_LIB.h@{API\_LIB.h}}
+\doxysubsubsection{\texorpdfstring{ERR\_FONT\_INVALID}{ERR\_FONT\_INVALID}}
+{\footnotesize\ttfamily \label{_a_p_i___l_i_b_8h_a00158df574e52f6a444f2f9f58738aeb} 
+\#define ERR\+\_\+\+FONT\+\_\+\+INVALID~613}
+
+Requested font does not exist. 
+
+Definition at line \mbox{\hyperlink{_a_p_i___l_i_b_8h_source_l00026}{26}} of file \mbox{\hyperlink{_a_p_i___l_i_b_8h_source}{API\+\_\+\+LIB.\+h}}.
+
+\Hypertarget{_a_p_i___l_i_b_8h_a349dc88885b43e554d37465fc4d1c548}\index{API\_LIB.h@{API\_LIB.h}!ERR\_OBJ\_OUT\_OF\_BOUNDS@{ERR\_OBJ\_OUT\_OF\_BOUNDS}}
+\index{ERR\_OBJ\_OUT\_OF\_BOUNDS@{ERR\_OBJ\_OUT\_OF\_BOUNDS}!API\_LIB.h@{API\_LIB.h}}
+\doxysubsubsection{\texorpdfstring{ERR\_OBJ\_OUT\_OF\_BOUNDS}{ERR\_OBJ\_OUT\_OF\_BOUNDS}}
+{\footnotesize\ttfamily \label{_a_p_i___l_i_b_8h_a349dc88885b43e554d37465fc4d1c548} 
+\#define ERR\+\_\+\+OBJ\+\_\+\+OUT\+\_\+\+OF\+\_\+\+BOUNDS~602}
+
+Part of the object is out of bounds 
+
+Definition at line \mbox{\hyperlink{_a_p_i___l_i_b_8h_source_l00021}{21}} of file \mbox{\hyperlink{_a_p_i___l_i_b_8h_source}{API\+\_\+\+LIB.\+h}}.
+
+\Hypertarget{_a_p_i___l_i_b_8h_af40a67289a379d8427d8b7f6666f7c03}\index{API\_LIB.h@{API\_LIB.h}!ERR\_RECT\_HEIGHT\_INVALID@{ERR\_RECT\_HEIGHT\_INVALID}}
+\index{ERR\_RECT\_HEIGHT\_INVALID@{ERR\_RECT\_HEIGHT\_INVALID}!API\_LIB.h@{API\_LIB.h}}
+\doxysubsubsection{\texorpdfstring{ERR\_RECT\_HEIGHT\_INVALID}{ERR\_RECT\_HEIGHT\_INVALID}}
+{\footnotesize\ttfamily \label{_a_p_i___l_i_b_8h_af40a67289a379d8427d8b7f6666f7c03} 
+\#define ERR\+\_\+\+RECT\+\_\+\+HEIGHT\+\_\+\+INVALID~601}
+
+The height parameter is 0 or negative, resulting in an empty rectangle. 
+
+Definition at line \mbox{\hyperlink{_a_p_i___l_i_b_8h_source_l00020}{20}} of file \mbox{\hyperlink{_a_p_i___l_i_b_8h_source}{API\+\_\+\+LIB.\+h}}.
+
+\Hypertarget{_a_p_i___l_i_b_8h_a0f8602b05bfd73a0ac2f8f8bfeb8eb08}\index{API\_LIB.h@{API\_LIB.h}!ERR\_RECT\_WIDTH\_INVALID@{ERR\_RECT\_WIDTH\_INVALID}}
+\index{ERR\_RECT\_WIDTH\_INVALID@{ERR\_RECT\_WIDTH\_INVALID}!API\_LIB.h@{API\_LIB.h}}
+\doxysubsubsection{\texorpdfstring{ERR\_RECT\_WIDTH\_INVALID}{ERR\_RECT\_WIDTH\_INVALID}}
+{\footnotesize\ttfamily \label{_a_p_i___l_i_b_8h_a0f8602b05bfd73a0ac2f8f8bfeb8eb08} 
+\#define ERR\+\_\+\+RECT\+\_\+\+WIDTH\+\_\+\+INVALID~600}
+
+The width parameter is 0 or negative, resulting in an empty rectangle. 
+
+Definition at line \mbox{\hyperlink{_a_p_i___l_i_b_8h_source_l00019}{19}} of file \mbox{\hyperlink{_a_p_i___l_i_b_8h_source}{API\+\_\+\+LIB.\+h}}.
+
+\Hypertarget{_a_p_i___l_i_b_8h_a92372915c2803f97b29d78ea18c82ae9}\index{API\_LIB.h@{API\_LIB.h}!ERR\_WEIGHT\_INVALID@{ERR\_WEIGHT\_INVALID}}
+\index{ERR\_WEIGHT\_INVALID@{ERR\_WEIGHT\_INVALID}!API\_LIB.h@{API\_LIB.h}}
+\doxysubsubsection{\texorpdfstring{ERR\_WEIGHT\_INVALID}{ERR\_WEIGHT\_INVALID}}
+{\footnotesize\ttfamily \label{_a_p_i___l_i_b_8h_a92372915c2803f97b29d78ea18c82ae9} 
+\#define ERR\+\_\+\+WEIGHT\+\_\+\+INVALID~604}
+
+Weight is below 0, which is not possible for line thickness. 
+
+Definition at line \mbox{\hyperlink{_a_p_i___l_i_b_8h_source_l00023}{23}} of file \mbox{\hyperlink{_a_p_i___l_i_b_8h_source}{API\+\_\+\+LIB.\+h}}.
+
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{_a_p_i___l_i_b_8h_aad2d416b1f2feac2fc202c198b9bffe2}\index{API\_LIB.h@{API\_LIB.h}!\_CrossProduct@{\_CrossProduct}}
+\index{\_CrossProduct@{\_CrossProduct}!API\_LIB.h@{API\_LIB.h}}
+\doxysubsubsection{\texorpdfstring{\_CrossProduct()}{\_CrossProduct()}}
+{\footnotesize\ttfamily \label{_a_p_i___l_i_b_8h_aad2d416b1f2feac2fc202c198b9bffe2} 
+int \+\_\+\+Cross\+Product (\begin{DoxyParamCaption}\item[{int}]{x\+\_\+1}{, }\item[{int}]{y\+\_\+1}{, }\item[{int}]{x\+\_\+2}{, }\item[{int}]{y\+\_\+2}{, }\item[{int}]{x\+\_\+3}{, }\item[{int}]{y\+\_\+3}{}\end{DoxyParamCaption})}
+
+
+
+Calculates cross product of three coordinates. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x\+\_\+1} & X-\/coordinate 1 \\
+\hline
+{\em y\+\_\+1} & Y-\/coordinate 1 \\
+\hline
+{\em x\+\_\+2} & X-\/coordinate 2 \\
+\hline
+{\em y\+\_\+2} & Y-\/coordinate 2 \\
+\hline
+{\em x\+\_\+3} & X-\/coordinate 3 \\
+\hline
+{\em y\+\_\+3} & Y-\/coordinate 3\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Cross prodcuct. 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_a_p_i___l_i_b_8c_source_l00560}{560}} of file \mbox{\hyperlink{_a_p_i___l_i_b_8c_source}{API\+\_\+\+LIB.\+c}}.
+
+\Hypertarget{_a_p_i___l_i_b_8h_adb23c637c52a0d86c3c3879292eaebdb}\index{API\_LIB.h@{API\_LIB.h}!\_IsInPolygon@{\_IsInPolygon}}
+\index{\_IsInPolygon@{\_IsInPolygon}!API\_LIB.h@{API\_LIB.h}}
+\doxysubsubsection{\texorpdfstring{\_IsInPolygon()}{\_IsInPolygon()}}
+{\footnotesize\ttfamily \label{_a_p_i___l_i_b_8h_adb23c637c52a0d86c3c3879292eaebdb} 
+int \+\_\+\+Is\+In\+Polygon (\begin{DoxyParamCaption}\item[{int}]{x\+\_\+p}{, }\item[{int}]{y\+\_\+p}{, }\item[{int}]{x\+\_\+1}{, }\item[{int}]{y\+\_\+1}{, }\item[{int}]{x\+\_\+2}{, }\item[{int}]{y\+\_\+2}{, }\item[{int}]{x\+\_\+3}{, }\item[{int}]{y\+\_\+3}{, }\item[{int}]{x\+\_\+4}{, }\item[{int}]{y\+\_\+4}{, }\item[{int}]{x\+\_\+5}{, }\item[{int}]{y\+\_\+5}{}\end{DoxyParamCaption})}
+
+
+
+determines if point is on segment 1-\/2. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x\+\_\+p} & X-\/coordinate of point \\
+\hline
+{\em y\+\_\+p} & Y-\/coordinate of point \\
+\hline
+{\em x\+\_\+1} & X-\/coordinate 1 \\
+\hline
+{\em y\+\_\+1} & Y-\/coordinate 1 \\
+\hline
+{\em x\+\_\+2} & X-\/coordinate 2 \\
+\hline
+{\em y\+\_\+2} & Y-\/coordinate 2 \\
+\hline
+{\em x\+\_\+3} & X-\/coordinate 3 \\
+\hline
+{\em y\+\_\+3} & Y-\/coordinate 3 \\
+\hline
+{\em x\+\_\+4} & X-\/coordinate 4 \\
+\hline
+{\em y\+\_\+4} & Y-\/coordinate 4 \\
+\hline
+{\em x\+\_\+5} & X-\/coordinate 5 \\
+\hline
+{\em y\+\_\+5} & Y-\/coordinate 5\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 if on segment, 0 if not. 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_a_p_i___l_i_b_8c_source_l00615}{615}} of file \mbox{\hyperlink{_a_p_i___l_i_b_8c_source}{API\+\_\+\+LIB.\+c}}.
+
+\Hypertarget{_a_p_i___l_i_b_8h_aa447a2276c7f53432afd2124b73fd6cb}\index{API\_LIB.h@{API\_LIB.h}!\_IsOnSegment@{\_IsOnSegment}}
+\index{\_IsOnSegment@{\_IsOnSegment}!API\_LIB.h@{API\_LIB.h}}
+\doxysubsubsection{\texorpdfstring{\_IsOnSegment()}{\_IsOnSegment()}}
+{\footnotesize\ttfamily \label{_a_p_i___l_i_b_8h_aa447a2276c7f53432afd2124b73fd6cb} 
+int \+\_\+\+Is\+On\+Segment (\begin{DoxyParamCaption}\item[{int}]{x\+\_\+p}{, }\item[{int}]{y\+\_\+p}{, }\item[{int}]{x\+\_\+1}{, }\item[{int}]{y\+\_\+1}{, }\item[{int}]{x\+\_\+2}{, }\item[{int}]{y\+\_\+2}{}\end{DoxyParamCaption})}
+
+
+
+determines if point is on segment 1-\/2. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x\+\_\+p} & X-\/coordinate of point \\
+\hline
+{\em y\+\_\+p} & Y-\/coordinate of point \\
+\hline
+{\em x\+\_\+1} & X-\/coordinate 1 \\
+\hline
+{\em y\+\_\+1} & Y-\/coordinate 1 \\
+\hline
+{\em x\+\_\+2} & X-\/coordinate 2 \\
+\hline
+{\em y\+\_\+2} & Y-\/coordinate 2\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 if on segment, 0 if not. 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_a_p_i___l_i_b_8c_source_l00577}{577}} of file \mbox{\hyperlink{_a_p_i___l_i_b_8c_source}{API\+\_\+\+LIB.\+c}}.
+
+\Hypertarget{_a_p_i___l_i_b_8h_a9b10cc36d1985a85f173670221b276b6}\index{API\_LIB.h@{API\_LIB.h}!\_Max@{\_Max}}
+\index{\_Max@{\_Max}!API\_LIB.h@{API\_LIB.h}}
+\doxysubsubsection{\texorpdfstring{\_Max()}{\_Max()}}
+{\footnotesize\ttfamily \label{_a_p_i___l_i_b_8h_a9b10cc36d1985a85f173670221b276b6} 
+int \+\_\+\+Max (\begin{DoxyParamCaption}\item[{int}]{a}{, }\item[{int}]{b}{}\end{DoxyParamCaption})}
+
+
+
+Returns bigger of two numbers. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em a} & Number 1 \\
+\hline
+{\em b} & Number 2\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Bigger of the two numbers.
+\end{DoxyReturn}
+
+\begin{DoxyParams}{Parameters}
+{\em a} & Number 1 \\
+\hline
+{\em b} & Number 2\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Bigger of the two numbers. \texorpdfstring{$\ast$}{*} 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_a_p_i___l_i_b_8c_source_l00543}{543}} of file \mbox{\hyperlink{_a_p_i___l_i_b_8c_source}{API\+\_\+\+LIB.\+c}}.
+
+\Hypertarget{_a_p_i___l_i_b_8h_a55a53fc99041ea1658042d163f70c047}\index{API\_LIB.h@{API\_LIB.h}!\_Min@{\_Min}}
+\index{\_Min@{\_Min}!API\_LIB.h@{API\_LIB.h}}
+\doxysubsubsection{\texorpdfstring{\_Min()}{\_Min()}}
+{\footnotesize\ttfamily \label{_a_p_i___l_i_b_8h_a55a53fc99041ea1658042d163f70c047} 
+int \+\_\+\+Min (\begin{DoxyParamCaption}\item[{int}]{a}{, }\item[{int}]{b}{}\end{DoxyParamCaption})}
+
+
+
+Draws a string of text on the VGA display. 
+
+
+\begin{DoxyItemize}
+\item 
+\begin{DoxyParams}{Parameters}
+{\em x\+\_\+lup} & Upper-\/left X-\/coordinate for the start of the text. \\
+\hline
+{\em y\+\_\+lup} & Upper-\/left Y-\/coordinate for the start of the text. \\
+\hline
+{\em color} & Color of the text pixels. \\
+\hline
+{\em text} & Pointer to the string of characters to be drawn. \\
+\hline
+{\em fontname} & Name of the font (e.\+g., "{}\+Arial"{}, "{}\+Consolas"{}). \\
+\hline
+{\em fontsize} & Size of the font (1 for small, 2 for large/doubled). \\
+\hline
+{\em fontstyle} & Style of the font (0 for normal, 1 for bold/italic).\\
+\hline
+\end{DoxyParams}
+
+\item \begin{DoxyReturn}{Returns}
+0 on success, or an error code if the text wanders off the screen.
+\end{DoxyReturn}
+Draws a string of text on the VGA display.
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em a} & Number 1 \\
+\hline
+{\em b} & Number 2\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Smaller of the two numbers. 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_a_p_i___l_i_b_8c_source_l00530}{530}} of file \mbox{\hyperlink{_a_p_i___l_i_b_8c_source}{API\+\_\+\+LIB.\+c}}.
+
+\Hypertarget{_a_p_i___l_i_b_8h_ac5d34bcb0d84db1190d4b876a3f65944}\index{API\_LIB.h@{API\_LIB.h}!API\_clearscreen@{API\_clearscreen}}
+\index{API\_clearscreen@{API\_clearscreen}!API\_LIB.h@{API\_LIB.h}}
+\doxysubsubsection{\texorpdfstring{API\_clearscreen()}{API\_clearscreen()}}
+{\footnotesize\ttfamily \label{_a_p_i___l_i_b_8h_ac5d34bcb0d84db1190d4b876a3f65944} 
+int API\+\_\+clearscreen (\begin{DoxyParamCaption}\item[{int}]{color}{}\end{DoxyParamCaption})}
+
+
+
+Sets all pixels to given color. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em color} & Screen color\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 if succesfull, otherwise error code 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_a_p_i___l_i_b_8c_source_l00670}{670}} of file \mbox{\hyperlink{_a_p_i___l_i_b_8c_source}{API\+\_\+\+LIB.\+c}}.
+
+\Hypertarget{_a_p_i___l_i_b_8h_a2ea495971b1f8a9158ff7c5a824eec5a}\index{API\_LIB.h@{API\_LIB.h}!API\_draw\_bitmap@{API\_draw\_bitmap}}
+\index{API\_draw\_bitmap@{API\_draw\_bitmap}!API\_LIB.h@{API\_LIB.h}}
+\doxysubsubsection{\texorpdfstring{API\_draw\_bitmap()}{API\_draw\_bitmap()}}
+{\footnotesize\ttfamily \label{_a_p_i___l_i_b_8h_a2ea495971b1f8a9158ff7c5a824eec5a} 
+int API\+\_\+draw\+\_\+bitmap (\begin{DoxyParamCaption}\item[{int}]{x\+\_\+lup}{, }\item[{int}]{y\+\_\+lup}{, }\item[{int}]{bitnr}{}\end{DoxyParamCaption})}
+
+
+
+Draws a bitmap on the screen at the specified upper-\/left position. 
+
+This function takes a bitmap index from a global bitmap array and renders it at the given (x, y) coordinates on the screen. Each bitmap is expected to have the following format\+:
+\begin{DoxyItemize}
+\item bmp\mbox{[}0\mbox{]} = height of the bitmap in pixels
+\item bmp\mbox{[}1\mbox{]} = width of the bitmap in pixels
+\item bmp\mbox{[}2..\mbox{]} = pixel color data (row-\/major order)
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em x\+\_\+lup} & The x-\/coordinate of the upper-\/left pixel where the bitmap will be drawn. \\
+\hline
+{\em y\+\_\+lup} & The y-\/coordinate of the upper-\/left pixel where the bitmap will be drawn. \\
+\hline
+{\em bitnr} & The index of the bitmap in the global {\ttfamily bitmaps} array.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+The function assumes that the {\ttfamily bitmaps} array and {\ttfamily UB\+\_\+\+VGA\+\_\+\+Set\+Pixel} function are properly defined and accessible. 
+\end{DoxyNote}
+\texorpdfstring{$<$}{<} Select bitmap from argument.
+
+\texorpdfstring{$<$}{<} Move up y coordinate.
+
+\texorpdfstring{$<$}{<} Move up x coordinate.
+
+\texorpdfstring{$<$}{<} Color current pixel.
+
+Definition at line \mbox{\hyperlink{_a_p_i___l_i_b_8c_source_l00253}{253}} of file \mbox{\hyperlink{_a_p_i___l_i_b_8c_source}{API\+\_\+\+LIB.\+c}}.
+
+\Hypertarget{_a_p_i___l_i_b_8h_a970082c425e5df1b713a39b66adbf37a}\index{API\_LIB.h@{API\_LIB.h}!API\_draw\_circle@{API\_draw\_circle}}
+\index{API\_draw\_circle@{API\_draw\_circle}!API\_LIB.h@{API\_LIB.h}}
+\doxysubsubsection{\texorpdfstring{API\_draw\_circle()}{API\_draw\_circle()}}
+{\footnotesize\ttfamily \label{_a_p_i___l_i_b_8h_a970082c425e5df1b713a39b66adbf37a} 
+int API\+\_\+draw\+\_\+circle (\begin{DoxyParamCaption}\item[{int}]{x0}{, }\item[{int}]{y0}{, }\item[{int}]{radius}{, }\item[{int}]{color}{, }\item[{int}]{reserved}{}\end{DoxyParamCaption})}
+
+
+
+Draws a filled circle on the VGA display. 
+
+This function uses the midpoint circle algorithm to draw a filled circle centered at the specified coordinates. The circle is filled by drawing horizontal spans between symmetric points on each iteration.
+
+
+\begin{DoxyParams}{Parameters}
+{\em x0} & X-\/coordinate of the circle center. \\
+\hline
+{\em y0} & Y-\/coordinate of the circle center. \\
+\hline
+{\em radius} & Radius of the circle in pixels. \\
+\hline
+{\em color} & 16-\/bit color value used to fill the circle. @parma reserved Reserved variable\\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+This function requires the UB\+\_\+\+VGA\+\_\+\+Set\+Pixel() function to be available for setting individual pixels on the display.
+\end{DoxyNote}
+\begin{DoxyWarning}{Warning}
+No boundary checking is performed. Ensure the circle fits within the screen to avoid memory access errors. 
+\end{DoxyWarning}
+\texorpdfstring{$<$}{<} Bresenham decision variable, distance between ideal circle.
+
+\texorpdfstring{$<$}{<} Filling circle outline.
+
+Definition at line \mbox{\hyperlink{_a_p_i___l_i_b_8c_source_l00035}{35}} of file \mbox{\hyperlink{_a_p_i___l_i_b_8c_source}{API\+\_\+\+LIB.\+c}}.
+
+\Hypertarget{_a_p_i___l_i_b_8h_ab66114c6716ff8496f4bf615af6bd60e}\index{API\_LIB.h@{API\_LIB.h}!API\_draw\_figure@{API\_draw\_figure}}
+\index{API\_draw\_figure@{API\_draw\_figure}!API\_LIB.h@{API\_LIB.h}}
+\doxysubsubsection{\texorpdfstring{API\_draw\_figure()}{API\_draw\_figure()}}
+{\footnotesize\ttfamily \label{_a_p_i___l_i_b_8h_ab66114c6716ff8496f4bf615af6bd60e} 
+int API\+\_\+draw\+\_\+figure (\begin{DoxyParamCaption}\item[{int}]{x\+\_\+1}{, }\item[{int}]{y\+\_\+1}{, }\item[{int}]{x\+\_\+2}{, }\item[{int}]{y\+\_\+2}{, }\item[{int}]{x\+\_\+3}{, }\item[{int}]{y\+\_\+3}{, }\item[{int}]{x\+\_\+4}{, }\item[{int}]{y\+\_\+4}{, }\item[{int}]{x\+\_\+5}{, }\item[{int}]{y\+\_\+5}{, }\item[{int}]{color}{, }\item[{int}]{filled}{}\end{DoxyParamCaption})}
+
+
+
+Draws a figure based on 5 coordinates. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x\+\_\+1} & X-\/coordinate 1 \\
+\hline
+{\em y\+\_\+1} & Y-\/coordinate 1 \\
+\hline
+{\em x\+\_\+2} & X-\/coordinate 2 \\
+\hline
+{\em y\+\_\+2} & Y-\/coordinate 2 \\
+\hline
+{\em x\+\_\+3} & X-\/coordinate 3 \\
+\hline
+{\em y\+\_\+3} & Y-\/coordinate 3 \\
+\hline
+{\em x\+\_\+4} & X-\/coordinate 4 \\
+\hline
+{\em y\+\_\+4} & Y-\/coordinate 4 \\
+\hline
+{\em x\+\_\+5} & X-\/coordinate 5 \\
+\hline
+{\em y\+\_\+5} & Y-\/coordinate 5 \\
+\hline
+{\em color} & Figure color \\
+\hline
+{\em filled} & Figure Fill\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 if no errors occured, otherwise returns the error code.
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+This function calls \doxylink{_a_p_i___l_i_b_8c_a77fe59a28c36c982d8e744469b6f75a7}{API\+\_\+draw\+\_\+line()}. 
+\end{DoxyNote}
+
+
+Definition at line \mbox{\hyperlink{_a_p_i___l_i_b_8c_source_l00469}{469}} of file \mbox{\hyperlink{_a_p_i___l_i_b_8c_source}{API\+\_\+\+LIB.\+c}}.
+
+\Hypertarget{_a_p_i___l_i_b_8h_a77fe59a28c36c982d8e744469b6f75a7}\index{API\_LIB.h@{API\_LIB.h}!API\_draw\_line@{API\_draw\_line}}
+\index{API\_draw\_line@{API\_draw\_line}!API\_LIB.h@{API\_LIB.h}}
+\doxysubsubsection{\texorpdfstring{API\_draw\_line()}{API\_draw\_line()}}
+{\footnotesize\ttfamily \label{_a_p_i___l_i_b_8h_a77fe59a28c36c982d8e744469b6f75a7} 
+int API\+\_\+draw\+\_\+line (\begin{DoxyParamCaption}\item[{int}]{x\+\_\+1}{, }\item[{int}]{y\+\_\+1}{, }\item[{int}]{x\+\_\+2}{, }\item[{int}]{y\+\_\+2}{, }\item[{int}]{weight}{, }\item[{int}]{color}{, }\item[{int}]{reserved}{}\end{DoxyParamCaption})}
+
+
+
+Draws a line with adjustable thickness on the VGA display. 
+
+This function implements Bresenham\textquotesingle{}s line algorithm to efficiently draw a line between two points using only integer arithmetic. Line thickness is achieved by drawing a filled circle (brush) at each point along the path.
+
+
+\begin{DoxyParams}{Parameters}
+{\em x\+\_\+1} & Starting X-\/coordinate of the line. \\
+\hline
+{\em y\+\_\+1} & Starting Y-\/coordinate of the line. \\
+\hline
+{\em x\+\_\+2} & Ending X-\/coordinate of the line. \\
+\hline
+{\em y\+\_\+2} & Ending Y-\/coordinate of the line. \\
+\hline
+{\em weight} & Thickness of the line in pixels. The value represents the diameter; internally, a circle with radius = weight/2 is drawn as the brush. \\
+\hline
+{\em color} & 8-\/bit color value used to draw the line. \\
+\hline
+{\em reserved} & Reserved variable\\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+This function calls \doxylink{_a_p_i___l_i_b_8h_a970082c425e5df1b713a39b66adbf37a}{API\+\_\+draw\+\_\+circle()} to simulate line thickness. For very large weights, performance may decrease due to repeated circle drawing.
+\end{DoxyNote}
+\begin{DoxyWarning}{Warning}
+No boundary checking is performed. Ensure that the line (including brush size) fits within the display memory region to avoid invalid pixel writes. 
+\end{DoxyWarning}
+\texorpdfstring{$<$}{<} Horizontal distance between points.
+
+\texorpdfstring{$<$}{<} Vertical distance between points.
+
+\texorpdfstring{$<$}{<} Step direction in X (+1 or -\/1).
+
+\texorpdfstring{$<$}{<} Step direction in Y (+1 or -\/1).
+
+\texorpdfstring{$<$}{<} Bresenham\textquotesingle{}s error term dictating the distance to the ideal mathematical line
+
+\texorpdfstring{$<$}{<} Brush for drawing lines.
+
+\texorpdfstring{$<$}{<} Horizontal movement.
+
+\texorpdfstring{$<$}{<} Vertical movement.
+
+Definition at line \mbox{\hyperlink{_a_p_i___l_i_b_8c_source_l00104}{104}} of file \mbox{\hyperlink{_a_p_i___l_i_b_8c_source}{API\+\_\+\+LIB.\+c}}.
+
+\Hypertarget{_a_p_i___l_i_b_8h_a62957deeb57f3a25c8d0727c8c9a8b40}\index{API\_LIB.h@{API\_LIB.h}!API\_draw\_rectangle@{API\_draw\_rectangle}}
+\index{API\_draw\_rectangle@{API\_draw\_rectangle}!API\_LIB.h@{API\_LIB.h}}
+\doxysubsubsection{\texorpdfstring{API\_draw\_rectangle()}{API\_draw\_rectangle()}}
+{\footnotesize\ttfamily \label{_a_p_i___l_i_b_8h_a62957deeb57f3a25c8d0727c8c9a8b40} 
+int API\+\_\+draw\+\_\+rectangle (\begin{DoxyParamCaption}\item[{int}]{x}{, }\item[{int}]{y}{, }\item[{int}]{width}{, }\item[{int}]{height}{, }\item[{int}]{color}{, }\item[{int}]{filled}{, }\item[{int}]{weight}{, }\item[{int}]{bordercolor}{}\end{DoxyParamCaption})}
+
+
+
+Draws a rectangle on the VGA display. 
+
+This function draws a rectangle defined by its top-\/left corner (x, y), width, and height. It can draw either an outline or a filled rectangle based on the \textquotesingle{}filled\textquotesingle{} parameter.
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & Starting X-\/coordinate (top-\/left corner) of the rectangle. \\
+\hline
+{\em y} & Starting Y-\/coordinate (top-\/left corner) of the rectangle. \\
+\hline
+{\em width} & Width of the rectangle in pixels. \\
+\hline
+{\em height} & Height of the rectangle in pixels. \\
+\hline
+{\em color} & 8-\/bit color value used to draw the rectangle. \\
+\hline
+{\em filled} & Flag indicating whether the rectangle should be filled (non-\/zero for filled, 0 for outline). \\
+\hline
+{\em weight} & Reserved variable (unused). \\
+\hline
+{\em bordercolor} & Reserved variable (unused).\\
+\hline
+\end{DoxyParams}
+\begin{DoxyNote}{Note}
+If \textquotesingle{}filled\textquotesingle{} is 0, the function typically calls an API to draw four lines. If \textquotesingle{}filled\textquotesingle{} is non-\/zero, the function typically iterates and calls an API to draw horizontal lines. 
+\end{DoxyNote}
+Error handling
+
+Code block below handles errors. If the parameters get values which are out of bounds or wrong, return a corresponding error code.
+
+\texorpdfstring{$<$}{<} Calculate the second X coordinate.
+
+\texorpdfstring{$<$}{<} Calculate the second Y coordinate.
+
+\texorpdfstring{$<$}{<} Draw a borderline around the rectangle\texorpdfstring{$>$}{>}
+
+\texorpdfstring{$<$}{<} Draw horizontal lines (Top and Bottom)
+
+\texorpdfstring{$<$}{<} Top edge
+
+\texorpdfstring{$<$}{<} Bottom edge
+
+\texorpdfstring{$<$}{<} Left edge
+
+\texorpdfstring{$<$}{<} Right edge
+
+\texorpdfstring{$<$}{<} Return 0 on success
+
+Definition at line \mbox{\hyperlink{_a_p_i___l_i_b_8c_source_l00168}{168}} of file \mbox{\hyperlink{_a_p_i___l_i_b_8c_source}{API\+\_\+\+LIB.\+c}}.
+
+\Hypertarget{_a_p_i___l_i_b_8h_ae0803eadbc03323e0bd22ba2412340f5}\index{API\_LIB.h@{API\_LIB.h}!API\_draw\_text@{API\_draw\_text}}
+\index{API\_draw\_text@{API\_draw\_text}!API\_LIB.h@{API\_LIB.h}}
+\doxysubsubsection{\texorpdfstring{API\_draw\_text()}{API\_draw\_text()}}
+{\footnotesize\ttfamily \label{_a_p_i___l_i_b_8h_ae0803eadbc03323e0bd22ba2412340f5} 
+int API\+\_\+draw\+\_\+text (\begin{DoxyParamCaption}\item[{int}]{x\+\_\+lup}{, }\item[{int}]{y\+\_\+lup}{, }\item[{int}]{color}{, }\item[{char \texorpdfstring{$\ast$}{*}}]{text}{, }\item[{char \texorpdfstring{$\ast$}{*}}]{fontname}{, }\item[{int}]{fontsize}{, }\item[{char \texorpdfstring{$\ast$}{*}}]{fontstyle}{}\end{DoxyParamCaption})}
+
+
+
+Returns smaller of two numbers. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em a} & Number 1 \\
+\hline
+{\em b} & Number 2\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Smaller of the two numbers.
+\end{DoxyReturn}
+Returns smaller of two numbers.
+
+This function iterates through a string and draws each character using a specific font array. It supports dynamic font switching and size scaling.
+
+
+\begin{DoxyParams}{Parameters}
+{\em x\+\_\+lup} & The x-\/coordinate of the upper-\/left pixel where text starts. \\
+\hline
+{\em y\+\_\+lup} & The y-\/coordinate of the upper-\/left pixel where text starts. \\
+\hline
+{\em color} & 8-\/bit color value used to draw the text. \\
+\hline
+{\em text} & Pointer to the string of characters to be drawn. \\
+\hline
+{\em fontname} & String representing the font name ("{}\+Comic\+Sans"{} or "{}\+Consolas"{}). \\
+\hline
+{\em fontsize} & Multiplier for the font size (1 = original, 2 = double, etc.). \\
+\hline
+{\em fontstyle} & Variable for styles (bold/italic).\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 on success, or an error code if invalid parameters are passed. 
+\end{DoxyReturn}
+Word-\/wrap check\+: If we are at the start of a word, measure the full word width before drawing it. If it does not fit on the current line, move the cursor to the next line.
+
+Definition at line \mbox{\hyperlink{_a_p_i___l_i_b_8c_source_l00300}{300}} of file \mbox{\hyperlink{_a_p_i___l_i_b_8c_source}{API\+\_\+\+LIB.\+c}}.
+

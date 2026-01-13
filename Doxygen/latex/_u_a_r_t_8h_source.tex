@@ -1,0 +1,44 @@
+\doxysection{UART.\+h}
+\hypertarget{_u_a_r_t_8h_source}{}\label{_u_a_r_t_8h_source}\index{Core/Inc/UART.h@{Core/Inc/UART.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_u_a_r_t_8h_source_l00001}00001\ \textcolor{preprocessor}{\#ifndef\ \_\_UART\_H}}
+\DoxyCodeLine{\Hypertarget{_u_a_r_t_8h_source_l00002}00002\ \textcolor{preprocessor}{\#define\ \_\_UART\_H}}
+\DoxyCodeLine{\Hypertarget{_u_a_r_t_8h_source_l00003}00003\ }
+\DoxyCodeLine{\Hypertarget{_u_a_r_t_8h_source_l00004}00004\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{\Hypertarget{_u_a_r_t_8h_source_l00005}00005\ \textcolor{preprocessor}{\#include\ <stdbool.h>}}
+\DoxyCodeLine{\Hypertarget{_u_a_r_t_8h_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{_u_a_r_t_8h_source_l00007}00007\ \textcolor{comment}{//\ -\/-\/-\/\ Configuration\ -\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{_u_a_r_t_8h_source_l00008}00008\ \textcolor{preprocessor}{\#define\ UART\_RX\_BUFFER\_SIZE\ 512\ }\textcolor{comment}{//\ Define\ the\ size\ of\ the\ circular\ buffer}}
+\DoxyCodeLine{\Hypertarget{_u_a_r_t_8h_source_l00009}00009\ }
+\DoxyCodeLine{\Hypertarget{_u_a_r_t_8h_source_l00010}00010\ \textcolor{comment}{//\ -\/-\/-\/\ Global\ Variables\ (Extern\ Declarations)\ -\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{_u_a_r_t_8h_source_l00011}00011\ }
+\DoxyCodeLine{\Hypertarget{_u_a_r_t_8h_source_l00012}00012\ \textcolor{comment}{//\ Circular\ buffer\ storage\ and\ indices}}
+\DoxyCodeLine{\Hypertarget{_u_a_r_t_8h_source_l00013}00013\ \textcolor{keyword}{extern}\ \textcolor{keyword}{volatile}\ uint8\_t\ uart\_rx\_buffer[UART\_RX\_BUFFER\_SIZE];}
+\DoxyCodeLine{\Hypertarget{_u_a_r_t_8h_source_l00014}00014\ \textcolor{keyword}{extern}\ \textcolor{keyword}{volatile}\ uint16\_t\ uart\_rx\_head;\ \textcolor{comment}{//\ Index\ where\ the\ next\ received\ byte\ will\ be\ stored}}
+\DoxyCodeLine{\Hypertarget{_u_a_r_t_8h_source_l00015}00015\ \textcolor{keyword}{extern}\ \textcolor{keyword}{volatile}\ uint16\_t\ uart\_rx\_tail;\ \textcolor{comment}{//\ Index\ where\ the\ next\ byte\ will\ be\ read\ from}}
+\DoxyCodeLine{\Hypertarget{_u_a_r_t_8h_source_l00016}00016\ }
+\DoxyCodeLine{\Hypertarget{_u_a_r_t_8h_source_l00017}00017\ \textcolor{comment}{//\ Flag\ to\ indicate\ a\ complete\ line\ has\ been\ received\ (ending\ with\ LF)}}
+\DoxyCodeLine{\Hypertarget{_u_a_r_t_8h_source_l00018}00018\ \textcolor{keyword}{extern}\ \textcolor{keyword}{volatile}\ \textcolor{keywordtype}{bool}\ uart\_rx\_line\_ready;}
+\DoxyCodeLine{\Hypertarget{_u_a_r_t_8h_source_l00019}00019\ }
+\DoxyCodeLine{\Hypertarget{_u_a_r_t_8h_source_l00020}00020\ \textcolor{comment}{//\ -\/-\/-\/\ Initialization\ -\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{_u_a_r_t_8h_source_l00024}00024\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{_u_a_r_t_8c_aff3f7046d2412aeebc67b3266a6e27fc}{usart2\_init}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{_u_a_r_t_8h_source_l00025}00025\ }
+\DoxyCodeLine{\Hypertarget{_u_a_r_t_8h_source_l00026}00026\ \textcolor{comment}{//\ -\/-\/-\/\ Polling\ Transmission\ -\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{_u_a_r_t_8h_source_l00031}00031\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{_u_a_r_t_8c_a2a4be228a246fa97ae6f890cacd8ca93}{usart2\_send\_char}}(uint8\_t\ data);}
+\DoxyCodeLine{\Hypertarget{_u_a_r_t_8h_source_l00032}00032\ }
+\DoxyCodeLine{\Hypertarget{_u_a_r_t_8h_source_l00037}00037\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{_u_a_r_t_8c_ac5f90a0a4d873f03ef53132a8b545afa}{usart2\_send\_string}}(\textcolor{keywordtype}{char}\ *str);}
+\DoxyCodeLine{\Hypertarget{_u_a_r_t_8h_source_l00038}00038\ }
+\DoxyCodeLine{\Hypertarget{_u_a_r_t_8h_source_l00039}00039\ \textcolor{comment}{//\ -\/-\/-\/\ Polling\ Reception\ -\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{_u_a_r_t_8h_source_l00044}00044\ uint8\_t\ \mbox{\hyperlink{_u_a_r_t_8c_a8f7e03b3afdd3c6a98cdef2ded6cc116}{usart2\_receive\_char}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{_u_a_r_t_8h_source_l00045}00045\ }
+\DoxyCodeLine{\Hypertarget{_u_a_r_t_8h_source_l00046}00046\ \textcolor{comment}{//\ -\/-\/-\/\ Interrupt\ Reception\ -\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{_u_a_r_t_8h_source_l00050}00050\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{_u_a_r_t_8c_a9446d975915a250b6d522d9699fd02ef}{usart2\_enable\_rx\_interrupt}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{_u_a_r_t_8h_source_l00051}00051\ }
+\DoxyCodeLine{\Hypertarget{_u_a_r_t_8h_source_l00056}00056\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{_u_a_r_t_8c_a0ca6fd0e6f77921dd1123539857ba0a8}{USART2\_IRQHandler}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{_u_a_r_t_8h_source_l00057}00057\ }
+\DoxyCodeLine{\Hypertarget{_u_a_r_t_8h_source_l00064}00064\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{_u_a_r_t_8c_a80c00106a153810c69f4b5ab459c033a}{usart2\_read\_line}}(\textcolor{keywordtype}{char}\ *dest,\ uint16\_t\ max\_len);}
+\DoxyCodeLine{\Hypertarget{_u_a_r_t_8h_source_l00065}00065\ }
+\DoxyCodeLine{\Hypertarget{_u_a_r_t_8h_source_l00066}00066\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ \_\_UART\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

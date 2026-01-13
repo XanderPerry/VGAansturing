@@ -1,0 +1,54 @@
+\doxysection{main.\+c}
+\hypertarget{main_8c_source}{}\label{main_8c_source}\index{Core/Src/main.c@{Core/Src/main.c}}
+\mbox{\hyperlink{main_8c}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00001}00001\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00012}00012\ \textcolor{preprocessor}{\#include\ <\mbox{\hyperlink{_a_p_i___l_i_b_8h}{API\_LIB.h}}>}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00013}00013\ \textcolor{preprocessor}{\#include\ "{}main.h"{}}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00014}00014\ \textcolor{preprocessor}{\#include\ "{}stm32\_ub\_vga\_screen.h"{}}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00015}00015\ \textcolor{preprocessor}{\#include\ <math.h>}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00016}00016\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00017}00017\ \textcolor{preprocessor}{\#include\ "{}uart.h"{}}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00018}00018\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{_logic_layer_8h}{LogicLayer.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00019}00019\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00020}00020\ \textcolor{preprocessor}{\#define\ CMD\_BUFF\_SIZE\ 512}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00021}00021\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00022}00022\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00023}00023\ \textcolor{keywordtype}{int}\ main(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00024}00024\ \{}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00025}00025\ \ \ \ \ \mbox{\hyperlink{group___s_t_m32_f4xx___system___private___functions_ga93f514700ccf00d08dbdcff7f1224eb2}{SystemInit}}();\ \textcolor{comment}{//\ System\ speed\ to\ 168MHz}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00026}00026\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00027}00027\ \ \ \ \ \mbox{\hyperlink{_u_a_r_t_8c_aff3f7046d2412aeebc67b3266a6e27fc}{usart2\_init}}();\ \textcolor{comment}{//\ initialize\ UART}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00028}00028\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00029}00029\ \ \ \ \ \mbox{\hyperlink{_u_a_r_t_8c_a9446d975915a250b6d522d9699fd02ef}{usart2\_enable\_rx\_interrupt}}();\ \textcolor{comment}{//\ Enable\ UART\ the\ interrupt}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00030}00030\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00031}00031\ \ \ \ \ \textcolor{keywordtype}{char}\ command\_buffer[CMD\_BUFF\_SIZE]\ =\ \{0\};\ \textcolor{comment}{//\ Create\ buffer\ for\ UART\ reception}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00032}00032\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00033}00033\ \ \ \ \ UB\_VGA\_Screen\_Init();\ \textcolor{comment}{//\ Init\ VGA-\/Screen}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00034}00034\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00035}00035\ \ \ \ \ UB\_VGA\_FillScreen(VGA\_COL\_GREEN);\ \textcolor{comment}{//\ Startup\ VGA\ screen\ with\ green\ background}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00036}00036\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00037}00037\ \ \ \textcolor{keywordflow}{while}(1)}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00038}00038\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00039}00039\ \ \ \ \ \ \ \textcolor{comment}{//\ Check\ the\ flag\ raised\ by\ the\ ISR}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00040}00040\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (uart\_rx\_line\_ready)}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00041}00041\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00042}00042\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Read\ the\ data\ from\ the\ UART\ buffer\ and\ reset\ the\ flag}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00043}00043\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{_u_a_r_t_8c_a80c00106a153810c69f4b5ab459c033a}{usart2\_read\_line}}(command\_buffer,\ \textcolor{keyword}{sizeof}(command\_buffer)))}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00044}00044\ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00045}00045\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Process\ error\ message}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00046}00046\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ error\ =\ CmdToFunc(command\_buffer);}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00047}00047\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00048}00048\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Reply\ error\ message}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00049}00049\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ error\_msg[12];}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00050}00050\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sprintf(error\_msg,\ \textcolor{stringliteral}{"{}\%d"{}},\ error);}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00051}00051\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{_u_a_r_t_8c_ac5f90a0a4d873f03ef53132a8b545afa}{usart2\_send\_string}}(\textcolor{stringliteral}{"{}ERROR:\ "{}});}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00052}00052\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{_u_a_r_t_8c_ac5f90a0a4d873f03ef53132a8b545afa}{usart2\_send\_string}}(error\_msg);}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00053}00053\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{_u_a_r_t_8c_ac5f90a0a4d873f03ef53132a8b545afa}{usart2\_send\_string}}(\textcolor{stringliteral}{"{}\(\backslash\)r\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00054}00054\ }
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00055}00055\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00056}00056\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00057}00057\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{main_8c_source_l00058}00058\ \}}
+
+\end{DoxyCode}

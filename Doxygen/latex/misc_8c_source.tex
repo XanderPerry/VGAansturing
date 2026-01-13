@@ -1,0 +1,104 @@
+\doxysection{misc.\+c}
+\hypertarget{misc_8c_source}{}\label{misc_8c_source}\index{Core/Src/misc.c@{Core/Src/misc.c}}
+\mbox{\hyperlink{misc_8c}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00001}00001\ }
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00069}00069\ \textcolor{comment}{/*\ Includes\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00070}00070\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{misc_8h}{misc.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00071}00071\ \textcolor{preprocessor}{\#include\ "{}stm32f4xx\_conf.h"{}}}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00072}00072\ }
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00082}00082\ \textcolor{comment}{/*\ Private\ typedef\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00083}00083\ \textcolor{comment}{/*\ Private\ define\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00084}00084\ \textcolor{preprocessor}{\#define\ AIRCR\_VECTKEY\_MASK\ \ \ \ ((uint32\_t)0x05FA0000)}}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00085}00085\ }
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00086}00086\ \textcolor{comment}{/*\ Private\ macro\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00087}00087\ \textcolor{comment}{/*\ Private\ variables\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00088}00088\ \textcolor{comment}{/*\ Private\ function\ prototypes\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00089}00089\ \textcolor{comment}{/*\ Private\ functions\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00090}00090\ }
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00113}\mbox{\hyperlink{group___m_i_s_c___private___functions_gadfb1f34f803ce54c976643db8c484442}{00113}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group___m_i_s_c___private___functions_gadfb1f34f803ce54c976643db8c484442}{NVIC\_PriorityGroupConfig}}(uint32\_t\ NVIC\_PriorityGroup)}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00114}00114\ \{}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00115}00115\ \ \ \textcolor{comment}{/*\ Check\ the\ parameters\ */}}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00116}00116\ \ \ assert\_param(IS\_NVIC\_PRIORITY\_GROUP(NVIC\_PriorityGroup));}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00117}00117\ \ \ }
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00118}00118\ \ \ \textcolor{comment}{/*\ Set\ the\ PRIGROUP[10:8]\ bits\ according\ to\ NVIC\_PriorityGroup\ value\ */}}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00119}00119\ \ \ \mbox{\hyperlink{group___c_m_s_i_s__core__register_gaaaf6477c2bde2f00f99e3c2fd1060b01}{SCB}}-\/>AIRCR\ =\ AIRCR\_VECTKEY\_MASK\ |\ NVIC\_PriorityGroup;}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00120}00120\ \}}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00121}00121\ }
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00131}\mbox{\hyperlink{group___m_i_s_c___private___functions_ga4ab373ed0870c06fca5eb51d639adf41}{00131}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group___m_i_s_c___private___functions_ga4ab373ed0870c06fca5eb51d639adf41}{NVIC\_Init}}(\mbox{\hyperlink{struct_n_v_i_c___init_type_def}{NVIC\_InitTypeDef}}*\ NVIC\_InitStruct)}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00132}00132\ \{}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00133}00133\ \ \ uint8\_t\ tmppriority\ =\ 0x00,\ tmppre\ =\ 0x00,\ tmpsub\ =\ 0x0F;}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00134}00134\ \ \ }
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00135}00135\ \ \ \textcolor{comment}{/*\ Check\ the\ parameters\ */}}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00136}00136\ \ \ assert\_param(IS\_FUNCTIONAL\_STATE(NVIC\_InitStruct-\/>\mbox{\hyperlink{struct_n_v_i_c___init_type_def_acb23fabb995fa4980c768825f12f5815}{NVIC\_IRQChannelCmd}}));}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00137}00137\ \ \ assert\_param(IS\_NVIC\_PREEMPTION\_PRIORITY(NVIC\_InitStruct-\/>\mbox{\hyperlink{struct_n_v_i_c___init_type_def_aa3fe262c30188404a6e31f922c5ae513}{NVIC\_IRQChannelPreemptionPriority}}));\ \ }
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00138}00138\ \ \ assert\_param(IS\_NVIC\_SUB\_PRIORITY(NVIC\_InitStruct-\/>\mbox{\hyperlink{struct_n_v_i_c___init_type_def_aecc22a002244e3f1f9448dbe46c1db4b}{NVIC\_IRQChannelSubPriority}}));}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00139}00139\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00140}00140\ \ \ \textcolor{keywordflow}{if}\ (NVIC\_InitStruct-\/>\mbox{\hyperlink{struct_n_v_i_c___init_type_def_acb23fabb995fa4980c768825f12f5815}{NVIC\_IRQChannelCmd}}\ !=\ DISABLE)}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00141}00141\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00142}00142\ \ \ \ \ \textcolor{comment}{/*\ Compute\ the\ Corresponding\ IRQ\ Priority\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}\ \ \ \ }
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00143}00143\ \ \ \ \ tmppriority\ =\ (0x700\ -\/\ ((\mbox{\hyperlink{group___c_m_s_i_s__core__register_gaaaf6477c2bde2f00f99e3c2fd1060b01}{SCB}}-\/>AIRCR)\ \&\ (uint32\_t)0x700))>>\ 0x08;}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00144}00144\ \ \ \ \ tmppre\ =\ (0x4\ -\/\ tmppriority);}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00145}00145\ \ \ \ \ tmpsub\ =\ tmpsub\ >>\ tmppriority;}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00146}00146\ }
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00147}00147\ \ \ \ \ tmppriority\ =\ NVIC\_InitStruct-\/>\mbox{\hyperlink{struct_n_v_i_c___init_type_def_aa3fe262c30188404a6e31f922c5ae513}{NVIC\_IRQChannelPreemptionPriority}}\ <<\ tmppre;}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00148}00148\ \ \ \ \ tmppriority\ |=\ \ (uint8\_t)(NVIC\_InitStruct-\/>\mbox{\hyperlink{struct_n_v_i_c___init_type_def_aecc22a002244e3f1f9448dbe46c1db4b}{NVIC\_IRQChannelSubPriority}}\ \&\ tmpsub);}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00149}00149\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00150}00150\ \ \ \ \ tmppriority\ =\ tmppriority\ <<\ 0x04;}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00151}00151\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00152}00152\ \ \ \ \ \mbox{\hyperlink{group___c_m_s_i_s__core__register_gac8e97e8ce56ae9f57da1363a937f8a17}{NVIC}}-\/>IP[NVIC\_InitStruct-\/>\mbox{\hyperlink{struct_n_v_i_c___init_type_def_afa04cf6e559bb690bdd9fcb7e3d93dcf}{NVIC\_IRQChannel}}]\ =\ tmppriority;}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00153}00153\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00154}00154\ \ \ \ \ \textcolor{comment}{/*\ Enable\ the\ Selected\ IRQ\ Channels\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00155}00155\ \ \ \ \ \mbox{\hyperlink{group___c_m_s_i_s__core__register_gac8e97e8ce56ae9f57da1363a937f8a17}{NVIC}}-\/>ISER[NVIC\_InitStruct-\/>\mbox{\hyperlink{struct_n_v_i_c___init_type_def_afa04cf6e559bb690bdd9fcb7e3d93dcf}{NVIC\_IRQChannel}}\ >>\ 0x05]\ =}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00156}00156\ \ \ \ \ \ \ (uint32\_t)0x01\ <<\ (NVIC\_InitStruct-\/>\mbox{\hyperlink{struct_n_v_i_c___init_type_def_afa04cf6e559bb690bdd9fcb7e3d93dcf}{NVIC\_IRQChannel}}\ \&\ (uint8\_t)0x1F);}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00157}00157\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00158}00158\ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00159}00159\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00160}00160\ \ \ \ \ \textcolor{comment}{/*\ Disable\ the\ Selected\ IRQ\ Channels\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00161}00161\ \ \ \ \ \mbox{\hyperlink{group___c_m_s_i_s__core__register_gac8e97e8ce56ae9f57da1363a937f8a17}{NVIC}}-\/>ICER[NVIC\_InitStruct-\/>\mbox{\hyperlink{struct_n_v_i_c___init_type_def_afa04cf6e559bb690bdd9fcb7e3d93dcf}{NVIC\_IRQChannel}}\ >>\ 0x05]\ =}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00162}00162\ \ \ \ \ \ \ (uint32\_t)0x01\ <<\ (NVIC\_InitStruct-\/>\mbox{\hyperlink{struct_n_v_i_c___init_type_def_afa04cf6e559bb690bdd9fcb7e3d93dcf}{NVIC\_IRQChannel}}\ \&\ (uint8\_t)0x1F);}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00163}00163\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00164}00164\ \}}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00165}00165\ }
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00175}\mbox{\hyperlink{group___m_i_s_c___private___functions_ga1145208ad70edfc2fab19b8b8ef1b1a1}{00175}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group___m_i_s_c___private___functions_ga1145208ad70edfc2fab19b8b8ef1b1a1}{NVIC\_SetVectorTable}}(uint32\_t\ NVIC\_VectTab,\ uint32\_t\ Offset)}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00176}00176\ \{\ }
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00177}00177\ \ \ \textcolor{comment}{/*\ Check\ the\ parameters\ */}}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00178}00178\ \ \ assert\_param(IS\_NVIC\_VECTTAB(NVIC\_VectTab));}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00179}00179\ \ \ assert\_param(IS\_NVIC\_OFFSET(Offset));\ \ }
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00180}00180\ \ \ \ }
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00181}00181\ \ \ \mbox{\hyperlink{group___c_m_s_i_s__core__register_gaaaf6477c2bde2f00f99e3c2fd1060b01}{SCB}}-\/>VTOR\ =\ NVIC\_VectTab\ |\ (Offset\ \&\ (uint32\_t)0x1FFFFF80);}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00182}00182\ \}}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00183}00183\ }
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00194}\mbox{\hyperlink{group___m_i_s_c___private___functions_gae21011c5232f5b8f366acbecd12a1d4a}{00194}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group___m_i_s_c___private___functions_gae21011c5232f5b8f366acbecd12a1d4a}{NVIC\_SystemLPConfig}}(uint8\_t\ LowPowerMode,\ FunctionalState\ NewState)}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00195}00195\ \{}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00196}00196\ \ \ \textcolor{comment}{/*\ Check\ the\ parameters\ */}}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00197}00197\ \ \ assert\_param(IS\_NVIC\_LP(LowPowerMode));}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00198}00198\ \ \ assert\_param(IS\_FUNCTIONAL\_STATE(NewState));\ \ }
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00199}00199\ \ \ }
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00200}00200\ \ \ \textcolor{keywordflow}{if}\ (NewState\ !=\ DISABLE)}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00201}00201\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00202}00202\ \ \ \ \ \mbox{\hyperlink{group___c_m_s_i_s__core__register_gaaaf6477c2bde2f00f99e3c2fd1060b01}{SCB}}-\/>SCR\ |=\ LowPowerMode;}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00203}00203\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00204}00204\ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00205}00205\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00206}00206\ \ \ \ \ \mbox{\hyperlink{group___c_m_s_i_s__core__register_gaaaf6477c2bde2f00f99e3c2fd1060b01}{SCB}}-\/>SCR\ \&=\ (uint32\_t)(\string~(uint32\_t)LowPowerMode);}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00207}00207\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00208}00208\ \}}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00209}00209\ }
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00218}\mbox{\hyperlink{group___m_i_s_c___private___functions_ga2777d255bb06ad62bb6372a9db1ff385}{00218}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group___m_i_s_c___private___functions_ga2777d255bb06ad62bb6372a9db1ff385}{SysTick\_CLKSourceConfig}}(uint32\_t\ SysTick\_CLKSource)}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00219}00219\ \{}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00220}00220\ \ \ \textcolor{comment}{/*\ Check\ the\ parameters\ */}}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00221}00221\ \ \ assert\_param(IS\_SYSTICK\_CLK\_SOURCE(SysTick\_CLKSource));}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00222}00222\ \ \ \textcolor{keywordflow}{if}\ (SysTick\_CLKSource\ ==\ SysTick\_CLKSource\_HCLK)}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00223}00223\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00224}00224\ \ \ \ \ \mbox{\hyperlink{group___c_m_s_i_s__core__register_gacd96c53beeaff8f603fcda425eb295de}{SysTick}}-\/>CTRL\ |=\ SysTick\_CLKSource\_HCLK;}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00225}00225\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00226}00226\ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00227}00227\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00228}00228\ \ \ \ \ \mbox{\hyperlink{group___c_m_s_i_s__core__register_gacd96c53beeaff8f603fcda425eb295de}{SysTick}}-\/>CTRL\ \&=\ SysTick\_CLKSource\_HCLK\_Div8;}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00229}00229\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00230}00230\ \}}
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00231}00231\ }
+\DoxyCodeLine{\Hypertarget{misc_8c_source_l00244}00244\ \textcolor{comment}{/*******************\ (C)\ COPYRIGHT\ 2011\ STMicroelectronics\ *****END\ OF\ FILE****/}}
+
+\end{DoxyCode}

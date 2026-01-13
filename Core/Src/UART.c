@@ -1,3 +1,14 @@
+/**
+ * @file uart.c
+ * @brief UART code file
+ *
+ * This file contains the code required to make use of uarts
+ *
+ *
+ * @author Tom Veldkamp, Xander Perry & Daniël Wit Ariza
+ * @date 2026-1-13
+ */
+
 #include "uart.h"
 #include "stm32f4xx.h"
 #include <string.h>

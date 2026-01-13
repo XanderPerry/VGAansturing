@@ -1,0 +1,692 @@
+\doxysection{stm32f4xx\+\_\+dma.\+c}
+\hypertarget{stm32f4xx__dma_8c_source}{}\label{stm32f4xx__dma_8c_source}\index{Core/Src/stm32f4xx\_dma.c@{Core/Src/stm32f4xx\_dma.c}}
+\mbox{\hyperlink{stm32f4xx__dma_8c}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00001}00001\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00115}00115\ \textcolor{comment}{/*\ Includes\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00116}00116\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{stm32f4xx__dma_8h}{stm32f4xx\_dma.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00117}00117\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{stm32f4xx__rcc_8h}{stm32f4xx\_rcc.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00118}00118\ \textcolor{preprocessor}{\#include\ "{}stm32f4xx\_conf.h"{}}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00119}00119\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00129}00129\ \textcolor{comment}{/*\ Private\ typedef\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00130}00130\ \textcolor{comment}{/*\ Private\ define\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00131}00131\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00132}00132\ \textcolor{comment}{/*\ Masks\ Definition\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00133}00133\ \textcolor{preprocessor}{\#define\ TRANSFER\_IT\_ENABLE\_MASK\ (uint32\_t)(DMA\_SxCR\_TCIE\ |\ DMA\_SxCR\_HTIE\ |\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00134}00134\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ DMA\_SxCR\_TEIE\ |\ DMA\_SxCR\_DMEIE)}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00135}00135\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00136}00136\ \textcolor{preprocessor}{\#define\ DMA\_Stream0\_IT\_MASK\ \ \ \ \ (uint32\_t)(DMA\_LISR\_FEIF0\ |\ DMA\_LISR\_DMEIF0\ |\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00137}00137\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ DMA\_LISR\_TEIF0\ |\ DMA\_LISR\_HTIF0\ |\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00138}00138\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ DMA\_LISR\_TCIF0)}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00139}00139\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00140}00140\ \textcolor{preprocessor}{\#define\ DMA\_Stream1\_IT\_MASK\ \ \ \ \ (uint32\_t)(DMA\_Stream0\_IT\_MASK\ <<\ 6)}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00141}00141\ \textcolor{preprocessor}{\#define\ DMA\_Stream2\_IT\_MASK\ \ \ \ \ (uint32\_t)(DMA\_Stream0\_IT\_MASK\ <<\ 16)}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00142}00142\ \textcolor{preprocessor}{\#define\ DMA\_Stream3\_IT\_MASK\ \ \ \ \ (uint32\_t)(DMA\_Stream0\_IT\_MASK\ <<\ 22)}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00143}00143\ \textcolor{preprocessor}{\#define\ DMA\_Stream4\_IT\_MASK\ \ \ \ \ (uint32\_t)(DMA\_Stream0\_IT\_MASK\ |\ (uint32\_t)0x20000000)}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00144}00144\ \textcolor{preprocessor}{\#define\ DMA\_Stream5\_IT\_MASK\ \ \ \ \ (uint32\_t)(DMA\_Stream1\_IT\_MASK\ |\ (uint32\_t)0x20000000)}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00145}00145\ \textcolor{preprocessor}{\#define\ DMA\_Stream6\_IT\_MASK\ \ \ \ \ (uint32\_t)(DMA\_Stream2\_IT\_MASK\ |\ (uint32\_t)0x20000000)}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00146}00146\ \textcolor{preprocessor}{\#define\ DMA\_Stream7\_IT\_MASK\ \ \ \ \ (uint32\_t)(DMA\_Stream3\_IT\_MASK\ |\ (uint32\_t)0x20000000)}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00147}00147\ \textcolor{preprocessor}{\#define\ TRANSFER\_IT\_MASK\ \ \ \ \ \ \ \ (uint32\_t)0x0F3C0F3C}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00148}00148\ \textcolor{preprocessor}{\#define\ HIGH\_ISR\_MASK\ \ \ \ \ \ \ \ \ \ \ (uint32\_t)0x20000000}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00149}00149\ \textcolor{preprocessor}{\#define\ RESERVED\_MASK\ \ \ \ \ \ \ \ \ \ \ (uint32\_t)0x0F7D0F7D\ \ }}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00150}00150\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00151}00151\ \textcolor{comment}{/*\ Private\ macro\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00152}00152\ \textcolor{comment}{/*\ Private\ variables\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00153}00153\ \textcolor{comment}{/*\ Private\ function\ prototypes\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00154}00154\ \textcolor{comment}{/*\ Private\ functions\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00155}00155\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00156}00156\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00189}\mbox{\hyperlink{group___d_m_a___group1_ga38d4a4ab8990299f8a6cf064e1e811d0}{00189}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group___d_m_a___group1_ga38d4a4ab8990299f8a6cf064e1e811d0}{DMA\_DeInit}}(\mbox{\hyperlink{struct_d_m_a___stream___type_def}{DMA\_Stream\_TypeDef}}*\ DMAy\_Streamx)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00190}00190\ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00191}00191\ \ \ \textcolor{comment}{/*\ Check\ the\ parameters\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00192}00192\ \ \ assert\_param(IS\_DMA\_ALL\_PERIPH(DMAy\_Streamx));}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00193}00193\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00194}00194\ \ \ \textcolor{comment}{/*\ Disable\ the\ selected\ DMAy\ Streamx\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00195}00195\ \ \ DMAy\_Streamx-\/>\mbox{\hyperlink{struct_d_m_a___stream___type_def_af893adc5e821b15d813237b2bfe4378b}{CR}}\ \&=\ \string~((uint32\_t)DMA\_SxCR\_EN);}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00196}00196\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00197}00197\ \ \ \textcolor{comment}{/*\ Reset\ DMAy\ Streamx\ control\ register\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00198}00198\ \ \ DMAy\_Streamx-\/>\mbox{\hyperlink{struct_d_m_a___stream___type_def_af893adc5e821b15d813237b2bfe4378b}{CR}}\ \ =\ 0;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00199}00199\ \ \ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00200}00200\ \ \ \textcolor{comment}{/*\ Reset\ DMAy\ Streamx\ Number\ of\ Data\ to\ Transfer\ register\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00201}00201\ \ \ DMAy\_Streamx-\/>\mbox{\hyperlink{struct_d_m_a___stream___type_def_a2cc2a52628182f9e79ab1e49bb78a1eb}{NDTR}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00202}00202\ \ \ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00203}00203\ \ \ \textcolor{comment}{/*\ Reset\ DMAy\ Streamx\ peripheral\ address\ register\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00204}00204\ \ \ DMAy\_Streamx-\/>\mbox{\hyperlink{struct_d_m_a___stream___type_def_adbeac1d47cb85ab52dac71d520273947}{PAR}}\ \ =\ 0;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00205}00205\ \ \ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00206}00206\ \ \ \textcolor{comment}{/*\ Reset\ DMAy\ Streamx\ memory\ 0\ address\ register\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00207}00207\ \ \ DMAy\_Streamx-\/>\mbox{\hyperlink{struct_d_m_a___stream___type_def_a965da718db7d0303bff185d367d96fd6}{M0AR}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00208}00208\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00209}00209\ \ \ \textcolor{comment}{/*\ Reset\ DMAy\ Streamx\ memory\ 1\ address\ register\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00210}00210\ \ \ DMAy\_Streamx-\/>\mbox{\hyperlink{struct_d_m_a___stream___type_def_a142ca5a1145ba9cf4cfa557655af1c13}{M1AR}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00211}00211\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00212}00212\ \ \ \textcolor{comment}{/*\ Reset\ DMAy\ Streamx\ FIFO\ control\ register\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00213}00213\ \ \ DMAy\_Streamx-\/>\mbox{\hyperlink{struct_d_m_a___stream___type_def_aad3d78ab35e7af48951be5be53392f9f}{FCR}}\ =\ (uint32\_t)0x00000021;\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00214}00214\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00215}00215\ \ \ \textcolor{comment}{/*\ Reset\ interrupt\ pending\ bits\ for\ the\ selected\ stream\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00216}00216\ \ \ \textcolor{keywordflow}{if}\ (DMAy\_Streamx\ ==\ DMA1\_Stream0)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00217}00217\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00218}00218\ \ \ \ \ \textcolor{comment}{/*\ Reset\ interrupt\ pending\ bits\ for\ DMA1\ Stream0\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00219}00219\ \ \ \ \ DMA1-\/>LIFCR\ =\ DMA\_Stream0\_IT\_MASK;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00220}00220\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00221}00221\ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (DMAy\_Streamx\ ==\ DMA1\_Stream1)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00222}00222\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00223}00223\ \ \ \ \ \textcolor{comment}{/*\ Reset\ interrupt\ pending\ bits\ for\ DMA1\ Stream1\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00224}00224\ \ \ \ \ DMA1-\/>LIFCR\ =\ DMA\_Stream1\_IT\_MASK;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00225}00225\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00226}00226\ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (DMAy\_Streamx\ ==\ DMA1\_Stream2)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00227}00227\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00228}00228\ \ \ \ \ \textcolor{comment}{/*\ Reset\ interrupt\ pending\ bits\ for\ DMA1\ Stream2\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00229}00229\ \ \ \ \ DMA1-\/>LIFCR\ =\ DMA\_Stream2\_IT\_MASK;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00230}00230\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00231}00231\ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (DMAy\_Streamx\ ==\ DMA1\_Stream3)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00232}00232\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00233}00233\ \ \ \ \ \textcolor{comment}{/*\ Reset\ interrupt\ pending\ bits\ for\ DMA1\ Stream3\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00234}00234\ \ \ \ \ DMA1-\/>LIFCR\ =\ DMA\_Stream3\_IT\_MASK;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00235}00235\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00236}00236\ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (DMAy\_Streamx\ ==\ DMA1\_Stream4)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00237}00237\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00238}00238\ \ \ \ \ \textcolor{comment}{/*\ Reset\ interrupt\ pending\ bits\ for\ DMA1\ Stream4\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00239}00239\ \ \ \ \ DMA1-\/>HIFCR\ =\ DMA\_Stream4\_IT\_MASK;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00240}00240\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00241}00241\ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (DMAy\_Streamx\ ==\ DMA1\_Stream5)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00242}00242\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00243}00243\ \ \ \ \ \textcolor{comment}{/*\ Reset\ interrupt\ pending\ bits\ for\ DMA1\ Stream5\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00244}00244\ \ \ \ \ DMA1-\/>HIFCR\ =\ DMA\_Stream5\_IT\_MASK;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00245}00245\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00246}00246\ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (DMAy\_Streamx\ ==\ DMA1\_Stream6)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00247}00247\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00248}00248\ \ \ \ \ \textcolor{comment}{/*\ Reset\ interrupt\ pending\ bits\ for\ DMA1\ Stream6\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00249}00249\ \ \ \ \ DMA1-\/>HIFCR\ =\ (uint32\_t)DMA\_Stream6\_IT\_MASK;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00250}00250\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00251}00251\ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (DMAy\_Streamx\ ==\ DMA1\_Stream7)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00252}00252\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00253}00253\ \ \ \ \ \textcolor{comment}{/*\ Reset\ interrupt\ pending\ bits\ for\ DMA1\ Stream7\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00254}00254\ \ \ \ \ DMA1-\/>HIFCR\ =\ DMA\_Stream7\_IT\_MASK;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00255}00255\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00256}00256\ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (DMAy\_Streamx\ ==\ DMA2\_Stream0)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00257}00257\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00258}00258\ \ \ \ \ \textcolor{comment}{/*\ Reset\ interrupt\ pending\ bits\ for\ DMA2\ Stream0\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00259}00259\ \ \ \ \ DMA2-\/>LIFCR\ =\ DMA\_Stream0\_IT\_MASK;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00260}00260\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00261}00261\ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (DMAy\_Streamx\ ==\ DMA2\_Stream1)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00262}00262\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00263}00263\ \ \ \ \ \textcolor{comment}{/*\ Reset\ interrupt\ pending\ bits\ for\ DMA2\ Stream1\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00264}00264\ \ \ \ \ DMA2-\/>LIFCR\ =\ DMA\_Stream1\_IT\_MASK;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00265}00265\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00266}00266\ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (DMAy\_Streamx\ ==\ DMA2\_Stream2)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00267}00267\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00268}00268\ \ \ \ \ \textcolor{comment}{/*\ Reset\ interrupt\ pending\ bits\ for\ DMA2\ Stream2\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00269}00269\ \ \ \ \ DMA2-\/>LIFCR\ =\ DMA\_Stream2\_IT\_MASK;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00270}00270\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00271}00271\ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (DMAy\_Streamx\ ==\ DMA2\_Stream3)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00272}00272\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00273}00273\ \ \ \ \ \textcolor{comment}{/*\ Reset\ interrupt\ pending\ bits\ for\ DMA2\ Stream3\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00274}00274\ \ \ \ \ DMA2-\/>LIFCR\ =\ DMA\_Stream3\_IT\_MASK;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00275}00275\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00276}00276\ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (DMAy\_Streamx\ ==\ DMA2\_Stream4)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00277}00277\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00278}00278\ \ \ \ \ \textcolor{comment}{/*\ Reset\ interrupt\ pending\ bits\ for\ DMA2\ Stream4\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00279}00279\ \ \ \ \ DMA2-\/>HIFCR\ =\ DMA\_Stream4\_IT\_MASK;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00280}00280\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00281}00281\ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (DMAy\_Streamx\ ==\ DMA2\_Stream5)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00282}00282\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00283}00283\ \ \ \ \ \textcolor{comment}{/*\ Reset\ interrupt\ pending\ bits\ for\ DMA2\ Stream5\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00284}00284\ \ \ \ \ DMA2-\/>HIFCR\ =\ DMA\_Stream5\_IT\_MASK;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00285}00285\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00286}00286\ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (DMAy\_Streamx\ ==\ DMA2\_Stream6)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00287}00287\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00288}00288\ \ \ \ \ \textcolor{comment}{/*\ Reset\ interrupt\ pending\ bits\ for\ DMA2\ Stream6\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00289}00289\ \ \ \ \ DMA2-\/>HIFCR\ =\ DMA\_Stream6\_IT\_MASK;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00290}00290\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00291}00291\ \ \ \textcolor{keywordflow}{else}\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00292}00292\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00293}00293\ \ \ \ \ \textcolor{keywordflow}{if}\ (DMAy\_Streamx\ ==\ DMA2\_Stream7)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00294}00294\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00295}00295\ \ \ \ \ \ \ \textcolor{comment}{/*\ Reset\ interrupt\ pending\ bits\ for\ DMA2\ Stream7\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00296}00296\ \ \ \ \ \ \ DMA2-\/>HIFCR\ =\ DMA\_Stream7\_IT\_MASK;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00297}00297\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00298}00298\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00299}00299\ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00300}00300\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00312}\mbox{\hyperlink{group___d_m_a___group1_gaced8a4149acfb0a50b50e63273a87148}{00312}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group___d_m_a___group1_gaced8a4149acfb0a50b50e63273a87148}{DMA\_Init}}(\mbox{\hyperlink{struct_d_m_a___stream___type_def}{DMA\_Stream\_TypeDef}}*\ DMAy\_Streamx,\ \mbox{\hyperlink{struct_d_m_a___init_type_def}{DMA\_InitTypeDef}}*\ DMA\_InitStruct)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00313}00313\ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00314}00314\ \ \ uint32\_t\ tmpreg\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00315}00315\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00316}00316\ \ \ \textcolor{comment}{/*\ Check\ the\ parameters\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00317}00317\ \ \ assert\_param(IS\_DMA\_ALL\_PERIPH(DMAy\_Streamx));}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00318}00318\ \ \ assert\_param(IS\_DMA\_CHANNEL(DMA\_InitStruct-\/>\mbox{\hyperlink{struct_d_m_a___init_type_def_a68cba36c380e7297b23b09a16c809969}{DMA\_Channel}}));}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00319}00319\ \ \ assert\_param(IS\_DMA\_DIRECTION(DMA\_InitStruct-\/>\mbox{\hyperlink{struct_d_m_a___init_type_def_a91b47435ccf4a40efa97bbbe631789e1}{DMA\_DIR}}));}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00320}00320\ \ \ assert\_param(IS\_DMA\_BUFFER\_SIZE(DMA\_InitStruct-\/>\mbox{\hyperlink{struct_d_m_a___init_type_def_a999df57215b28b3b1b3b6836c4952ca5}{DMA\_BufferSize}}));}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00321}00321\ \ \ assert\_param(IS\_DMA\_PERIPHERAL\_INC\_STATE(DMA\_InitStruct-\/>\mbox{\hyperlink{struct_d_m_a___init_type_def_ad4d427790f9a089ca0257a358fc263c2}{DMA\_PeripheralInc}}));}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00322}00322\ \ \ assert\_param(IS\_DMA\_MEMORY\_INC\_STATE(DMA\_InitStruct-\/>\mbox{\hyperlink{struct_d_m_a___init_type_def_aaf69c680a297ec01a2ed613289e691a1}{DMA\_MemoryInc}}));}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00323}00323\ \ \ assert\_param(IS\_DMA\_PERIPHERAL\_DATA\_SIZE(DMA\_InitStruct-\/>\mbox{\hyperlink{struct_d_m_a___init_type_def_afb46aaadfb80a7e19277c868bd252554}{DMA\_PeripheralDataSize}}));}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00324}00324\ \ \ assert\_param(IS\_DMA\_MEMORY\_DATA\_SIZE(DMA\_InitStruct-\/>\mbox{\hyperlink{struct_d_m_a___init_type_def_a74bb71921c4d198d6cf1979c120f694f}{DMA\_MemoryDataSize}}));}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00325}00325\ \ \ assert\_param(IS\_DMA\_MODE(DMA\_InitStruct-\/>\mbox{\hyperlink{struct_d_m_a___init_type_def_a8adbe6f3e46471d109afaa3111dce220}{DMA\_Mode}}));}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00326}00326\ \ \ assert\_param(IS\_DMA\_PRIORITY(DMA\_InitStruct-\/>\mbox{\hyperlink{struct_d_m_a___init_type_def_ab9a17bd51778478cbd728c868206dca0}{DMA\_Priority}}));}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00327}00327\ \ \ assert\_param(IS\_DMA\_FIFO\_MODE\_STATE(DMA\_InitStruct-\/>\mbox{\hyperlink{struct_d_m_a___init_type_def_a56198043a8d5f2e25a87a79cbe2a3aa5}{DMA\_FIFOMode}}));}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00328}00328\ \ \ assert\_param(IS\_DMA\_FIFO\_THRESHOLD(DMA\_InitStruct-\/>\mbox{\hyperlink{struct_d_m_a___init_type_def_a5dbf46e6177ea71b38119e5442a9fb36}{DMA\_FIFOThreshold}}));}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00329}00329\ \ \ assert\_param(IS\_DMA\_MEMORY\_BURST(DMA\_InitStruct-\/>\mbox{\hyperlink{struct_d_m_a___init_type_def_a10bdf685aa58035632ead27b61fe4ffd}{DMA\_MemoryBurst}}));}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00330}00330\ \ \ assert\_param(IS\_DMA\_PERIPHERAL\_BURST(DMA\_InitStruct-\/>\mbox{\hyperlink{struct_d_m_a___init_type_def_a331a1d487dba9bcba3f58e136bb91bc1}{DMA\_PeripheralBurst}}));}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00331}00331\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00332}00332\ \ \ \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ DMAy\ Streamx\ CR\ Configuration\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00333}00333\ \ \ \textcolor{comment}{/*\ Get\ the\ DMAy\_Streamx\ CR\ value\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00334}00334\ \ \ tmpreg\ =\ DMAy\_Streamx-\/>\mbox{\hyperlink{struct_d_m_a___stream___type_def_af893adc5e821b15d813237b2bfe4378b}{CR}};}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00335}00335\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00336}00336\ \ \ \textcolor{comment}{/*\ Clear\ CHSEL,\ MBURST,\ PBURST,\ PL,\ MSIZE,\ PSIZE,\ MINC,\ PINC,\ CIRC\ and\ DIR\ bits\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00337}00337\ \ \ tmpreg\ \&=\ ((uint32\_t)\string~(DMA\_SxCR\_CHSEL\ |\ DMA\_SxCR\_MBURST\ |\ DMA\_SxCR\_PBURST\ |\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00338}00338\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ DMA\_SxCR\_PL\ |\ DMA\_SxCR\_MSIZE\ |\ DMA\_SxCR\_PSIZE\ |\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00339}00339\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ DMA\_SxCR\_MINC\ |\ DMA\_SxCR\_PINC\ |\ DMA\_SxCR\_CIRC\ |\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00340}00340\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ DMA\_SxCR\_DIR));}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00341}00341\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00342}00342\ \ \ \textcolor{comment}{/*\ Configure\ DMAy\ Streamx:\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00343}00343\ \ \ \textcolor{comment}{/*\ Set\ CHSEL\ bits\ according\ to\ DMA\_CHSEL\ value\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00344}00344\ \ \ \textcolor{comment}{/*\ Set\ DIR\ bits\ according\ to\ DMA\_DIR\ value\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00345}00345\ \ \ \textcolor{comment}{/*\ Set\ PINC\ bit\ according\ to\ DMA\_PeripheralInc\ value\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00346}00346\ \ \ \textcolor{comment}{/*\ Set\ MINC\ bit\ according\ to\ DMA\_MemoryInc\ value\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00347}00347\ \ \ \textcolor{comment}{/*\ Set\ PSIZE\ bits\ according\ to\ DMA\_PeripheralDataSize\ value\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00348}00348\ \ \ \textcolor{comment}{/*\ Set\ MSIZE\ bits\ according\ to\ DMA\_MemoryDataSize\ value\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00349}00349\ \ \ \textcolor{comment}{/*\ Set\ CIRC\ bit\ according\ to\ DMA\_Mode\ value\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00350}00350\ \ \ \textcolor{comment}{/*\ Set\ PL\ bits\ according\ to\ DMA\_Priority\ value\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00351}00351\ \ \ \textcolor{comment}{/*\ Set\ MBURST\ bits\ according\ to\ DMA\_MemoryBurst\ value\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00352}00352\ \ \ \textcolor{comment}{/*\ Set\ PBURST\ bits\ according\ to\ DMA\_PeripheralBurst\ value\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00353}00353\ \ \ tmpreg\ |=\ DMA\_InitStruct-\/>\mbox{\hyperlink{struct_d_m_a___init_type_def_a68cba36c380e7297b23b09a16c809969}{DMA\_Channel}}\ |\ DMA\_InitStruct-\/>\mbox{\hyperlink{struct_d_m_a___init_type_def_a91b47435ccf4a40efa97bbbe631789e1}{DMA\_DIR}}\ |}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00354}00354\ \ \ \ \ \ \ \ \ \ \ \ \ DMA\_InitStruct-\/>\mbox{\hyperlink{struct_d_m_a___init_type_def_ad4d427790f9a089ca0257a358fc263c2}{DMA\_PeripheralInc}}\ |\ DMA\_InitStruct-\/>\mbox{\hyperlink{struct_d_m_a___init_type_def_aaf69c680a297ec01a2ed613289e691a1}{DMA\_MemoryInc}}\ |}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00355}00355\ \ \ \ \ \ \ \ \ \ \ \ \ DMA\_InitStruct-\/>\mbox{\hyperlink{struct_d_m_a___init_type_def_afb46aaadfb80a7e19277c868bd252554}{DMA\_PeripheralDataSize}}\ |\ DMA\_InitStruct-\/>\mbox{\hyperlink{struct_d_m_a___init_type_def_a74bb71921c4d198d6cf1979c120f694f}{DMA\_MemoryDataSize}}\ |}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00356}00356\ \ \ \ \ \ \ \ \ \ \ \ \ DMA\_InitStruct-\/>\mbox{\hyperlink{struct_d_m_a___init_type_def_a8adbe6f3e46471d109afaa3111dce220}{DMA\_Mode}}\ |\ DMA\_InitStruct-\/>\mbox{\hyperlink{struct_d_m_a___init_type_def_ab9a17bd51778478cbd728c868206dca0}{DMA\_Priority}}\ |}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00357}00357\ \ \ \ \ \ \ \ \ \ \ \ \ DMA\_InitStruct-\/>\mbox{\hyperlink{struct_d_m_a___init_type_def_a10bdf685aa58035632ead27b61fe4ffd}{DMA\_MemoryBurst}}\ |\ DMA\_InitStruct-\/>\mbox{\hyperlink{struct_d_m_a___init_type_def_a331a1d487dba9bcba3f58e136bb91bc1}{DMA\_PeripheralBurst}};}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00358}00358\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00359}00359\ \ \ \textcolor{comment}{/*\ Write\ to\ DMAy\ Streamx\ CR\ register\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00360}00360\ \ \ DMAy\_Streamx-\/>\mbox{\hyperlink{struct_d_m_a___stream___type_def_af893adc5e821b15d813237b2bfe4378b}{CR}}\ =\ tmpreg;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00361}00361\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00362}00362\ \ \ \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ DMAy\ Streamx\ FCR\ Configuration\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00363}00363\ \ \ \textcolor{comment}{/*\ Get\ the\ DMAy\_Streamx\ FCR\ value\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00364}00364\ \ \ tmpreg\ =\ DMAy\_Streamx-\/>\mbox{\hyperlink{struct_d_m_a___stream___type_def_aad3d78ab35e7af48951be5be53392f9f}{FCR}};}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00365}00365\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00366}00366\ \ \ \textcolor{comment}{/*\ Clear\ DMDIS\ and\ FTH\ bits\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00367}00367\ \ \ tmpreg\ \&=\ (uint32\_t)\string~(DMA\_SxFCR\_DMDIS\ |\ DMA\_SxFCR\_FTH);}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00368}00368\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00369}00369\ \ \ \textcolor{comment}{/*\ Configure\ DMAy\ Streamx\ FIFO:\ }}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00370}00370\ \textcolor{comment}{\ \ \ \ Set\ DMDIS\ bits\ according\ to\ DMA\_FIFOMode\ value\ }}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00371}00371\ \textcolor{comment}{\ \ \ \ Set\ FTH\ bits\ according\ to\ DMA\_FIFOThreshold\ value\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00372}00372\ \ \ tmpreg\ |=\ DMA\_InitStruct-\/>\mbox{\hyperlink{struct_d_m_a___init_type_def_a56198043a8d5f2e25a87a79cbe2a3aa5}{DMA\_FIFOMode}}\ |\ DMA\_InitStruct-\/>\mbox{\hyperlink{struct_d_m_a___init_type_def_a5dbf46e6177ea71b38119e5442a9fb36}{DMA\_FIFOThreshold}};}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00373}00373\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00374}00374\ \ \ \textcolor{comment}{/*\ Write\ to\ DMAy\ Streamx\ CR\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00375}00375\ \ \ DMAy\_Streamx-\/>\mbox{\hyperlink{struct_d_m_a___stream___type_def_aad3d78ab35e7af48951be5be53392f9f}{FCR}}\ =\ tmpreg;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00376}00376\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00377}00377\ \ \ \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ DMAy\ Streamx\ NDTR\ Configuration\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00378}00378\ \ \ \textcolor{comment}{/*\ Write\ to\ DMAy\ Streamx\ NDTR\ register\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00379}00379\ \ \ DMAy\_Streamx-\/>\mbox{\hyperlink{struct_d_m_a___stream___type_def_a2cc2a52628182f9e79ab1e49bb78a1eb}{NDTR}}\ =\ DMA\_InitStruct-\/>\mbox{\hyperlink{struct_d_m_a___init_type_def_a999df57215b28b3b1b3b6836c4952ca5}{DMA\_BufferSize}};}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00380}00380\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00381}00381\ \ \ \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ DMAy\ Streamx\ PAR\ Configuration\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00382}00382\ \ \ \textcolor{comment}{/*\ Write\ to\ DMAy\ Streamx\ PAR\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00383}00383\ \ \ DMAy\_Streamx-\/>\mbox{\hyperlink{struct_d_m_a___stream___type_def_adbeac1d47cb85ab52dac71d520273947}{PAR}}\ =\ DMA\_InitStruct-\/>\mbox{\hyperlink{struct_d_m_a___init_type_def_a232af556de7c2eec9a82d448730bd86d}{DMA\_PeripheralBaseAddr}};}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00384}00384\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00385}00385\ \ \ \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ DMAy\ Streamx\ M0AR\ Configuration\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00386}00386\ \ \ \textcolor{comment}{/*\ Write\ to\ DMAy\ Streamx\ M0AR\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00387}00387\ \ \ DMAy\_Streamx-\/>\mbox{\hyperlink{struct_d_m_a___stream___type_def_a965da718db7d0303bff185d367d96fd6}{M0AR}}\ =\ DMA\_InitStruct-\/>\mbox{\hyperlink{struct_d_m_a___init_type_def_a93227da797b033f9bc87523e1cfd8bbb}{DMA\_Memory0BaseAddr}};}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00388}00388\ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00389}00389\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00396}\mbox{\hyperlink{group___d_m_a___group1_ga0f7f95f750a90a6824f4e9b6f58adc7e}{00396}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group___d_m_a___group1_ga0f7f95f750a90a6824f4e9b6f58adc7e}{DMA\_StructInit}}(\mbox{\hyperlink{struct_d_m_a___init_type_def}{DMA\_InitTypeDef}}*\ DMA\_InitStruct)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00397}00397\ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00398}00398\ \ \ \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ Reset\ DMA\ init\ structure\ parameters\ values\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00399}00399\ \ \ \textcolor{comment}{/*\ Initialize\ the\ DMA\_Channel\ member\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00400}00400\ \ \ DMA\_InitStruct-\/>\mbox{\hyperlink{struct_d_m_a___init_type_def_a68cba36c380e7297b23b09a16c809969}{DMA\_Channel}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00401}00401\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00402}00402\ \ \ \textcolor{comment}{/*\ Initialize\ the\ DMA\_PeripheralBaseAddr\ member\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00403}00403\ \ \ DMA\_InitStruct-\/>\mbox{\hyperlink{struct_d_m_a___init_type_def_a232af556de7c2eec9a82d448730bd86d}{DMA\_PeripheralBaseAddr}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00404}00404\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00405}00405\ \ \ \textcolor{comment}{/*\ Initialize\ the\ DMA\_Memory0BaseAddr\ member\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00406}00406\ \ \ DMA\_InitStruct-\/>\mbox{\hyperlink{struct_d_m_a___init_type_def_a93227da797b033f9bc87523e1cfd8bbb}{DMA\_Memory0BaseAddr}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00407}00407\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00408}00408\ \ \ \textcolor{comment}{/*\ Initialize\ the\ DMA\_DIR\ member\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00409}00409\ \ \ DMA\_InitStruct-\/>\mbox{\hyperlink{struct_d_m_a___init_type_def_a91b47435ccf4a40efa97bbbe631789e1}{DMA\_DIR}}\ =\ DMA\_DIR\_PeripheralToMemory;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00410}00410\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00411}00411\ \ \ \textcolor{comment}{/*\ Initialize\ the\ DMA\_BufferSize\ member\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00412}00412\ \ \ DMA\_InitStruct-\/>\mbox{\hyperlink{struct_d_m_a___init_type_def_a999df57215b28b3b1b3b6836c4952ca5}{DMA\_BufferSize}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00413}00413\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00414}00414\ \ \ \textcolor{comment}{/*\ Initialize\ the\ DMA\_PeripheralInc\ member\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00415}00415\ \ \ DMA\_InitStruct-\/>\mbox{\hyperlink{struct_d_m_a___init_type_def_ad4d427790f9a089ca0257a358fc263c2}{DMA\_PeripheralInc}}\ =\ DMA\_PeripheralInc\_Disable;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00416}00416\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00417}00417\ \ \ \textcolor{comment}{/*\ Initialize\ the\ DMA\_MemoryInc\ member\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00418}00418\ \ \ DMA\_InitStruct-\/>\mbox{\hyperlink{struct_d_m_a___init_type_def_aaf69c680a297ec01a2ed613289e691a1}{DMA\_MemoryInc}}\ =\ DMA\_MemoryInc\_Disable;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00419}00419\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00420}00420\ \ \ \textcolor{comment}{/*\ Initialize\ the\ DMA\_PeripheralDataSize\ member\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00421}00421\ \ \ DMA\_InitStruct-\/>\mbox{\hyperlink{struct_d_m_a___init_type_def_afb46aaadfb80a7e19277c868bd252554}{DMA\_PeripheralDataSize}}\ =\ DMA\_PeripheralDataSize\_Byte;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00422}00422\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00423}00423\ \ \ \textcolor{comment}{/*\ Initialize\ the\ DMA\_MemoryDataSize\ member\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00424}00424\ \ \ DMA\_InitStruct-\/>\mbox{\hyperlink{struct_d_m_a___init_type_def_a74bb71921c4d198d6cf1979c120f694f}{DMA\_MemoryDataSize}}\ =\ DMA\_MemoryDataSize\_Byte;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00425}00425\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00426}00426\ \ \ \textcolor{comment}{/*\ Initialize\ the\ DMA\_Mode\ member\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00427}00427\ \ \ DMA\_InitStruct-\/>\mbox{\hyperlink{struct_d_m_a___init_type_def_a8adbe6f3e46471d109afaa3111dce220}{DMA\_Mode}}\ =\ DMA\_Mode\_Normal;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00428}00428\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00429}00429\ \ \ \textcolor{comment}{/*\ Initialize\ the\ DMA\_Priority\ member\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00430}00430\ \ \ DMA\_InitStruct-\/>\mbox{\hyperlink{struct_d_m_a___init_type_def_ab9a17bd51778478cbd728c868206dca0}{DMA\_Priority}}\ =\ DMA\_Priority\_Low;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00431}00431\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00432}00432\ \ \ \textcolor{comment}{/*\ Initialize\ the\ DMA\_FIFOMode\ member\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00433}00433\ \ \ DMA\_InitStruct-\/>\mbox{\hyperlink{struct_d_m_a___init_type_def_a56198043a8d5f2e25a87a79cbe2a3aa5}{DMA\_FIFOMode}}\ =\ DMA\_FIFOMode\_Disable;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00434}00434\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00435}00435\ \ \ \textcolor{comment}{/*\ Initialize\ the\ DMA\_FIFOThreshold\ member\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00436}00436\ \ \ DMA\_InitStruct-\/>\mbox{\hyperlink{struct_d_m_a___init_type_def_a5dbf46e6177ea71b38119e5442a9fb36}{DMA\_FIFOThreshold}}\ =\ DMA\_FIFOThreshold\_1QuarterFull;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00437}00437\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00438}00438\ \ \ \textcolor{comment}{/*\ Initialize\ the\ DMA\_MemoryBurst\ member\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00439}00439\ \ \ DMA\_InitStruct-\/>\mbox{\hyperlink{struct_d_m_a___init_type_def_a10bdf685aa58035632ead27b61fe4ffd}{DMA\_MemoryBurst}}\ =\ DMA\_MemoryBurst\_Single;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00440}00440\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00441}00441\ \ \ \textcolor{comment}{/*\ Initialize\ the\ DMA\_PeripheralBurst\ member\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00442}00442\ \ \ DMA\_InitStruct-\/>\mbox{\hyperlink{struct_d_m_a___init_type_def_a331a1d487dba9bcba3f58e136bb91bc1}{DMA\_PeripheralBurst}}\ =\ DMA\_PeripheralBurst\_Single;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00443}00443\ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00444}00444\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00471}\mbox{\hyperlink{group___d_m_a___group1_gab2bea22f9f6dc62fdd7afb385a0c1f73}{00471}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group___d_m_a___group1_gab2bea22f9f6dc62fdd7afb385a0c1f73}{DMA\_Cmd}}(\mbox{\hyperlink{struct_d_m_a___stream___type_def}{DMA\_Stream\_TypeDef}}*\ DMAy\_Streamx,\ FunctionalState\ NewState)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00472}00472\ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00473}00473\ \ \ \textcolor{comment}{/*\ Check\ the\ parameters\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00474}00474\ \ \ assert\_param(IS\_DMA\_ALL\_PERIPH(DMAy\_Streamx));}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00475}00475\ \ \ assert\_param(IS\_FUNCTIONAL\_STATE(NewState));}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00476}00476\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00477}00477\ \ \ \textcolor{keywordflow}{if}\ (NewState\ !=\ DISABLE)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00478}00478\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00479}00479\ \ \ \ \ \textcolor{comment}{/*\ Enable\ the\ selected\ DMAy\ Streamx\ by\ setting\ EN\ bit\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00480}00480\ \ \ \ \ DMAy\_Streamx-\/>\mbox{\hyperlink{struct_d_m_a___stream___type_def_af893adc5e821b15d813237b2bfe4378b}{CR}}\ |=\ (uint32\_t)DMA\_SxCR\_EN;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00481}00481\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00482}00482\ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00483}00483\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00484}00484\ \ \ \ \ \textcolor{comment}{/*\ Disable\ the\ selected\ DMAy\ Streamx\ by\ clearing\ EN\ bit\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00485}00485\ \ \ \ \ DMAy\_Streamx-\/>\mbox{\hyperlink{struct_d_m_a___stream___type_def_af893adc5e821b15d813237b2bfe4378b}{CR}}\ \&=\ \string~(uint32\_t)DMA\_SxCR\_EN;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00486}00486\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00487}00487\ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00488}00488\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00507}\mbox{\hyperlink{group___d_m_a___group1_ga210a9861460b3c9b3fa14fdc1a949744}{00507}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group___d_m_a___group1_ga210a9861460b3c9b3fa14fdc1a949744}{DMA\_PeriphIncOffsetSizeConfig}}(\mbox{\hyperlink{struct_d_m_a___stream___type_def}{DMA\_Stream\_TypeDef}}*\ DMAy\_Streamx,\ uint32\_t\ DMA\_Pincos)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00508}00508\ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00509}00509\ \ \ \textcolor{comment}{/*\ Check\ the\ parameters\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00510}00510\ \ \ assert\_param(IS\_DMA\_ALL\_PERIPH(DMAy\_Streamx));}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00511}00511\ \ \ assert\_param(IS\_DMA\_PINCOS\_SIZE(DMA\_Pincos));}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00512}00512\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00513}00513\ \ \ \textcolor{comment}{/*\ Check\ the\ needed\ Peripheral\ increment\ offset\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00514}00514\ \ \ \textcolor{keywordflow}{if}(DMA\_Pincos\ !=\ DMA\_PINCOS\_Psize)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00515}00515\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00516}00516\ \ \ \ \ \textcolor{comment}{/*\ Configure\ DMA\_SxCR\_PINCOS\ bit\ with\ the\ input\ parameter\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00517}00517\ \ \ \ \ DMAy\_Streamx-\/>\mbox{\hyperlink{struct_d_m_a___stream___type_def_af893adc5e821b15d813237b2bfe4378b}{CR}}\ |=\ (uint32\_t)DMA\_SxCR\_PINCOS;\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00518}00518\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00519}00519\ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00520}00520\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00521}00521\ \ \ \ \ \textcolor{comment}{/*\ Clear\ the\ PINCOS\ bit:\ Peripheral\ address\ incremented\ according\ to\ PSIZE\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00522}00522\ \ \ \ \ DMAy\_Streamx-\/>\mbox{\hyperlink{struct_d_m_a___stream___type_def_af893adc5e821b15d813237b2bfe4378b}{CR}}\ \&=\ \string~(uint32\_t)DMA\_SxCR\_PINCOS;\ \ \ \ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00523}00523\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00524}00524\ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00525}00525\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00543}\mbox{\hyperlink{group___d_m_a___group1_ga77f7628f6be9d6d088127eceb090b8b2}{00543}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group___d_m_a___group1_ga77f7628f6be9d6d088127eceb090b8b2}{DMA\_FlowControllerConfig}}(\mbox{\hyperlink{struct_d_m_a___stream___type_def}{DMA\_Stream\_TypeDef}}*\ DMAy\_Streamx,\ uint32\_t\ DMA\_FlowCtrl)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00544}00544\ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00545}00545\ \ \ \textcolor{comment}{/*\ Check\ the\ parameters\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00546}00546\ \ \ assert\_param(IS\_DMA\_ALL\_PERIPH(DMAy\_Streamx));}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00547}00547\ \ \ assert\_param(IS\_DMA\_FLOW\_CTRL(DMA\_FlowCtrl));}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00548}00548\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00549}00549\ \ \ \textcolor{comment}{/*\ Check\ the\ needed\ flow\ controller\ \ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00550}00550\ \ \ \textcolor{keywordflow}{if}(DMA\_FlowCtrl\ !=\ DMA\_FlowCtrl\_Memory)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00551}00551\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00552}00552\ \ \ \ \ \textcolor{comment}{/*\ Configure\ DMA\_SxCR\_PFCTRL\ bit\ with\ the\ input\ parameter\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00553}00553\ \ \ \ \ DMAy\_Streamx-\/>\mbox{\hyperlink{struct_d_m_a___stream___type_def_af893adc5e821b15d813237b2bfe4378b}{CR}}\ |=\ (uint32\_t)DMA\_SxCR\_PFCTRL;\ \ \ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00554}00554\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00555}00555\ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00556}00556\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00557}00557\ \ \ \ \ \textcolor{comment}{/*\ Clear\ the\ PFCTRL\ bit:\ Memory\ is\ the\ flow\ controller\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00558}00558\ \ \ \ \ DMAy\_Streamx-\/>\mbox{\hyperlink{struct_d_m_a___stream___type_def_af893adc5e821b15d813237b2bfe4378b}{CR}}\ \&=\ \string~(uint32\_t)DMA\_SxCR\_PFCTRL;\ \ \ \ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00559}00559\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00560}00560\ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00627}\mbox{\hyperlink{group___d_m_a___group2_ga6a11a2c951cff59b125ba8857d44e3f3}{00627}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group___d_m_a___group2_ga6a11a2c951cff59b125ba8857d44e3f3}{DMA\_SetCurrDataCounter}}(\mbox{\hyperlink{struct_d_m_a___stream___type_def}{DMA\_Stream\_TypeDef}}*\ DMAy\_Streamx,\ uint16\_t\ Counter)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00628}00628\ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00629}00629\ \ \ \textcolor{comment}{/*\ Check\ the\ parameters\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00630}00630\ \ \ assert\_param(IS\_DMA\_ALL\_PERIPH(DMAy\_Streamx));}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00631}00631\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00632}00632\ \ \ \textcolor{comment}{/*\ Write\ the\ number\ of\ data\ units\ to\ be\ transferred\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00633}00633\ \ \ DMAy\_Streamx-\/>\mbox{\hyperlink{struct_d_m_a___stream___type_def_a2cc2a52628182f9e79ab1e49bb78a1eb}{NDTR}}\ =\ (uint16\_t)Counter;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00634}00634\ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00635}00635\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00642}\mbox{\hyperlink{group___d_m_a___group2_ga4a76444a92423f5f15a4328738d6dc46}{00642}}\ uint16\_t\ \mbox{\hyperlink{group___d_m_a___group2_ga4a76444a92423f5f15a4328738d6dc46}{DMA\_GetCurrDataCounter}}(\mbox{\hyperlink{struct_d_m_a___stream___type_def}{DMA\_Stream\_TypeDef}}*\ DMAy\_Streamx)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00643}00643\ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00644}00644\ \ \ \textcolor{comment}{/*\ Check\ the\ parameters\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00645}00645\ \ \ assert\_param(IS\_DMA\_ALL\_PERIPH(DMAy\_Streamx));}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00646}00646\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00647}00647\ \ \ \textcolor{comment}{/*\ Return\ the\ number\ of\ remaining\ data\ units\ for\ DMAy\ Streamx\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00648}00648\ \ \ \textcolor{keywordflow}{return}\ ((uint16\_t)(DMAy\_Streamx-\/>\mbox{\hyperlink{struct_d_m_a___stream___type_def_a2cc2a52628182f9e79ab1e49bb78a1eb}{NDTR}}));}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00649}00649\ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00719}\mbox{\hyperlink{group___d_m_a___group3_ga8d0957e50302efaf48a16c62d14c9ca8}{00719}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group___d_m_a___group3_ga8d0957e50302efaf48a16c62d14c9ca8}{DMA\_DoubleBufferModeConfig}}(\mbox{\hyperlink{struct_d_m_a___stream___type_def}{DMA\_Stream\_TypeDef}}*\ DMAy\_Streamx,\ uint32\_t\ Memory1BaseAddr,}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00720}00720\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uint32\_t\ DMA\_CurrentMemory)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00721}00721\ \{\ \ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00722}00722\ \ \ \textcolor{comment}{/*\ Check\ the\ parameters\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00723}00723\ \ \ assert\_param(IS\_DMA\_ALL\_PERIPH(DMAy\_Streamx));}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00724}00724\ \ \ assert\_param(IS\_DMA\_CURRENT\_MEM(DMA\_CurrentMemory));}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00725}00725\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00726}00726\ \ \ \textcolor{keywordflow}{if}\ (DMA\_CurrentMemory\ !=\ DMA\_Memory\_0)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00727}00727\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00728}00728\ \ \ \ \ \textcolor{comment}{/*\ Set\ Memory\ 1\ as\ current\ memory\ address\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00729}00729\ \ \ \ \ DMAy\_Streamx-\/>\mbox{\hyperlink{struct_d_m_a___stream___type_def_af893adc5e821b15d813237b2bfe4378b}{CR}}\ |=\ (uint32\_t)(DMA\_SxCR\_CT);\ \ \ \ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00730}00730\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00731}00731\ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00732}00732\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00733}00733\ \ \ \ \ \textcolor{comment}{/*\ Set\ Memory\ 0\ as\ current\ memory\ address\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00734}00734\ \ \ \ \ DMAy\_Streamx-\/>\mbox{\hyperlink{struct_d_m_a___stream___type_def_af893adc5e821b15d813237b2bfe4378b}{CR}}\ \&=\ \string~(uint32\_t)(DMA\_SxCR\_CT);\ \ \ \ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00735}00735\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00736}00736\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00737}00737\ \ \ \textcolor{comment}{/*\ Write\ to\ DMAy\ Streamx\ M1AR\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00738}00738\ \ \ DMAy\_Streamx-\/>\mbox{\hyperlink{struct_d_m_a___stream___type_def_a142ca5a1145ba9cf4cfa557655af1c13}{M1AR}}\ =\ Memory1BaseAddr;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00739}00739\ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00740}00740\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00750}\mbox{\hyperlink{group___d_m_a___group3_ga7fe09e62ea3125db384829dab59ebe3e}{00750}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group___d_m_a___group3_ga7fe09e62ea3125db384829dab59ebe3e}{DMA\_DoubleBufferModeCmd}}(\mbox{\hyperlink{struct_d_m_a___stream___type_def}{DMA\_Stream\_TypeDef}}*\ DMAy\_Streamx,\ FunctionalState\ NewState)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00751}00751\ \{\ \ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00752}00752\ \ \ \textcolor{comment}{/*\ Check\ the\ parameters\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00753}00753\ \ \ assert\_param(IS\_DMA\_ALL\_PERIPH(DMAy\_Streamx));}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00754}00754\ \ \ assert\_param(IS\_FUNCTIONAL\_STATE(NewState));}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00755}00755\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00756}00756\ \ \ \textcolor{comment}{/*\ Configure\ the\ Double\ Buffer\ mode\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00757}00757\ \ \ \textcolor{keywordflow}{if}\ (NewState\ !=\ DISABLE)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00758}00758\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00759}00759\ \ \ \ \ \textcolor{comment}{/*\ Enable\ the\ Double\ buffer\ mode\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00760}00760\ \ \ \ \ DMAy\_Streamx-\/>\mbox{\hyperlink{struct_d_m_a___stream___type_def_af893adc5e821b15d813237b2bfe4378b}{CR}}\ |=\ (uint32\_t)DMA\_SxCR\_DBM;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00761}00761\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00762}00762\ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00763}00763\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00764}00764\ \ \ \ \ \textcolor{comment}{/*\ Disable\ the\ Double\ buffer\ mode\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00765}00765\ \ \ \ \ DMAy\_Streamx-\/>\mbox{\hyperlink{struct_d_m_a___stream___type_def_af893adc5e821b15d813237b2bfe4378b}{CR}}\ \&=\ \string~(uint32\_t)DMA\_SxCR\_DBM;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00766}00766\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00767}00767\ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00768}00768\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00791}\mbox{\hyperlink{group___d_m_a___group3_ga4ebcffd32eb6968ac61cfb64a6bae258}{00791}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group___d_m_a___group3_ga4ebcffd32eb6968ac61cfb64a6bae258}{DMA\_MemoryTargetConfig}}(\mbox{\hyperlink{struct_d_m_a___stream___type_def}{DMA\_Stream\_TypeDef}}*\ DMAy\_Streamx,\ uint32\_t\ MemoryBaseAddr,}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00792}00792\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ uint32\_t\ DMA\_MemoryTarget)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00793}00793\ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00794}00794\ \ \ \textcolor{comment}{/*\ Check\ the\ parameters\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00795}00795\ \ \ assert\_param(IS\_DMA\_ALL\_PERIPH(DMAy\_Streamx));}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00796}00796\ \ \ assert\_param(IS\_DMA\_CURRENT\_MEM(DMA\_MemoryTarget));}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00797}00797\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00798}00798\ \ \ \textcolor{comment}{/*\ Check\ the\ Memory\ target\ to\ be\ configured\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00799}00799\ \ \ \textcolor{keywordflow}{if}\ (DMA\_MemoryTarget\ !=\ DMA\_Memory\_0)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00800}00800\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00801}00801\ \ \ \ \ \textcolor{comment}{/*\ Write\ to\ DMAy\ Streamx\ M1AR\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00802}00802\ \ \ \ \ DMAy\_Streamx-\/>\mbox{\hyperlink{struct_d_m_a___stream___type_def_a142ca5a1145ba9cf4cfa557655af1c13}{M1AR}}\ =\ MemoryBaseAddr;\ \ \ \ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00803}00803\ \ \ \}\ \ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00804}00804\ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00805}00805\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00806}00806\ \ \ \ \ \textcolor{comment}{/*\ Write\ to\ DMAy\ Streamx\ M0AR\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00807}00807\ \ \ \ \ DMAy\_Streamx-\/>\mbox{\hyperlink{struct_d_m_a___stream___type_def_a965da718db7d0303bff185d367d96fd6}{M0AR}}\ =\ MemoryBaseAddr;\ \ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00808}00808\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00809}00809\ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00810}00810\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00817}\mbox{\hyperlink{group___d_m_a___group3_ga74b6624f9faa2f43c9369ddbdeab241c}{00817}}\ uint32\_t\ \mbox{\hyperlink{group___d_m_a___group3_ga74b6624f9faa2f43c9369ddbdeab241c}{DMA\_GetCurrentMemoryTarget}}(\mbox{\hyperlink{struct_d_m_a___stream___type_def}{DMA\_Stream\_TypeDef}}*\ DMAy\_Streamx)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00818}00818\ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00819}00819\ \ \ uint32\_t\ tmp\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00820}00820\ \ \ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00821}00821\ \ \ \textcolor{comment}{/*\ Check\ the\ parameters\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00822}00822\ \ \ assert\_param(IS\_DMA\_ALL\_PERIPH(DMAy\_Streamx));}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00823}00823\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00824}00824\ \ \ \textcolor{comment}{/*\ Get\ the\ current\ memory\ target\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00825}00825\ \ \ \textcolor{keywordflow}{if}\ ((DMAy\_Streamx-\/>\mbox{\hyperlink{struct_d_m_a___stream___type_def_af893adc5e821b15d813237b2bfe4378b}{CR}}\ \&\ DMA\_SxCR\_CT)\ !=\ 0)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00826}00826\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00827}00827\ \ \ \ \ \textcolor{comment}{/*\ Current\ memory\ buffer\ used\ is\ Memory\ 1\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00828}00828\ \ \ \ \ tmp\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00829}00829\ \ \ \}\ \ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00830}00830\ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00831}00831\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00832}00832\ \ \ \ \ \textcolor{comment}{/*\ Current\ memory\ buffer\ used\ is\ Memory\ 0\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00833}00833\ \ \ \ \ tmp\ =\ 0;\ \ \ \ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00834}00834\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00835}00835\ \ \ \textcolor{keywordflow}{return}\ tmp;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00836}00836\ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00926}\mbox{\hyperlink{group___d_m_a___group4_gaa4d631cdd6cd020106435f30c0c6fb15}{00926}}\ FunctionalState\ \mbox{\hyperlink{group___d_m_a___group4_gaa4d631cdd6cd020106435f30c0c6fb15}{DMA\_GetCmdStatus}}(\mbox{\hyperlink{struct_d_m_a___stream___type_def}{DMA\_Stream\_TypeDef}}*\ DMAy\_Streamx)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00927}00927\ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00928}00928\ \ \ FunctionalState\ state\ =\ DISABLE;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00929}00929\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00930}00930\ \ \ \textcolor{comment}{/*\ Check\ the\ parameters\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00931}00931\ \ \ assert\_param(IS\_DMA\_ALL\_PERIPH(DMAy\_Streamx));}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00932}00932\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00933}00933\ \ \ \textcolor{keywordflow}{if}\ ((DMAy\_Streamx-\/>\mbox{\hyperlink{struct_d_m_a___stream___type_def_af893adc5e821b15d813237b2bfe4378b}{CR}}\ \&\ (uint32\_t)DMA\_SxCR\_EN)\ !=\ 0)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00934}00934\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00935}00935\ \ \ \ \ \textcolor{comment}{/*\ The\ selected\ DMAy\ Streamx\ EN\ bit\ is\ set\ (DMA\ is\ still\ transferring)\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00936}00936\ \ \ \ \ state\ =\ ENABLE;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00937}00937\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00938}00938\ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00939}00939\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00940}00940\ \ \ \ \ \textcolor{comment}{/*\ The\ selected\ DMAy\ Streamx\ EN\ bit\ is\ cleared\ (DMA\ is\ disabled\ and\ }}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00941}00941\ \textcolor{comment}{\ \ \ \ \ \ \ \ all\ transfers\ are\ complete)\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00942}00942\ \ \ \ \ state\ =\ DISABLE;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00943}00943\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00944}00944\ \ \ \textcolor{keywordflow}{return}\ state;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00945}00945\ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00946}00946\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00960}\mbox{\hyperlink{group___d_m_a___group4_ga9893809a7067861ec111f7d712ebf28d}{00960}}\ uint32\_t\ \mbox{\hyperlink{group___d_m_a___group4_ga9893809a7067861ec111f7d712ebf28d}{DMA\_GetFIFOStatus}}(\mbox{\hyperlink{struct_d_m_a___stream___type_def}{DMA\_Stream\_TypeDef}}*\ DMAy\_Streamx)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00961}00961\ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00962}00962\ \ \ uint32\_t\ tmpreg\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00963}00963\ \ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00964}00964\ \ \ \textcolor{comment}{/*\ Check\ the\ parameters\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00965}00965\ \ \ assert\_param(IS\_DMA\_ALL\_PERIPH(DMAy\_Streamx));}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00966}00966\ \ \ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00967}00967\ \ \ \textcolor{comment}{/*\ Get\ the\ FIFO\ level\ bits\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00968}00968\ \ \ tmpreg\ =\ (uint32\_t)((DMAy\_Streamx-\/>\mbox{\hyperlink{struct_d_m_a___stream___type_def_aad3d78ab35e7af48951be5be53392f9f}{FCR}}\ \&\ DMA\_SxFCR\_FS));}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00969}00969\ \ \ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00970}00970\ \ \ \textcolor{keywordflow}{return}\ tmpreg;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00971}00971\ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00972}00972\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00987}\mbox{\hyperlink{group___d_m_a___group4_ga10cfc0fe31d64a1fd8fb3efb4ae2a411}{00987}}\ FlagStatus\ \mbox{\hyperlink{group___d_m_a___group4_ga10cfc0fe31d64a1fd8fb3efb4ae2a411}{DMA\_GetFlagStatus}}(\mbox{\hyperlink{struct_d_m_a___stream___type_def}{DMA\_Stream\_TypeDef}}*\ DMAy\_Streamx,\ uint32\_t\ DMA\_FLAG)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00988}00988\ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00989}00989\ \ \ FlagStatus\ bitstatus\ =\ RESET;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00990}00990\ \ \ \mbox{\hyperlink{struct_d_m_a___type_def}{DMA\_TypeDef}}*\ DMAy;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00991}00991\ \ \ uint32\_t\ tmpreg\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00992}00992\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00993}00993\ \ \ \textcolor{comment}{/*\ Check\ the\ parameters\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00994}00994\ \ \ assert\_param(IS\_DMA\_ALL\_PERIPH(DMAy\_Streamx));}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00995}00995\ \ \ assert\_param(IS\_DMA\_GET\_FLAG(DMA\_FLAG));}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00996}00996\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00997}00997\ \ \ \textcolor{comment}{/*\ Determine\ the\ DMA\ to\ which\ belongs\ the\ stream\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00998}00998\ \ \ \textcolor{keywordflow}{if}\ (DMAy\_Streamx\ <\ DMA2\_Stream0)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l00999}00999\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01000}01000\ \ \ \ \ \textcolor{comment}{/*\ DMAy\_Streamx\ belongs\ to\ DMA1\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01001}01001\ \ \ \ \ DMAy\ =\ DMA1;\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01002}01002\ \ \ \}\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01003}01003\ \ \ \textcolor{keywordflow}{else}\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01004}01004\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01005}01005\ \ \ \ \ \textcolor{comment}{/*\ DMAy\_Streamx\ belongs\ to\ DMA2\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01006}01006\ \ \ \ \ DMAy\ =\ DMA2;\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01007}01007\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01008}01008\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01009}01009\ \ \ \textcolor{comment}{/*\ Check\ if\ the\ flag\ is\ in\ HISR\ or\ LISR\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01010}01010\ \ \ \textcolor{keywordflow}{if}\ ((DMA\_FLAG\ \&\ HIGH\_ISR\_MASK)\ !=\ (uint32\_t)RESET)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01011}01011\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01012}01012\ \ \ \ \ \textcolor{comment}{/*\ Get\ DMAy\ HISR\ register\ value\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01013}01013\ \ \ \ \ tmpreg\ =\ DMAy-\/>\mbox{\hyperlink{struct_d_m_a___type_def_a01a90a5fcd6459e10b81c0ab737dd2e3}{HISR}};}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01014}01014\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01015}01015\ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01016}01016\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01017}01017\ \ \ \ \ \textcolor{comment}{/*\ Get\ DMAy\ LISR\ register\ value\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01018}01018\ \ \ \ \ tmpreg\ =\ DMAy-\/>\mbox{\hyperlink{struct_d_m_a___type_def_aacb4a0977d281bc809cb5974e178bc2b}{LISR}};}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01019}01019\ \ \ \}\ \ \ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01020}01020\ \ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01021}01021\ \ \ \textcolor{comment}{/*\ Mask\ the\ reserved\ bits\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01022}01022\ \ \ tmpreg\ \&=\ (uint32\_t)RESERVED\_MASK;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01023}01023\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01024}01024\ \ \ \textcolor{comment}{/*\ Check\ the\ status\ of\ the\ specified\ DMA\ flag\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01025}01025\ \ \ \textcolor{keywordflow}{if}\ ((tmpreg\ \&\ DMA\_FLAG)\ !=\ (uint32\_t)RESET)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01026}01026\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01027}01027\ \ \ \ \ \textcolor{comment}{/*\ DMA\_FLAG\ is\ set\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01028}01028\ \ \ \ \ bitstatus\ =\ SET;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01029}01029\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01030}01030\ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01031}01031\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01032}01032\ \ \ \ \ \textcolor{comment}{/*\ DMA\_FLAG\ is\ reset\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01033}01033\ \ \ \ \ bitstatus\ =\ RESET;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01034}01034\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01035}01035\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01036}01036\ \ \ \textcolor{comment}{/*\ Return\ the\ DMA\_FLAG\ status\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01037}01037\ \ \ \textcolor{keywordflow}{return}\ \ bitstatus;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01038}01038\ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01039}01039\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01054}\mbox{\hyperlink{group___d_m_a___group4_ga510d62b4051f5a5de164e84b266b851d}{01054}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group___d_m_a___group4_ga510d62b4051f5a5de164e84b266b851d}{DMA\_ClearFlag}}(\mbox{\hyperlink{struct_d_m_a___stream___type_def}{DMA\_Stream\_TypeDef}}*\ DMAy\_Streamx,\ uint32\_t\ DMA\_FLAG)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01055}01055\ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01056}01056\ \ \ \mbox{\hyperlink{struct_d_m_a___type_def}{DMA\_TypeDef}}*\ DMAy;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01057}01057\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01058}01058\ \ \ \textcolor{comment}{/*\ Check\ the\ parameters\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01059}01059\ \ \ assert\_param(IS\_DMA\_ALL\_PERIPH(DMAy\_Streamx));}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01060}01060\ \ \ assert\_param(IS\_DMA\_CLEAR\_FLAG(DMA\_FLAG));}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01061}01061\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01062}01062\ \ \ \textcolor{comment}{/*\ Determine\ the\ DMA\ to\ which\ belongs\ the\ stream\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01063}01063\ \ \ \textcolor{keywordflow}{if}\ (DMAy\_Streamx\ <\ DMA2\_Stream0)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01064}01064\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01065}01065\ \ \ \ \ \textcolor{comment}{/*\ DMAy\_Streamx\ belongs\ to\ DMA1\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01066}01066\ \ \ \ \ DMAy\ =\ DMA1;\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01067}01067\ \ \ \}\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01068}01068\ \ \ \textcolor{keywordflow}{else}\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01069}01069\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01070}01070\ \ \ \ \ \textcolor{comment}{/*\ DMAy\_Streamx\ belongs\ to\ DMA2\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01071}01071\ \ \ \ \ DMAy\ =\ DMA2;\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01072}01072\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01073}01073\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01074}01074\ \ \ \textcolor{comment}{/*\ Check\ if\ LIFCR\ or\ HIFCR\ register\ is\ targeted\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01075}01075\ \ \ \textcolor{keywordflow}{if}\ ((DMA\_FLAG\ \&\ HIGH\_ISR\_MASK)\ !=\ (uint32\_t)RESET)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01076}01076\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01077}01077\ \ \ \ \ \textcolor{comment}{/*\ Set\ DMAy\ HIFCR\ register\ clear\ flag\ bits\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01078}01078\ \ \ \ \ DMAy-\/>\mbox{\hyperlink{struct_d_m_a___type_def_a1e4f50b935bab2520788ae936f2e55c1}{HIFCR}}\ =\ (uint32\_t)(DMA\_FLAG\ \&\ RESERVED\_MASK);}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01079}01079\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01080}01080\ \ \ \textcolor{keywordflow}{else}\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01081}01081\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01082}01082\ \ \ \ \ \textcolor{comment}{/*\ Set\ DMAy\ LIFCR\ register\ clear\ flag\ bits\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01083}01083\ \ \ \ \ DMAy-\/>\mbox{\hyperlink{struct_d_m_a___type_def_a11adb689c874d38b49fa44990323b653}{LIFCR}}\ =\ (uint32\_t)(DMA\_FLAG\ \&\ RESERVED\_MASK);}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01084}01084\ \ \ \}\ \ \ \ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01085}01085\ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01086}01086\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01101}\mbox{\hyperlink{group___d_m_a___group4_gab9c469a3f5d4aca5c97dee798ffc2f05}{01101}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group___d_m_a___group4_gab9c469a3f5d4aca5c97dee798ffc2f05}{DMA\_ITConfig}}(\mbox{\hyperlink{struct_d_m_a___stream___type_def}{DMA\_Stream\_TypeDef}}*\ DMAy\_Streamx,\ uint32\_t\ DMA\_IT,\ FunctionalState\ NewState)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01102}01102\ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01103}01103\ \ \ \textcolor{comment}{/*\ Check\ the\ parameters\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01104}01104\ \ \ assert\_param(IS\_DMA\_ALL\_PERIPH(DMAy\_Streamx));}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01105}01105\ \ \ assert\_param(IS\_DMA\_CONFIG\_IT(DMA\_IT));}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01106}01106\ \ \ assert\_param(IS\_FUNCTIONAL\_STATE(NewState));}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01107}01107\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01108}01108\ \ \ \textcolor{comment}{/*\ Check\ if\ the\ DMA\_IT\ parameter\ contains\ a\ FIFO\ interrupt\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01109}01109\ \ \ \textcolor{keywordflow}{if}\ ((DMA\_IT\ \&\ DMA\_IT\_FE)\ !=\ 0)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01110}01110\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01111}01111\ \ \ \ \ \textcolor{keywordflow}{if}\ (NewState\ !=\ DISABLE)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01112}01112\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01113}01113\ \ \ \ \ \ \ \textcolor{comment}{/*\ Enable\ the\ selected\ DMA\ FIFO\ interrupts\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01114}01114\ \ \ \ \ \ \ DMAy\_Streamx-\/>\mbox{\hyperlink{struct_d_m_a___stream___type_def_aad3d78ab35e7af48951be5be53392f9f}{FCR}}\ |=\ (uint32\_t)DMA\_IT\_FE;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01115}01115\ \ \ \ \ \}\ \ \ \ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01116}01116\ \ \ \ \ \textcolor{keywordflow}{else}\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01117}01117\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01118}01118\ \ \ \ \ \ \ \textcolor{comment}{/*\ Disable\ the\ selected\ DMA\ FIFO\ interrupts\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01119}01119\ \ \ \ \ \ \ DMAy\_Streamx-\/>\mbox{\hyperlink{struct_d_m_a___stream___type_def_aad3d78ab35e7af48951be5be53392f9f}{FCR}}\ \&=\ \string~(uint32\_t)DMA\_IT\_FE;\ \ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01120}01120\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01121}01121\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01122}01122\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01123}01123\ \ \ \textcolor{comment}{/*\ Check\ if\ the\ DMA\_IT\ parameter\ contains\ a\ Transfer\ interrupt\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01124}01124\ \ \ \textcolor{keywordflow}{if}\ (DMA\_IT\ !=\ DMA\_IT\_FE)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01125}01125\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01126}01126\ \ \ \ \ \textcolor{keywordflow}{if}\ (NewState\ !=\ DISABLE)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01127}01127\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01128}01128\ \ \ \ \ \ \ \textcolor{comment}{/*\ Enable\ the\ selected\ DMA\ transfer\ interrupts\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01129}01129\ \ \ \ \ \ \ DMAy\_Streamx-\/>\mbox{\hyperlink{struct_d_m_a___stream___type_def_af893adc5e821b15d813237b2bfe4378b}{CR}}\ |=\ (uint32\_t)(DMA\_IT\ \ \&\ TRANSFER\_IT\_ENABLE\_MASK);}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01130}01130\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01131}01131\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01132}01132\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01133}01133\ \ \ \ \ \ \ \textcolor{comment}{/*\ Disable\ the\ selected\ DMA\ transfer\ interrupts\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01134}01134\ \ \ \ \ \ \ DMAy\_Streamx-\/>\mbox{\hyperlink{struct_d_m_a___stream___type_def_af893adc5e821b15d813237b2bfe4378b}{CR}}\ \&=\ \string~(uint32\_t)(DMA\_IT\ \&\ TRANSFER\_IT\_ENABLE\_MASK);}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01135}01135\ \ \ \ \ \}\ \ \ \ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01136}01136\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01137}01137\ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01138}01138\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01153}\mbox{\hyperlink{group___d_m_a___group4_gad0ccf5f6548bd7cf8f2cae30393bb716}{01153}}\ ITStatus\ \mbox{\hyperlink{group___d_m_a___group4_gad0ccf5f6548bd7cf8f2cae30393bb716}{DMA\_GetITStatus}}(\mbox{\hyperlink{struct_d_m_a___stream___type_def}{DMA\_Stream\_TypeDef}}*\ DMAy\_Streamx,\ uint32\_t\ DMA\_IT)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01154}01154\ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01155}01155\ \ \ ITStatus\ bitstatus\ =\ RESET;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01156}01156\ \ \ \mbox{\hyperlink{struct_d_m_a___type_def}{DMA\_TypeDef}}*\ DMAy;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01157}01157\ \ \ uint32\_t\ tmpreg\ =\ 0,\ enablestatus\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01158}01158\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01159}01159\ \ \ \textcolor{comment}{/*\ Check\ the\ parameters\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01160}01160\ \ \ assert\_param(IS\_DMA\_ALL\_PERIPH(DMAy\_Streamx));}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01161}01161\ \ \ assert\_param(IS\_DMA\_GET\_IT(DMA\_IT));}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01162}01162\ \ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01163}01163\ \ \ \textcolor{comment}{/*\ Determine\ the\ DMA\ to\ which\ belongs\ the\ stream\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01164}01164\ \ \ \textcolor{keywordflow}{if}\ (DMAy\_Streamx\ <\ DMA2\_Stream0)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01165}01165\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01166}01166\ \ \ \ \ \textcolor{comment}{/*\ DMAy\_Streamx\ belongs\ to\ DMA1\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01167}01167\ \ \ \ \ DMAy\ =\ DMA1;\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01168}01168\ \ \ \}\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01169}01169\ \ \ \textcolor{keywordflow}{else}\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01170}01170\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01171}01171\ \ \ \ \ \textcolor{comment}{/*\ DMAy\_Streamx\ belongs\ to\ DMA2\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01172}01172\ \ \ \ \ DMAy\ =\ DMA2;\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01173}01173\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01174}01174\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01175}01175\ \ \ \textcolor{comment}{/*\ Check\ if\ the\ interrupt\ enable\ bit\ is\ in\ the\ CR\ or\ FCR\ register\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01176}01176\ \ \ \textcolor{keywordflow}{if}\ ((DMA\_IT\ \&\ TRANSFER\_IT\_MASK)\ !=\ (uint32\_t)RESET)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01177}01177\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01178}01178\ \ \ \ \ \textcolor{comment}{/*\ Get\ the\ interrupt\ enable\ position\ mask\ in\ CR\ register\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01179}01179\ \ \ \ \ tmpreg\ =\ (uint32\_t)((DMA\_IT\ >>\ 11)\ \&\ TRANSFER\_IT\_ENABLE\_MASK);\ \ \ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01180}01180\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01181}01181\ \ \ \ \ \textcolor{comment}{/*\ Check\ the\ enable\ bit\ in\ CR\ register\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01182}01182\ \ \ \ \ enablestatus\ =\ (uint32\_t)(DMAy\_Streamx-\/>\mbox{\hyperlink{struct_d_m_a___stream___type_def_af893adc5e821b15d813237b2bfe4378b}{CR}}\ \&\ tmpreg);}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01183}01183\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01184}01184\ \ \ \textcolor{keywordflow}{else}\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01185}01185\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01186}01186\ \ \ \ \ \textcolor{comment}{/*\ Check\ the\ enable\ bit\ in\ FCR\ register\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01187}01187\ \ \ \ \ enablestatus\ =\ (uint32\_t)(DMAy\_Streamx-\/>\mbox{\hyperlink{struct_d_m_a___stream___type_def_aad3d78ab35e7af48951be5be53392f9f}{FCR}}\ \&\ DMA\_IT\_FE);\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01188}01188\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01189}01189\ \ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01190}01190\ \ \ \textcolor{comment}{/*\ Check\ if\ the\ interrupt\ pending\ flag\ is\ in\ LISR\ or\ HISR\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01191}01191\ \ \ \textcolor{keywordflow}{if}\ ((DMA\_IT\ \&\ HIGH\_ISR\_MASK)\ !=\ (uint32\_t)RESET)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01192}01192\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01193}01193\ \ \ \ \ \textcolor{comment}{/*\ Get\ DMAy\ HISR\ register\ value\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01194}01194\ \ \ \ \ tmpreg\ =\ DMAy-\/>\mbox{\hyperlink{struct_d_m_a___type_def_a01a90a5fcd6459e10b81c0ab737dd2e3}{HISR}}\ ;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01195}01195\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01196}01196\ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01197}01197\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01198}01198\ \ \ \ \ \textcolor{comment}{/*\ Get\ DMAy\ LISR\ register\ value\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01199}01199\ \ \ \ \ tmpreg\ =\ DMAy-\/>\mbox{\hyperlink{struct_d_m_a___type_def_aacb4a0977d281bc809cb5974e178bc2b}{LISR}}\ ;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01200}01200\ \ \ \}\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01201}01201\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01202}01202\ \ \ \textcolor{comment}{/*\ mask\ all\ reserved\ bits\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01203}01203\ \ \ tmpreg\ \&=\ (uint32\_t)RESERVED\_MASK;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01204}01204\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01205}01205\ \ \ \textcolor{comment}{/*\ Check\ the\ status\ of\ the\ specified\ DMA\ interrupt\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01206}01206\ \ \ \textcolor{keywordflow}{if}\ (((tmpreg\ \&\ DMA\_IT)\ !=\ (uint32\_t)RESET)\ \&\&\ (enablestatus\ !=\ (uint32\_t)RESET))}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01207}01207\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01208}01208\ \ \ \ \ \textcolor{comment}{/*\ DMA\_IT\ is\ set\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01209}01209\ \ \ \ \ bitstatus\ =\ SET;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01210}01210\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01211}01211\ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01212}01212\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01213}01213\ \ \ \ \ \textcolor{comment}{/*\ DMA\_IT\ is\ reset\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01214}01214\ \ \ \ \ bitstatus\ =\ RESET;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01215}01215\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01216}01216\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01217}01217\ \ \ \textcolor{comment}{/*\ Return\ the\ DMA\_IT\ status\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01218}01218\ \ \ \textcolor{keywordflow}{return}\ \ bitstatus;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01219}01219\ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01220}01220\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01235}\mbox{\hyperlink{group___d_m_a___group4_gad5433018889cd36140d98bb380c4e76e}{01235}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{group___d_m_a___group4_gad5433018889cd36140d98bb380c4e76e}{DMA\_ClearITPendingBit}}(\mbox{\hyperlink{struct_d_m_a___stream___type_def}{DMA\_Stream\_TypeDef}}*\ DMAy\_Streamx,\ uint32\_t\ DMA\_IT)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01236}01236\ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01237}01237\ \ \ \mbox{\hyperlink{struct_d_m_a___type_def}{DMA\_TypeDef}}*\ DMAy;}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01238}01238\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01239}01239\ \ \ \textcolor{comment}{/*\ Check\ the\ parameters\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01240}01240\ \ \ assert\_param(IS\_DMA\_ALL\_PERIPH(DMAy\_Streamx));}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01241}01241\ \ \ assert\_param(IS\_DMA\_CLEAR\_IT(DMA\_IT));}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01242}01242\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01243}01243\ \ \ \textcolor{comment}{/*\ Determine\ the\ DMA\ to\ which\ belongs\ the\ stream\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01244}01244\ \ \ \textcolor{keywordflow}{if}\ (DMAy\_Streamx\ <\ DMA2\_Stream0)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01245}01245\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01246}01246\ \ \ \ \ \textcolor{comment}{/*\ DMAy\_Streamx\ belongs\ to\ DMA1\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01247}01247\ \ \ \ \ DMAy\ =\ DMA1;\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01248}01248\ \ \ \}\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01249}01249\ \ \ \textcolor{keywordflow}{else}\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01250}01250\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01251}01251\ \ \ \ \ \textcolor{comment}{/*\ DMAy\_Streamx\ belongs\ to\ DMA2\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01252}01252\ \ \ \ \ DMAy\ =\ DMA2;\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01253}01253\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01254}01254\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01255}01255\ \ \ \textcolor{comment}{/*\ Check\ if\ LIFCR\ or\ HIFCR\ register\ is\ targeted\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01256}01256\ \ \ \textcolor{keywordflow}{if}\ ((DMA\_IT\ \&\ HIGH\_ISR\_MASK)\ !=\ (uint32\_t)RESET)}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01257}01257\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01258}01258\ \ \ \ \ \textcolor{comment}{/*\ Set\ DMAy\ HIFCR\ register\ clear\ interrupt\ bits\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01259}01259\ \ \ \ \ DMAy-\/>\mbox{\hyperlink{struct_d_m_a___type_def_a1e4f50b935bab2520788ae936f2e55c1}{HIFCR}}\ =\ (uint32\_t)(DMA\_IT\ \&\ RESERVED\_MASK);}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01260}01260\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01261}01261\ \ \ \textcolor{keywordflow}{else}\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01262}01262\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01263}01263\ \ \ \ \ \textcolor{comment}{/*\ Set\ DMAy\ LIFCR\ register\ clear\ interrupt\ bits\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01264}01264\ \ \ \ \ DMAy-\/>\mbox{\hyperlink{struct_d_m_a___type_def_a11adb689c874d38b49fa44990323b653}{LIFCR}}\ =\ (uint32\_t)(DMA\_IT\ \&\ RESERVED\_MASK);}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01265}01265\ \ \ \}\ \ \ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01266}01266\ \}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01267}01267\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__dma_8c_source_l01284}01284\ \textcolor{comment}{/*******************\ (C)\ COPYRIGHT\ 2011\ STMicroelectronics\ *****END\ OF\ FILE****/}}
+
+\end{DoxyCode}

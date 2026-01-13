@@ -5,7 +5,7 @@
  * This file contains the source code for all the
  * different API functions.
  *
- * @author Tom Veldkamp, Xander Perry & Daniël Wit Arendza
+ * @author Tom Veldkamp, Xander Perry & Daniël Wit Ariza
  * @date 2025-12-03
  */
 #include <API_LIB.h>
@@ -446,7 +446,7 @@ void _draw_glcd_char(int x, int y, const unsigned short *data, int color, int fo
         }
     }
 }
- /* @brief Draws a figure based on 5 coordinates
+ /** @brief Draws a figure based on 5 coordinates
  *
  * @param x_1 		X-coordinate 1
  * @param y_1 		Y-coordinate 1

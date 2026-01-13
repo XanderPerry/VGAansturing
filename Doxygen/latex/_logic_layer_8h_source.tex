@@ -1,0 +1,30 @@
+\doxysection{Logic\+Layer.\+h}
+\hypertarget{_logic_layer_8h_source}{}\label{_logic_layer_8h_source}\index{Core/Inc/LogicLayer.h@{Core/Inc/LogicLayer.h}}
+\mbox{\hyperlink{_logic_layer_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_logic_layer_8h_source_l00001}00001\ }
+\DoxyCodeLine{\Hypertarget{_logic_layer_8h_source_l00011}00011\ \textcolor{preprocessor}{\#ifndef\ \_\_LOGIC\_LAYER\_H}}
+\DoxyCodeLine{\Hypertarget{_logic_layer_8h_source_l00012}00012\ \textcolor{preprocessor}{\#define\ \_\_LOGIC\_LAYER\_H}}
+\DoxyCodeLine{\Hypertarget{_logic_layer_8h_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{_logic_layer_8h_source_l00014}00014\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{stm32f4xx_8h}{stm32f4xx.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_logic_layer_8h_source_l00015}00015\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{\Hypertarget{_logic_layer_8h_source_l00016}00016\ \textcolor{preprocessor}{\#include\ <stdbool.h>}}
+\DoxyCodeLine{\Hypertarget{_logic_layer_8h_source_l00017}00017\ }
+\DoxyCodeLine{\Hypertarget{_logic_layer_8h_source_l00018}00018\ \textcolor{comment}{//\ Define\ error\ codes}}
+\DoxyCodeLine{\Hypertarget{_logic_layer_8h_source_l00019}00019\ \textcolor{preprocessor}{\#define\ ERR\_UNSUPPORTED\_COMMAND\ 300}}
+\DoxyCodeLine{\Hypertarget{_logic_layer_8h_source_l00020}00020\ \textcolor{preprocessor}{\#define\ ERR\_INVALID\_PARAM\_INPUT\ 301}}
+\DoxyCodeLine{\Hypertarget{_logic_layer_8h_source_l00021}00021\ \textcolor{preprocessor}{\#define\ ERR\_X\_OUT\_OF\_BOUND\ 302}}
+\DoxyCodeLine{\Hypertarget{_logic_layer_8h_source_l00022}00022\ \textcolor{preprocessor}{\#define\ ERR\_Y\_OUT\_OF\_BOUND\ 303}}
+\DoxyCodeLine{\Hypertarget{_logic_layer_8h_source_l00023}00023\ \textcolor{preprocessor}{\#define\ ERR\_INVALID\_COLOR\_INPUT\ 304}}
+\DoxyCodeLine{\Hypertarget{_logic_layer_8h_source_l00024}00024\ }
+\DoxyCodeLine{\Hypertarget{_logic_layer_8h_source_l00030}00030\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{_logic_layer_8h_a4da4baf4d12c6c5d88e073a7ff382226}{CmdToFunc}}(\textcolor{keywordtype}{char}\ *cmd);}
+\DoxyCodeLine{\Hypertarget{_logic_layer_8h_source_l00031}00031\ }
+\DoxyCodeLine{\Hypertarget{_logic_layer_8h_source_l00037}00037\ uint8\_t\ \mbox{\hyperlink{_logic_layer_8h_a7a32c3031c9700164fb7f63c80b317f7}{StrToCol}}\ (\textcolor{keywordtype}{char}\ *str);}
+\DoxyCodeLine{\Hypertarget{_logic_layer_8h_source_l00038}00038\ }
+\DoxyCodeLine{\Hypertarget{_logic_layer_8h_source_l00044}00044\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{_logic_layer_8h_a072dbc28a59ba2d90ac3cc86a44ea879}{XOutOfBound}}(uint16\_t\ x);}
+\DoxyCodeLine{\Hypertarget{_logic_layer_8h_source_l00045}00045\ }
+\DoxyCodeLine{\Hypertarget{_logic_layer_8h_source_l00051}00051\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{_logic_layer_8h_a6e51d6615ef33492f6da2c9aeb8ae8fc}{YOutOfBound}}(uint16\_t\ y);}
+\DoxyCodeLine{\Hypertarget{_logic_layer_8h_source_l00052}00052\ }
+\DoxyCodeLine{\Hypertarget{_logic_layer_8h_source_l00053}00053\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ \_\_UART\_H\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

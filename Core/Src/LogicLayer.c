@@ -4,7 +4,7 @@
  *
  * This file contains the code for logic layer functions
  *
- * @author Xander Perry
+ * @author Xander Perry, Daniel Wit Ariza
  * @date 2025-12-03
  */
 

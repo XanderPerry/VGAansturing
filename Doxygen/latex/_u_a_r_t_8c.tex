@@ -1,0 +1,241 @@
+\doxysection{Core/\+Src/\+UART.c File Reference}
+\hypertarget{_u_a_r_t_8c}{}\label{_u_a_r_t_8c}\index{Core/Src/UART.c@{Core/Src/UART.c}}
+
+
+UART code file.  
+
+
+{\ttfamily \#include "{}uart.\+h"{}}\newline
+{\ttfamily \#include "{}stm32f4xx.\+h"{}}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include $<$stdbool.\+h$>$}\newline
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{_u_a_r_t_8c_a1edf4de1dc19cd53f215478adf4c2500}{LF\+\_\+\+CHAR}}~0x0A
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{_u_a_r_t_8c_aff3f7046d2412aeebc67b3266a6e27fc}{usart2\+\_\+init}} (void)
+\begin{DoxyCompactList}\small\item\em Initializes USART2 for 115200 baud, 8N1 (Register-\/level) Steps\+: Clock -\/\texorpdfstring{$>$}{>} GPIO -\/\texorpdfstring{$>$}{>} Baud Rate -\/\texorpdfstring{$>$}{>} Enable. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{_u_a_r_t_8c_a2a4be228a246fa97ae6f890cacd8ca93}{usart2\+\_\+send\+\_\+char}} (uint8\+\_\+t data)
+\begin{DoxyCompactList}\small\item\em Sends a single byte (character) via USART2. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{_u_a_r_t_8c_ac5f90a0a4d873f03ef53132a8b545afa}{usart2\+\_\+send\+\_\+string}} (char \texorpdfstring{$\ast$}{*}str)
+\begin{DoxyCompactList}\small\item\em Sends a null-\/terminated string via USART2. \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{_u_a_r_t_8c_a8f7e03b3afdd3c6a98cdef2ded6cc116}{usart2\+\_\+receive\+\_\+char}} (void)
+\begin{DoxyCompactList}\small\item\em Receives a single byte (character) via USART2. Blocking/\+Polling. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{_u_a_r_t_8c_a9446d975915a250b6d522d9699fd02ef}{usart2\+\_\+enable\+\_\+rx\+\_\+interrupt}} (void)
+\begin{DoxyCompactList}\small\item\em Enables the Receive Not Empty (RXNE) interrupt for USART2 and enables the corresponding interrupt in the NVIC. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{_u_a_r_t_8c_a0ca6fd0e6f77921dd1123539857ba0a8}{USART2\+\_\+\+IRQHandler}} (void)
+\begin{DoxyCompactList}\small\item\em USART2 Interrupt Service Routine (ISR). \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{_u_a_r_t_8c_a80c00106a153810c69f4b5ab459c033a}{usart2\+\_\+read\+\_\+line}} (char \texorpdfstring{$\ast$}{*}dest, uint16\+\_\+t max\+\_\+len)
+\begin{DoxyCompactList}\small\item\em Reads all characters from the buffer up to the first LF or the buffer limit. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+volatile uint8\+\_\+t \mbox{\hyperlink{_u_a_r_t_8c_aaed8583e85796e44f1c6b4e3e9f1b631}{uart\+\_\+rx\+\_\+buffer}} \mbox{[}UART\+\_\+\+RX\+\_\+\+BUFFER\+\_\+\+SIZE\mbox{]}
+\item 
+volatile uint16\+\_\+t \mbox{\hyperlink{_u_a_r_t_8c_a6336287ee05f9ff7fe682e40baefac14}{uart\+\_\+rx\+\_\+head}} = 0
+\item 
+volatile uint16\+\_\+t \mbox{\hyperlink{_u_a_r_t_8c_a7430a315e673184c6244a8b7dc1d6af4}{uart\+\_\+rx\+\_\+tail}} = 0
+\item 
+volatile bool \mbox{\hyperlink{_u_a_r_t_8c_ac7a769f085cd484d1142c9f1ba71b59b}{uart\+\_\+rx\+\_\+line\+\_\+ready}} = false
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+UART code file. 
+
+This file contains the code required to make use of uarts
+
+\begin{DoxyAuthor}{Author}
+Tom Veldkamp, Xander Perry \& Daniël Wit Ariza 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+2026-\/1-\/13 
+\end{DoxyDate}
+
+
+Definition in file \mbox{\hyperlink{_u_a_r_t_8c_source}{UART.\+c}}.
+
+
+
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{_u_a_r_t_8c_a1edf4de1dc19cd53f215478adf4c2500}\index{UART.c@{UART.c}!LF\_CHAR@{LF\_CHAR}}
+\index{LF\_CHAR@{LF\_CHAR}!UART.c@{UART.c}}
+\doxysubsubsection{\texorpdfstring{LF\_CHAR}{LF\_CHAR}}
+{\footnotesize\ttfamily \label{_u_a_r_t_8c_a1edf4de1dc19cd53f215478adf4c2500} 
+\#define LF\+\_\+\+CHAR~0x0A}
+
+
+
+Definition at line \mbox{\hyperlink{_u_a_r_t_8c_source_l00147}{147}} of file \mbox{\hyperlink{_u_a_r_t_8c_source}{UART.\+c}}.
+
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{_u_a_r_t_8c_a9446d975915a250b6d522d9699fd02ef}\index{UART.c@{UART.c}!usart2\_enable\_rx\_interrupt@{usart2\_enable\_rx\_interrupt}}
+\index{usart2\_enable\_rx\_interrupt@{usart2\_enable\_rx\_interrupt}!UART.c@{UART.c}}
+\doxysubsubsection{\texorpdfstring{usart2\_enable\_rx\_interrupt()}{usart2\_enable\_rx\_interrupt()}}
+{\footnotesize\ttfamily \label{_u_a_r_t_8c_a9446d975915a250b6d522d9699fd02ef} 
+void usart2\+\_\+enable\+\_\+rx\+\_\+interrupt (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Enables the Receive Not Empty (RXNE) interrupt for USART2 and enables the corresponding interrupt in the NVIC. 
+
+Enables the Receive Not Empty (RXNE) interrupt for USART2. 
+
+Definition at line \mbox{\hyperlink{_u_a_r_t_8c_source_l00137}{137}} of file \mbox{\hyperlink{_u_a_r_t_8c_source}{UART.\+c}}.
+
+\Hypertarget{_u_a_r_t_8c_aff3f7046d2412aeebc67b3266a6e27fc}\index{UART.c@{UART.c}!usart2\_init@{usart2\_init}}
+\index{usart2\_init@{usart2\_init}!UART.c@{UART.c}}
+\doxysubsubsection{\texorpdfstring{usart2\_init()}{usart2\_init()}}
+{\footnotesize\ttfamily \label{_u_a_r_t_8c_aff3f7046d2412aeebc67b3266a6e27fc} 
+void usart2\+\_\+init (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Initializes USART2 for 115200 baud, 8N1 (Register-\/level) Steps\+: Clock -\/\texorpdfstring{$>$}{>} GPIO -\/\texorpdfstring{$>$}{>} Baud Rate -\/\texorpdfstring{$>$}{>} Enable. 
+
+Initializes USART2 for 115200 baud, 8N1 (Register-\/level) 
+
+Definition at line \mbox{\hyperlink{_u_a_r_t_8c_source_l00028}{28}} of file \mbox{\hyperlink{_u_a_r_t_8c_source}{UART.\+c}}.
+
+\Hypertarget{_u_a_r_t_8c_a0ca6fd0e6f77921dd1123539857ba0a8}\index{UART.c@{UART.c}!USART2\_IRQHandler@{USART2\_IRQHandler}}
+\index{USART2\_IRQHandler@{USART2\_IRQHandler}!UART.c@{UART.c}}
+\doxysubsubsection{\texorpdfstring{USART2\_IRQHandler()}{USART2\_IRQHandler()}}
+{\footnotesize\ttfamily \label{_u_a_r_t_8c_a0ca6fd0e6f77921dd1123539857ba0a8} 
+void USART2\+\_\+\+IRQHandler (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+USART2 Interrupt Service Routine (ISR). 
+
+USART2 Interrupt Service Routine (ISR). This function must be defined in the startup file\textquotesingle{}s vector table. 
+
+Definition at line \mbox{\hyperlink{_u_a_r_t_8c_source_l00152}{152}} of file \mbox{\hyperlink{_u_a_r_t_8c_source}{UART.\+c}}.
+
+\Hypertarget{_u_a_r_t_8c_a80c00106a153810c69f4b5ab459c033a}\index{UART.c@{UART.c}!usart2\_read\_line@{usart2\_read\_line}}
+\index{usart2\_read\_line@{usart2\_read\_line}!UART.c@{UART.c}}
+\doxysubsubsection{\texorpdfstring{usart2\_read\_line()}{usart2\_read\_line()}}
+{\footnotesize\ttfamily \label{_u_a_r_t_8c_a80c00106a153810c69f4b5ab459c033a} 
+bool usart2\+\_\+read\+\_\+line (\begin{DoxyParamCaption}\item[{char \texorpdfstring{$\ast$}{*}}]{dest}{, }\item[{uint16\+\_\+t}]{max\+\_\+len}{}\end{DoxyParamCaption})}
+
+
+
+Reads all characters from the buffer up to the first LF or the buffer limit. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em dest} & Pointer to the destination string buffer. \\
+\hline
+{\em max\+\_\+len} & Maximum length of the destination buffer (including null terminator). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if a line (terminated by LF) was successfully read, false otherwise. 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_u_a_r_t_8c_source_l00188}{188}} of file \mbox{\hyperlink{_u_a_r_t_8c_source}{UART.\+c}}.
+
+\Hypertarget{_u_a_r_t_8c_a8f7e03b3afdd3c6a98cdef2ded6cc116}\index{UART.c@{UART.c}!usart2\_receive\_char@{usart2\_receive\_char}}
+\index{usart2\_receive\_char@{usart2\_receive\_char}!UART.c@{UART.c}}
+\doxysubsubsection{\texorpdfstring{usart2\_receive\_char()}{usart2\_receive\_char()}}
+{\footnotesize\ttfamily \label{_u_a_r_t_8c_a8f7e03b3afdd3c6a98cdef2ded6cc116} 
+uint8\+\_\+t usart2\+\_\+receive\+\_\+char (\begin{DoxyParamCaption}\item[{void}]{}{}\end{DoxyParamCaption})}
+
+
+
+Receives a single byte (character) via USART2. Blocking/\+Polling. 
+
+\begin{DoxyReturn}{Returns}
+The received byte. 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_u_a_r_t_8c_source_l00119}{119}} of file \mbox{\hyperlink{_u_a_r_t_8c_source}{UART.\+c}}.
+
+\Hypertarget{_u_a_r_t_8c_a2a4be228a246fa97ae6f890cacd8ca93}\index{UART.c@{UART.c}!usart2\_send\_char@{usart2\_send\_char}}
+\index{usart2\_send\_char@{usart2\_send\_char}!UART.c@{UART.c}}
+\doxysubsubsection{\texorpdfstring{usart2\_send\_char()}{usart2\_send\_char()}}
+{\footnotesize\ttfamily \label{_u_a_r_t_8c_a2a4be228a246fa97ae6f890cacd8ca93} 
+void usart2\+\_\+send\+\_\+char (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{data}{}\end{DoxyParamCaption})}
+
+
+
+Sends a single byte (character) via USART2. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em data} & The byte to send. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{_u_a_r_t_8c_source_l00090}{90}} of file \mbox{\hyperlink{_u_a_r_t_8c_source}{UART.\+c}}.
+
+\Hypertarget{_u_a_r_t_8c_ac5f90a0a4d873f03ef53132a8b545afa}\index{UART.c@{UART.c}!usart2\_send\_string@{usart2\_send\_string}}
+\index{usart2\_send\_string@{usart2\_send\_string}!UART.c@{UART.c}}
+\doxysubsubsection{\texorpdfstring{usart2\_send\_string()}{usart2\_send\_string()}}
+{\footnotesize\ttfamily \label{_u_a_r_t_8c_ac5f90a0a4d873f03ef53132a8b545afa} 
+void usart2\+\_\+send\+\_\+string (\begin{DoxyParamCaption}\item[{char \texorpdfstring{$\ast$}{*}}]{str}{}\end{DoxyParamCaption})}
+
+
+
+Sends a null-\/terminated string via USART2. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em str} & Pointer to the string to send. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{_u_a_r_t_8c_source_l00103}{103}} of file \mbox{\hyperlink{_u_a_r_t_8c_source}{UART.\+c}}.
+
+
+
+\doxysubsection{Variable Documentation}
+\Hypertarget{_u_a_r_t_8c_aaed8583e85796e44f1c6b4e3e9f1b631}\index{UART.c@{UART.c}!uart\_rx\_buffer@{uart\_rx\_buffer}}
+\index{uart\_rx\_buffer@{uart\_rx\_buffer}!UART.c@{UART.c}}
+\doxysubsubsection{\texorpdfstring{uart\_rx\_buffer}{uart\_rx\_buffer}}
+{\footnotesize\ttfamily \label{_u_a_r_t_8c_aaed8583e85796e44f1c6b4e3e9f1b631} 
+volatile uint8\+\_\+t uart\+\_\+rx\+\_\+buffer\mbox{[}UART\+\_\+\+RX\+\_\+\+BUFFER\+\_\+\+SIZE\mbox{]}}
+
+
+
+Definition at line \mbox{\hyperlink{_u_a_r_t_8c_source_l00019}{19}} of file \mbox{\hyperlink{_u_a_r_t_8c_source}{UART.\+c}}.
+
+\Hypertarget{_u_a_r_t_8c_a6336287ee05f9ff7fe682e40baefac14}\index{UART.c@{UART.c}!uart\_rx\_head@{uart\_rx\_head}}
+\index{uart\_rx\_head@{uart\_rx\_head}!UART.c@{UART.c}}
+\doxysubsubsection{\texorpdfstring{uart\_rx\_head}{uart\_rx\_head}}
+{\footnotesize\ttfamily \label{_u_a_r_t_8c_a6336287ee05f9ff7fe682e40baefac14} 
+volatile uint16\+\_\+t uart\+\_\+rx\+\_\+head = 0}
+
+
+
+Definition at line \mbox{\hyperlink{_u_a_r_t_8c_source_l00020}{20}} of file \mbox{\hyperlink{_u_a_r_t_8c_source}{UART.\+c}}.
+
+\Hypertarget{_u_a_r_t_8c_ac7a769f085cd484d1142c9f1ba71b59b}\index{UART.c@{UART.c}!uart\_rx\_line\_ready@{uart\_rx\_line\_ready}}
+\index{uart\_rx\_line\_ready@{uart\_rx\_line\_ready}!UART.c@{UART.c}}
+\doxysubsubsection{\texorpdfstring{uart\_rx\_line\_ready}{uart\_rx\_line\_ready}}
+{\footnotesize\ttfamily \label{_u_a_r_t_8c_ac7a769f085cd484d1142c9f1ba71b59b} 
+volatile bool uart\+\_\+rx\+\_\+line\+\_\+ready = false}
+
+
+
+Definition at line \mbox{\hyperlink{_u_a_r_t_8c_source_l00022}{22}} of file \mbox{\hyperlink{_u_a_r_t_8c_source}{UART.\+c}}.
+
+\Hypertarget{_u_a_r_t_8c_a7430a315e673184c6244a8b7dc1d6af4}\index{UART.c@{UART.c}!uart\_rx\_tail@{uart\_rx\_tail}}
+\index{uart\_rx\_tail@{uart\_rx\_tail}!UART.c@{UART.c}}
+\doxysubsubsection{\texorpdfstring{uart\_rx\_tail}{uart\_rx\_tail}}
+{\footnotesize\ttfamily \label{_u_a_r_t_8c_a7430a315e673184c6244a8b7dc1d6af4} 
+volatile uint16\+\_\+t uart\+\_\+rx\+\_\+tail = 0}
+
+
+
+Definition at line \mbox{\hyperlink{_u_a_r_t_8c_source_l00021}{21}} of file \mbox{\hyperlink{_u_a_r_t_8c_source}{UART.\+c}}.
+
