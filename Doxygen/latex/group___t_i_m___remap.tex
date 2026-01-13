@@ -1,0 +1,157 @@
+\doxysubsubsubsection{TIM\+\_\+\+Remap}
+\hypertarget{group___t_i_m___remap}{}\label{group___t_i_m___remap}\index{TIM\_Remap@{TIM\_Remap}}
+\doxysubsubsubsubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{group___t_i_m___remap_ga4382cc14c8c5fba6ea1826bbac1c661a}{TIM2\+\_\+\+TIM8\+\_\+\+TRGO}}~((uint16\+\_\+t)0x0000)
+\item 
+\#define \mbox{\hyperlink{group___t_i_m___remap_ga1136f862c583441e16dfd476bcd4d2dc}{TIM2\+\_\+\+ETH\+\_\+\+PTP}}~((uint16\+\_\+t)0x0400)
+\item 
+\#define \mbox{\hyperlink{group___t_i_m___remap_gaea7d327d7d540269ee321a0657c01cd0}{TIM2\+\_\+\+USBFS\+\_\+\+SOF}}~((uint16\+\_\+t)0x0800)
+\item 
+\#define \mbox{\hyperlink{group___t_i_m___remap_ga49b8df3318ad0bf238953a2d8c6742af}{TIM2\+\_\+\+USBHS\+\_\+\+SOF}}~((uint16\+\_\+t)0x0\+C00)
+\item 
+\#define \mbox{\hyperlink{group___t_i_m___remap_ga64d3cf8f3b833eea9e78c79ed1322f2a}{TIM5\+\_\+\+GPIO}}~((uint16\+\_\+t)0x0000)
+\item 
+\#define \mbox{\hyperlink{group___t_i_m___remap_gaf7e3c9769149255920a9088fd51c7e81}{TIM5\+\_\+\+LSI}}~((uint16\+\_\+t)0x0040)
+\item 
+\#define \mbox{\hyperlink{group___t_i_m___remap_ga14bf08ccc822156ed44f9234825b6858}{TIM5\+\_\+\+LSE}}~((uint16\+\_\+t)0x0080)
+\item 
+\#define \mbox{\hyperlink{group___t_i_m___remap_gad95bd2157c29f94703c0942ca3d2b767}{TIM5\+\_\+\+RTC}}~((uint16\+\_\+t)0x00\+C0)
+\item 
+\#define \mbox{\hyperlink{group___t_i_m___remap_ga96850a4ae7ae9590f1ab9c04ec32bb06}{TIM11\+\_\+\+GPIO}}~((uint16\+\_\+t)0x0000)
+\item 
+\#define \mbox{\hyperlink{group___t_i_m___remap_ga1d6d3f53290050b59b202e6d72af673a}{TIM11\+\_\+\+HSE}}~((uint16\+\_\+t)0x0002)
+\item 
+\#define \mbox{\hyperlink{group___t_i_m___remap_ga7faab73212e996d8b49555d3ad5be965}{IS\+\_\+\+TIM\+\_\+\+REMAP}}(TIM\+\_\+\+REMAP)
+\end{DoxyCompactItemize}
+
+
+\doxysubsubsubsubsection{Detailed Description}
+
+
+\doxysubsubsubsubsection{Macro Definition Documentation}
+\Hypertarget{group___t_i_m___remap_ga7faab73212e996d8b49555d3ad5be965}\index{TIM\_Remap@{TIM\_Remap}!IS\_TIM\_REMAP@{IS\_TIM\_REMAP}}
+\index{IS\_TIM\_REMAP@{IS\_TIM\_REMAP}!TIM\_Remap@{TIM\_Remap}}
+\doxysubsubsubsubsubsection{\texorpdfstring{IS\_TIM\_REMAP}{IS\_TIM\_REMAP}}
+{\footnotesize\ttfamily \label{group___t_i_m___remap_ga7faab73212e996d8b49555d3ad5be965} 
+\#define IS\+\_\+\+TIM\+\_\+\+REMAP(\begin{DoxyParamCaption}\item[{}]{TIM\+\_\+\+REMAP}{}\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (((TIM\_REMAP)\ ==\ TIM2\_TIM8\_TRGO)||\(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ((TIM\_REMAP)\ ==\ TIM2\_ETH\_PTP)||\(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ((TIM\_REMAP)\ ==\ TIM2\_USBFS\_SOF)||\(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ((TIM\_REMAP)\ ==\ TIM2\_USBHS\_SOF)||\(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ((TIM\_REMAP)\ ==\ TIM5\_GPIO)||\(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ((TIM\_REMAP)\ ==\ TIM5\_LSI)||\(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ((TIM\_REMAP)\ ==\ TIM5\_LSE)||\(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ((TIM\_REMAP)\ ==\ TIM5\_RTC)||\(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ((TIM\_REMAP)\ ==\ TIM11\_GPIO)||\(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ((TIM\_REMAP)\ ==\ TIM11\_HSE))}
+
+\end{DoxyCode}
+
+
+Definition at line \mbox{\hyperlink{stm32f4xx__tim_8h_source_l00921}{921}} of file \mbox{\hyperlink{stm32f4xx__tim_8h_source}{stm32f4xx\+\_\+tim.\+h}}.
+
+\Hypertarget{group___t_i_m___remap_ga96850a4ae7ae9590f1ab9c04ec32bb06}\index{TIM\_Remap@{TIM\_Remap}!TIM11\_GPIO@{TIM11\_GPIO}}
+\index{TIM11\_GPIO@{TIM11\_GPIO}!TIM\_Remap@{TIM\_Remap}}
+\doxysubsubsubsubsubsection{\texorpdfstring{TIM11\_GPIO}{TIM11\_GPIO}}
+{\footnotesize\ttfamily \label{group___t_i_m___remap_ga96850a4ae7ae9590f1ab9c04ec32bb06} 
+\#define TIM11\+\_\+\+GPIO~((uint16\+\_\+t)0x0000)}
+
+
+
+Definition at line \mbox{\hyperlink{stm32f4xx__tim_8h_source_l00918}{918}} of file \mbox{\hyperlink{stm32f4xx__tim_8h_source}{stm32f4xx\+\_\+tim.\+h}}.
+
+\Hypertarget{group___t_i_m___remap_ga1d6d3f53290050b59b202e6d72af673a}\index{TIM\_Remap@{TIM\_Remap}!TIM11\_HSE@{TIM11\_HSE}}
+\index{TIM11\_HSE@{TIM11\_HSE}!TIM\_Remap@{TIM\_Remap}}
+\doxysubsubsubsubsubsection{\texorpdfstring{TIM11\_HSE}{TIM11\_HSE}}
+{\footnotesize\ttfamily \label{group___t_i_m___remap_ga1d6d3f53290050b59b202e6d72af673a} 
+\#define TIM11\+\_\+\+HSE~((uint16\+\_\+t)0x0002)}
+
+
+
+Definition at line \mbox{\hyperlink{stm32f4xx__tim_8h_source_l00919}{919}} of file \mbox{\hyperlink{stm32f4xx__tim_8h_source}{stm32f4xx\+\_\+tim.\+h}}.
+
+\Hypertarget{group___t_i_m___remap_ga1136f862c583441e16dfd476bcd4d2dc}\index{TIM\_Remap@{TIM\_Remap}!TIM2\_ETH\_PTP@{TIM2\_ETH\_PTP}}
+\index{TIM2\_ETH\_PTP@{TIM2\_ETH\_PTP}!TIM\_Remap@{TIM\_Remap}}
+\doxysubsubsubsubsubsection{\texorpdfstring{TIM2\_ETH\_PTP}{TIM2\_ETH\_PTP}}
+{\footnotesize\ttfamily \label{group___t_i_m___remap_ga1136f862c583441e16dfd476bcd4d2dc} 
+\#define TIM2\+\_\+\+ETH\+\_\+\+PTP~((uint16\+\_\+t)0x0400)}
+
+
+
+Definition at line \mbox{\hyperlink{stm32f4xx__tim_8h_source_l00909}{909}} of file \mbox{\hyperlink{stm32f4xx__tim_8h_source}{stm32f4xx\+\_\+tim.\+h}}.
+
+\Hypertarget{group___t_i_m___remap_ga4382cc14c8c5fba6ea1826bbac1c661a}\index{TIM\_Remap@{TIM\_Remap}!TIM2\_TIM8\_TRGO@{TIM2\_TIM8\_TRGO}}
+\index{TIM2\_TIM8\_TRGO@{TIM2\_TIM8\_TRGO}!TIM\_Remap@{TIM\_Remap}}
+\doxysubsubsubsubsubsection{\texorpdfstring{TIM2\_TIM8\_TRGO}{TIM2\_TIM8\_TRGO}}
+{\footnotesize\ttfamily \label{group___t_i_m___remap_ga4382cc14c8c5fba6ea1826bbac1c661a} 
+\#define TIM2\+\_\+\+TIM8\+\_\+\+TRGO~((uint16\+\_\+t)0x0000)}
+
+
+
+Definition at line \mbox{\hyperlink{stm32f4xx__tim_8h_source_l00908}{908}} of file \mbox{\hyperlink{stm32f4xx__tim_8h_source}{stm32f4xx\+\_\+tim.\+h}}.
+
+\Hypertarget{group___t_i_m___remap_gaea7d327d7d540269ee321a0657c01cd0}\index{TIM\_Remap@{TIM\_Remap}!TIM2\_USBFS\_SOF@{TIM2\_USBFS\_SOF}}
+\index{TIM2\_USBFS\_SOF@{TIM2\_USBFS\_SOF}!TIM\_Remap@{TIM\_Remap}}
+\doxysubsubsubsubsubsection{\texorpdfstring{TIM2\_USBFS\_SOF}{TIM2\_USBFS\_SOF}}
+{\footnotesize\ttfamily \label{group___t_i_m___remap_gaea7d327d7d540269ee321a0657c01cd0} 
+\#define TIM2\+\_\+\+USBFS\+\_\+\+SOF~((uint16\+\_\+t)0x0800)}
+
+
+
+Definition at line \mbox{\hyperlink{stm32f4xx__tim_8h_source_l00910}{910}} of file \mbox{\hyperlink{stm32f4xx__tim_8h_source}{stm32f4xx\+\_\+tim.\+h}}.
+
+\Hypertarget{group___t_i_m___remap_ga49b8df3318ad0bf238953a2d8c6742af}\index{TIM\_Remap@{TIM\_Remap}!TIM2\_USBHS\_SOF@{TIM2\_USBHS\_SOF}}
+\index{TIM2\_USBHS\_SOF@{TIM2\_USBHS\_SOF}!TIM\_Remap@{TIM\_Remap}}
+\doxysubsubsubsubsubsection{\texorpdfstring{TIM2\_USBHS\_SOF}{TIM2\_USBHS\_SOF}}
+{\footnotesize\ttfamily \label{group___t_i_m___remap_ga49b8df3318ad0bf238953a2d8c6742af} 
+\#define TIM2\+\_\+\+USBHS\+\_\+\+SOF~((uint16\+\_\+t)0x0\+C00)}
+
+
+
+Definition at line \mbox{\hyperlink{stm32f4xx__tim_8h_source_l00911}{911}} of file \mbox{\hyperlink{stm32f4xx__tim_8h_source}{stm32f4xx\+\_\+tim.\+h}}.
+
+\Hypertarget{group___t_i_m___remap_ga64d3cf8f3b833eea9e78c79ed1322f2a}\index{TIM\_Remap@{TIM\_Remap}!TIM5\_GPIO@{TIM5\_GPIO}}
+\index{TIM5\_GPIO@{TIM5\_GPIO}!TIM\_Remap@{TIM\_Remap}}
+\doxysubsubsubsubsubsection{\texorpdfstring{TIM5\_GPIO}{TIM5\_GPIO}}
+{\footnotesize\ttfamily \label{group___t_i_m___remap_ga64d3cf8f3b833eea9e78c79ed1322f2a} 
+\#define TIM5\+\_\+\+GPIO~((uint16\+\_\+t)0x0000)}
+
+
+
+Definition at line \mbox{\hyperlink{stm32f4xx__tim_8h_source_l00913}{913}} of file \mbox{\hyperlink{stm32f4xx__tim_8h_source}{stm32f4xx\+\_\+tim.\+h}}.
+
+\Hypertarget{group___t_i_m___remap_ga14bf08ccc822156ed44f9234825b6858}\index{TIM\_Remap@{TIM\_Remap}!TIM5\_LSE@{TIM5\_LSE}}
+\index{TIM5\_LSE@{TIM5\_LSE}!TIM\_Remap@{TIM\_Remap}}
+\doxysubsubsubsubsubsection{\texorpdfstring{TIM5\_LSE}{TIM5\_LSE}}
+{\footnotesize\ttfamily \label{group___t_i_m___remap_ga14bf08ccc822156ed44f9234825b6858} 
+\#define TIM5\+\_\+\+LSE~((uint16\+\_\+t)0x0080)}
+
+
+
+Definition at line \mbox{\hyperlink{stm32f4xx__tim_8h_source_l00915}{915}} of file \mbox{\hyperlink{stm32f4xx__tim_8h_source}{stm32f4xx\+\_\+tim.\+h}}.
+
+\Hypertarget{group___t_i_m___remap_gaf7e3c9769149255920a9088fd51c7e81}\index{TIM\_Remap@{TIM\_Remap}!TIM5\_LSI@{TIM5\_LSI}}
+\index{TIM5\_LSI@{TIM5\_LSI}!TIM\_Remap@{TIM\_Remap}}
+\doxysubsubsubsubsubsection{\texorpdfstring{TIM5\_LSI}{TIM5\_LSI}}
+{\footnotesize\ttfamily \label{group___t_i_m___remap_gaf7e3c9769149255920a9088fd51c7e81} 
+\#define TIM5\+\_\+\+LSI~((uint16\+\_\+t)0x0040)}
+
+
+
+Definition at line \mbox{\hyperlink{stm32f4xx__tim_8h_source_l00914}{914}} of file \mbox{\hyperlink{stm32f4xx__tim_8h_source}{stm32f4xx\+\_\+tim.\+h}}.
+
+\Hypertarget{group___t_i_m___remap_gad95bd2157c29f94703c0942ca3d2b767}\index{TIM\_Remap@{TIM\_Remap}!TIM5\_RTC@{TIM5\_RTC}}
+\index{TIM5\_RTC@{TIM5\_RTC}!TIM\_Remap@{TIM\_Remap}}
+\doxysubsubsubsubsubsection{\texorpdfstring{TIM5\_RTC}{TIM5\_RTC}}
+{\footnotesize\ttfamily \label{group___t_i_m___remap_gad95bd2157c29f94703c0942ca3d2b767} 
+\#define TIM5\+\_\+\+RTC~((uint16\+\_\+t)0x00\+C0)}
+
+
+
+Definition at line \mbox{\hyperlink{stm32f4xx__tim_8h_source_l00916}{916}} of file \mbox{\hyperlink{stm32f4xx__tim_8h_source}{stm32f4xx\+\_\+tim.\+h}}.
+

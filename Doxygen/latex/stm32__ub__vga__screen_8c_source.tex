@@ -1,0 +1,423 @@
+\doxysection{stm32\+\_\+ub\+\_\+vga\+\_\+screen.\+c}
+\hypertarget{stm32__ub__vga__screen_8c_source}{}\label{stm32__ub__vga__screen_8c_source}\index{Core/Src/stm32\_ub\_vga\_screen.c@{Core/Src/stm32\_ub\_vga\_screen.c}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00001}00001\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00002}00002\ \textcolor{comment}{//\ File\ \ \ \ \ :\ stm32\_ub\_vga\_320x240.c}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00003}00003\ \textcolor{comment}{//\ CPU\ \ \ \ \ \ :\ STM32F4}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00004}00004\ \textcolor{comment}{//\ IDE\ \ \ \ \ \ :\ CooCox\ CoIDE\ 1.7.0}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00005}00005\ \textcolor{comment}{//\ Module\ \ \ :\ GPIO,\ TIM,\ MISC,\ DMA}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00006}00006\ \textcolor{comment}{//\ Function\ :\ VGA\ out\ by\ GPIO\ (320x240\ Pixel,\ 8bit\ color)}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00007}00007\ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00008}00008\ \textcolor{comment}{//\ signals\ \ :\ PB11\ \ \ \ \ \ =\ HSync-\/Signal}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00009}00009\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ PB12\ \ \ \ \ \ =\ VSync-\/Signal}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00010}00010\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ PE8+PE9\ \ \ =\ color\ Blue}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00011}00011\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ PE10-\/PE12\ =\ color\ Green}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00012}00012\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ PE13-\/PE15\ =\ color\ red}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00013}00013\ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00014}00014\ \textcolor{comment}{//\ uses\ \ \ \ \ :\ TIM1,\ TIM2}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00015}00015\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ DMA2,\ Channel6,\ Stream5}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00016}00016\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00017}00017\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00018}00018\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00019}00019\ \textcolor{comment}{//\ Includes}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00020}00020\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00021}00021\ \textcolor{preprocessor}{\#include\ "{}stm32\_ub\_vga\_screen.h"{}}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00022}00022\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00023}00023\ \mbox{\hyperlink{struct_v_g_a__t}{VGA\_t}}\ VGA;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00024}00024\ uint8\_t\ VGA\_RAM1[(VGA\_DISPLAY\_X+1)*VGA\_DISPLAY\_Y];}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00025}00025\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00026}00026\ \textcolor{comment}{//\ internal\ Functions}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00027}00027\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00028}00028\ \textcolor{keywordtype}{void}\ P\_VGA\_InitIO(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00029}00029\ \textcolor{keywordtype}{void}\ P\_VGA\_InitTIM(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00030}00030\ \textcolor{keywordtype}{void}\ P\_VGA\_InitINT(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00031}00031\ \textcolor{keywordtype}{void}\ P\_VGA\_InitDMA(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00032}00032\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00033}00033\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00034}00034\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00035}00035\ \textcolor{comment}{//\ Init\ VGA-\/Module}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00036}00036\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00037}00037\ \textcolor{keywordtype}{void}\ UB\_VGA\_Screen\_Init(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00038}00038\ \{}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00039}00039\ \ \ uint16\_t\ xp,yp;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00040}00040\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00041}00041\ \ \ VGA.hsync\_cnt=0;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00042}00042\ \ \ VGA.start\_adr=0;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00043}00043\ \ \ VGA.dma2\_cr\_reg=0;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00044}00044\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00045}00045\ \ \ \textcolor{comment}{//\ RAM\ init\ total\ black}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00046}00046\ \ \ \textcolor{keywordflow}{for}(yp=0;yp<VGA\_DISPLAY\_Y;yp++)\ \{}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00047}00047\ \ \ \ \ \textcolor{keywordflow}{for}(xp=0;xp<(VGA\_DISPLAY\_X+1);xp++)\ \{}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00048}00048\ \ \ \ \ \ \ VGA\_RAM1[(yp*(VGA\_DISPLAY\_X+1))+xp]=0;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00049}00049\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00050}00050\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00051}00051\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00052}00052\ \ \ \textcolor{comment}{//\ init\ IO-\/Pins}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00053}00053\ \ \ P\_VGA\_InitIO();}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00054}00054\ \ \ \textcolor{comment}{//\ init\ Timer}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00055}00055\ \ \ P\_VGA\_InitTIM();}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00056}00056\ \ \ \textcolor{comment}{//\ init\ DMA}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00057}00057\ \ \ P\_VGA\_InitDMA();}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00058}00058\ \ \ \textcolor{comment}{//\ init\ Interrupts}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00059}00059\ \ \ P\_VGA\_InitINT();}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00060}00060\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00061}00061\ \ \ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00062}00062\ \ \ \textcolor{comment}{//\ Register\ swap\ and\ safe}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00063}00063\ \ \ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00064}00064\ \ \ \textcolor{comment}{//\ content\ of\ CR-\/Register\ read\ and\ save}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00065}00065\ \ \ VGA.dma2\_cr\_reg=DMA2\_Stream5-\/>CR;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00066}00066\ \}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00067}00067\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00068}00068\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00069}00069\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00070}00070\ \textcolor{comment}{//\ fill\ the\ DMA\ RAM\ buffer\ with\ one\ color}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00071}00071\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00072}00072\ \textcolor{keywordtype}{void}\ UB\_VGA\_FillScreen(uint8\_t\ color)}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00073}00073\ \{}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00074}00074\ \ \ uint16\_t\ xp,yp;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00075}00075\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00076}00076\ \ \ \textcolor{keywordflow}{for}(yp=0;yp<VGA\_DISPLAY\_Y;yp++)\ \{}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00077}00077\ \ \ \ \ \textcolor{keywordflow}{for}(xp=0;xp<VGA\_DISPLAY\_X;xp++)\ \{}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00078}00078\ \ \ \ \ \ \ UB\_VGA\_SetPixel(xp,yp,color);}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00079}00079\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00080}00080\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00081}00081\ \}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00082}00082\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00083}00083\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00084}00084\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00085}00085\ \textcolor{comment}{//\ put\ one\ Pixel\ on\ the\ screen\ with\ one\ color}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00086}00086\ \textcolor{comment}{//\ Important\ :\ the\ last\ Pixel+1\ from\ every\ line\ must\ be\ black\ (don't\ know\ why??)}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00087}00087\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00088}00088\ \textcolor{keywordtype}{void}\ UB\_VGA\_SetPixel(uint16\_t\ xp,\ uint16\_t\ yp,\ uint8\_t\ color)}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00089}00089\ \{}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00090}00090\ \ \ \textcolor{keywordflow}{if}\ (color\ ==\ 0x01)\ \textcolor{keywordflow}{return};\ \ \textcolor{comment}{//\ skip\ background\ pixel}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00091}00091\ \ \ \textcolor{keywordflow}{if}(xp>=VGA\_DISPLAY\_X)\ xp=0;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00092}00092\ \ \ \textcolor{keywordflow}{if}(yp>=VGA\_DISPLAY\_Y)\ yp=0;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00093}00093\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00094}00094\ \ \ \textcolor{comment}{//\ Write\ pixel\ to\ ram}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00095}00095\ \ \ VGA\_RAM1[(yp*(VGA\_DISPLAY\_X+1))+xp]=color;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00096}00096\ \}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00097}00097\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00098}00098\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00099}00099\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00100}00100\ \textcolor{comment}{//\ interne\ Funktionen}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00101}00101\ \textcolor{comment}{//\ init\ aller\ IO-\/Pins}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00102}00102\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00103}00103\ \textcolor{keywordtype}{void}\ P\_VGA\_InitIO(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00104}00104\ \{}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00105}00105\ \ \ \mbox{\hyperlink{struct_g_p_i_o___init_type_def}{GPIO\_InitTypeDef}}\ \ GPIO\_InitStructure;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00106}00106\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00107}00107\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00108}00108\ \ \ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00109}00109\ \ \ \textcolor{comment}{//\ init\ RGB-\/Pins\ (PE8\ -\/\ PE15)}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00110}00110\ \ \ \textcolor{comment}{//\ as\ normal\ GPIOs}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00111}00111\ \ \ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00112}00112\ \ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00113}00113\ \ \ \textcolor{comment}{//\ Clock\ Enable}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00114}00114\ \ \ \mbox{\hyperlink{group___r_c_c___group3_ga80c89116820d48bb38db2e7d5e5a49b9}{RCC\_AHB1PeriphClockCmd}}(RCC\_AHB1Periph\_GPIOE,\ ENABLE);}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00115}00115\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00116}00116\ \ \ \textcolor{comment}{//\ Config\ as\ Digital\ output}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00117}00117\ \ \ GPIO\_InitStructure.\mbox{\hyperlink{struct_g_p_i_o___init_type_def_a0beb7bf54bbf5fff56f49d8beba2e3df}{GPIO\_Pin}}\ =\ GPIO\_Pin\_8\ |\ GPIO\_Pin\_9\ |\ GPIO\_Pin\_10\ |\ GPIO\_Pin\_11\ |}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00118}00118\ \ \ \ \ \ \ \ \ GPIO\_Pin\_12\ |\ GPIO\_Pin\_13\ |\ GPIO\_Pin\_14\ |\ GPIO\_Pin\_15;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00119}00119\ \ \ GPIO\_InitStructure.\mbox{\hyperlink{struct_g_p_i_o___init_type_def_a55bd77e335c2bfeec9caa5dc922b791b}{GPIO\_Mode}}\ =\ \mbox{\hyperlink{group___g_p_i_o_gga1347339e1c84a196fabbb31205eec5d4a60f1d530f4119efcad8e1a68c890c6a6}{GPIO\_Mode\_OUT}};}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00120}00120\ \ \ GPIO\_InitStructure.\mbox{\hyperlink{struct_g_p_i_o___init_type_def_af48c56f3e56e71204c8904ea29f5181b}{GPIO\_OType}}\ =\ GPIO\_OType\_PP;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00121}00121\ \ \ GPIO\_InitStructure.\mbox{\hyperlink{struct_g_p_i_o___init_type_def_aad62942c003bc2083d37f10f6f39bd5f}{GPIO\_PuPd}}\ =\ GPIO\_PuPd\_UP;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00122}00122\ \ \ GPIO\_InitStructure.\mbox{\hyperlink{struct_g_p_i_o___init_type_def_ac05832cacebc861a9acf5294d702c16b}{GPIO\_Speed}}\ =\ \mbox{\hyperlink{group___g_p_i_o_gga062ad92b67b4a1f301c161022cf3ba8ea195a0e73cd63d7f5b5d41bd0155eacbb}{GPIO\_Speed\_100MHz}};}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00123}00123\ \ \ \mbox{\hyperlink{group___g_p_i_o___group1_ga71abf9404261370d03cca449b88d3a65}{GPIO\_Init}}(GPIOE,\ \&GPIO\_InitStructure);}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00124}00124\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00125}00125\ \ \ GPIOE-\/>BSRRH\ =\ VGA\_GPIO\_HINIBBLE;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00126}00126\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00127}00127\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00128}00128\ \ \ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00129}00129\ \ \ \textcolor{comment}{//\ init\ of\ the\ H-\/Sync\ Pin\ (PB11)}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00130}00130\ \ \ \textcolor{comment}{//\ using\ Timer2\ and\ CH4}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00131}00131\ \ \ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00132}00132\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00133}00133\ \ \ \textcolor{comment}{//\ Clock\ Enable}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00134}00134\ \ \ \mbox{\hyperlink{group___r_c_c___group3_ga80c89116820d48bb38db2e7d5e5a49b9}{RCC\_AHB1PeriphClockCmd}}(RCC\_AHB1Periph\_GPIOB,\ ENABLE);}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00135}00135\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00136}00136\ \ \ \textcolor{comment}{//\ Config\ Pins\ as\ Digital-\/out}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00137}00137\ \ \ GPIO\_InitStructure.\mbox{\hyperlink{struct_g_p_i_o___init_type_def_a0beb7bf54bbf5fff56f49d8beba2e3df}{GPIO\_Pin}}\ =\ GPIO\_Pin\_11;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00138}00138\ \ \ GPIO\_InitStructure.\mbox{\hyperlink{struct_g_p_i_o___init_type_def_a55bd77e335c2bfeec9caa5dc922b791b}{GPIO\_Mode}}\ =\ \mbox{\hyperlink{group___g_p_i_o_gga1347339e1c84a196fabbb31205eec5d4a6d44c35c6c5008d85bac9251a867e701}{GPIO\_Mode\_AF}};}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00139}00139\ \ \ GPIO\_InitStructure.\mbox{\hyperlink{struct_g_p_i_o___init_type_def_ac05832cacebc861a9acf5294d702c16b}{GPIO\_Speed}}\ =\ \mbox{\hyperlink{group___g_p_i_o_gga062ad92b67b4a1f301c161022cf3ba8ea195a0e73cd63d7f5b5d41bd0155eacbb}{GPIO\_Speed\_100MHz}};}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00140}00140\ \ \ GPIO\_InitStructure.\mbox{\hyperlink{struct_g_p_i_o___init_type_def_af48c56f3e56e71204c8904ea29f5181b}{GPIO\_OType}}\ =\ GPIO\_OType\_PP;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00141}00141\ \ \ GPIO\_InitStructure.\mbox{\hyperlink{struct_g_p_i_o___init_type_def_aad62942c003bc2083d37f10f6f39bd5f}{GPIO\_PuPd}}\ =\ GPIO\_PuPd\_UP\ ;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00142}00142\ \ \ \mbox{\hyperlink{group___g_p_i_o___group1_ga71abf9404261370d03cca449b88d3a65}{GPIO\_Init}}(GPIOB,\ \&GPIO\_InitStructure);}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00143}00143\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00144}00144\ \ \ \textcolor{comment}{//\ alternative\ function\ connect\ with\ IO}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00145}00145\ \ \ \mbox{\hyperlink{group___g_p_i_o___group3_ga0a77617a322562ae84f8d72486032c5d}{GPIO\_PinAFConfig}}(GPIOB,\ GPIO\_PinSource11,\ GPIO\_AF\_TIM2);}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00146}00146\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00147}00147\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00148}00148\ \ \ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00149}00149\ \ \ \textcolor{comment}{//\ init\ of\ V-\/Sync\ Pin\ (PB12)}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00150}00150\ \ \ \textcolor{comment}{//\ using\ GPIO}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00151}00151\ \ \ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00152}00152\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00153}00153\ \ \ \textcolor{comment}{//\ Clock\ Enable}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00154}00154\ \ \ \mbox{\hyperlink{group___r_c_c___group3_ga80c89116820d48bb38db2e7d5e5a49b9}{RCC\_AHB1PeriphClockCmd}}(RCC\_AHB1Periph\_GPIOB,\ ENABLE);}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00155}00155\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00156}00156\ \ \ \textcolor{comment}{//\ Config\ of\ the\ Pins\ as\ Digital\ out}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00157}00157\ \ \ GPIO\_InitStructure.\mbox{\hyperlink{struct_g_p_i_o___init_type_def_a0beb7bf54bbf5fff56f49d8beba2e3df}{GPIO\_Pin}}\ =\ GPIO\_Pin\_12;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00158}00158\ \ \ GPIO\_InitStructure.\mbox{\hyperlink{struct_g_p_i_o___init_type_def_a55bd77e335c2bfeec9caa5dc922b791b}{GPIO\_Mode}}\ =\ \mbox{\hyperlink{group___g_p_i_o_gga1347339e1c84a196fabbb31205eec5d4a60f1d530f4119efcad8e1a68c890c6a6}{GPIO\_Mode\_OUT}};}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00159}00159\ \ \ GPIO\_InitStructure.\mbox{\hyperlink{struct_g_p_i_o___init_type_def_af48c56f3e56e71204c8904ea29f5181b}{GPIO\_OType}}\ =\ GPIO\_OType\_PP;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00160}00160\ \ \ GPIO\_InitStructure.\mbox{\hyperlink{struct_g_p_i_o___init_type_def_aad62942c003bc2083d37f10f6f39bd5f}{GPIO\_PuPd}}\ =\ GPIO\_PuPd\_UP;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00161}00161\ \ \ GPIO\_InitStructure.\mbox{\hyperlink{struct_g_p_i_o___init_type_def_ac05832cacebc861a9acf5294d702c16b}{GPIO\_Speed}}\ =\ \mbox{\hyperlink{group___g_p_i_o_gga062ad92b67b4a1f301c161022cf3ba8ea195a0e73cd63d7f5b5d41bd0155eacbb}{GPIO\_Speed\_100MHz}};}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00162}00162\ \ \ \mbox{\hyperlink{group___g_p_i_o___group1_ga71abf9404261370d03cca449b88d3a65}{GPIO\_Init}}(GPIOB,\ \&GPIO\_InitStructure);}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00163}00163\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00164}00164\ \ \ GPIOB-\/>BSRRL\ =\ GPIO\_Pin\_12;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00165}00165\ \}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00166}00166\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00167}00167\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00168}00168\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00169}00169\ \textcolor{comment}{//\ internal\ Function}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00170}00170\ \textcolor{comment}{//\ init\ Timer}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00171}00171\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00172}00172\ \textcolor{keywordtype}{void}\ P\_VGA\_InitTIM(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00173}00173\ \{}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00174}00174\ \ \ \mbox{\hyperlink{struct_t_i_m___time_base_init_type_def}{TIM\_TimeBaseInitTypeDef}}\ \ TIM\_TimeBaseStructure;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00175}00175\ \ \ \mbox{\hyperlink{struct_t_i_m___o_c_init_type_def}{TIM\_OCInitTypeDef}}\ \ TIM\_OCInitStructure;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00176}00176\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00177}00177\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00178}00178\ \ \ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00179}00179\ \ \ \textcolor{comment}{//\ init\ of\ Timer1\ for}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00180}00180\ \ \ \textcolor{comment}{//\ Pixeldata\ via\ DMA}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00181}00181\ \ \ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00182}00182\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00183}00183\ \ \ \textcolor{comment}{//\ Clock\ enable}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00184}00184\ \ \ \mbox{\hyperlink{group___r_c_c___group3_ga56ff55caf8d835351916b40dd030bc87}{RCC\_APB2PeriphClockCmd}}(RCC\_APB2Periph\_TIM1,\ ENABLE);}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00185}00185\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00186}00186\ \ \ \textcolor{comment}{//\ Timer1\ init}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00187}00187\ \ \ TIM\_TimeBaseStructure.\mbox{\hyperlink{struct_t_i_m___time_base_init_type_def_a06a7f47b1ced6fa2227ec98a86eb391f}{TIM\_Period}}\ =\ \ VGA\_TIM1\_PERIODE;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00188}00188\ \ \ TIM\_TimeBaseStructure.\mbox{\hyperlink{struct_t_i_m___time_base_init_type_def_a6d3c8632780db819b2eb811e71ce251e}{TIM\_Prescaler}}\ =\ VGA\_TIM1\_PRESCALE;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00189}00189\ \ \ TIM\_TimeBaseStructure.\mbox{\hyperlink{struct_t_i_m___time_base_init_type_def_ab473f51adaa9474702e454fc8c24a407}{TIM\_ClockDivision}}\ =\ TIM\_CKD\_DIV1;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00190}00190\ \ \ TIM\_TimeBaseStructure.\mbox{\hyperlink{struct_t_i_m___time_base_init_type_def_a0de4138cd939566bc667f21df089e195}{TIM\_CounterMode}}\ =\ TIM\_CounterMode\_Up;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00191}00191\ \ \ \mbox{\hyperlink{group___t_i_m___group1_ga83fd58c9416802d9638bbe1715c98932}{TIM\_TimeBaseInit}}(TIM1,\ \&TIM\_TimeBaseStructure);}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00192}00192\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00193}00193\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00194}00194\ \ \ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00195}00195\ \ \ \textcolor{comment}{//\ init\ Timer2}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00196}00196\ \ \ \textcolor{comment}{//\ CH4\ for\ HSYNC-\/Signal}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00197}00197\ \ \ \textcolor{comment}{//\ CH3\ for\ DMA\ Trigger\ start}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00198}00198\ \ \ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00199}00199\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00200}00200\ \ \ \textcolor{comment}{//\ Clock\ enable}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00201}00201\ \ \ \mbox{\hyperlink{group___r_c_c___group3_gaee7cc5d73af7fe1986fceff8afd3973e}{RCC\_APB1PeriphClockCmd}}(RCC\_APB1Periph\_TIM2,\ ENABLE);}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00202}00202\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00203}00203\ \ \ \textcolor{comment}{//\ Timer2\ init}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00204}00204\ \ \ TIM\_TimeBaseStructure.\mbox{\hyperlink{struct_t_i_m___time_base_init_type_def_a06a7f47b1ced6fa2227ec98a86eb391f}{TIM\_Period}}\ =\ VGA\_TIM2\_HSYNC\_PERIODE;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00205}00205\ \ \ TIM\_TimeBaseStructure.\mbox{\hyperlink{struct_t_i_m___time_base_init_type_def_a6d3c8632780db819b2eb811e71ce251e}{TIM\_Prescaler}}\ =\ VGA\_TIM2\_HSYNC\_PRESCALE;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00206}00206\ \ \ TIM\_TimeBaseStructure.\mbox{\hyperlink{struct_t_i_m___time_base_init_type_def_ab473f51adaa9474702e454fc8c24a407}{TIM\_ClockDivision}}\ =\ TIM\_CKD\_DIV1;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00207}00207\ \ \ TIM\_TimeBaseStructure.\mbox{\hyperlink{struct_t_i_m___time_base_init_type_def_a0de4138cd939566bc667f21df089e195}{TIM\_CounterMode}}\ =\ TIM\_CounterMode\_Up;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00208}00208\ \ \ \mbox{\hyperlink{group___t_i_m___group1_ga83fd58c9416802d9638bbe1715c98932}{TIM\_TimeBaseInit}}(TIM2,\ \&TIM\_TimeBaseStructure);}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00209}00209\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00210}00210\ \ \ \textcolor{comment}{//\ Timer2\ Channel\ 3\ (\ for\ DMA\ Trigger\ start)}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00211}00211\ \ \ TIM\_OCInitStructure.\mbox{\hyperlink{struct_t_i_m___o_c_init_type_def_ad4338ed2415b0d6d19589bf72b7ba3b0}{TIM\_OCMode}}\ =\ TIM\_OCMode\_PWM1;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00212}00212\ \ \ TIM\_OCInitStructure.\mbox{\hyperlink{struct_t_i_m___o_c_init_type_def_a2baca9c02d214d3125635a74e8d9aee4}{TIM\_OutputState}}\ =\ TIM\_OutputState\_Enable;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00213}00213\ \ \ TIM\_OCInitStructure.\mbox{\hyperlink{struct_t_i_m___o_c_init_type_def_ab4a2620c38029b136be560041173375d}{TIM\_Pulse}}\ =\ VGA\_TIM2\_HTRIGGER\_START-\/VGA\_TIM2\_DMA\_DELAY;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00214}00214\ \ \ TIM\_OCInitStructure.\mbox{\hyperlink{struct_t_i_m___o_c_init_type_def_a9ed3e2de4700d008729a916d8ba78486}{TIM\_OCPolarity}}\ =\ TIM\_OCPolarity\_Low;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00215}00215\ \ \ \mbox{\hyperlink{group___t_i_m___group2_ga90d4a358d4e6d4c5ed17dc1d6beb5f30}{TIM\_OC3Init}}(TIM2,\ \&TIM\_OCInitStructure);}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00216}00216\ \ \ \mbox{\hyperlink{group___t_i_m___group2_ga8b2391685a519e60e596b7d596f86f09}{TIM\_OC3PreloadConfig}}(TIM2,\ TIM\_OCPreload\_Enable);}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00217}00217\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00218}00218\ \ \ \textcolor{comment}{//\ Timer2\ Channel\ 4\ (for\ HSYNC)}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00219}00219\ \ \ TIM\_OCInitStructure.\mbox{\hyperlink{struct_t_i_m___o_c_init_type_def_ad4338ed2415b0d6d19589bf72b7ba3b0}{TIM\_OCMode}}\ =\ TIM\_OCMode\_PWM1;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00220}00220\ \ \ TIM\_OCInitStructure.\mbox{\hyperlink{struct_t_i_m___o_c_init_type_def_a2baca9c02d214d3125635a74e8d9aee4}{TIM\_OutputState}}\ =\ TIM\_OutputState\_Enable;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00221}00221\ \ \ TIM\_OCInitStructure.\mbox{\hyperlink{struct_t_i_m___o_c_init_type_def_ab4a2620c38029b136be560041173375d}{TIM\_Pulse}}\ =\ VGA\_TIM2\_HSYNC\_IMP;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00222}00222\ \ \ TIM\_OCInitStructure.\mbox{\hyperlink{struct_t_i_m___o_c_init_type_def_a9ed3e2de4700d008729a916d8ba78486}{TIM\_OCPolarity}}\ =\ TIM\_OCPolarity\_Low;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00223}00223\ \ \ \mbox{\hyperlink{group___t_i_m___group2_ga64571ebbb58cac39a9e760050175f11c}{TIM\_OC4Init}}(TIM2,\ \&TIM\_OCInitStructure);}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00224}00224\ \ \ \mbox{\hyperlink{group___t_i_m___group2_ga8bf4dfb35ff0c7b494dd96579f50b1ec}{TIM\_OC4PreloadConfig}}(TIM2,\ TIM\_OCPreload\_Enable);}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00225}00225\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00226}00226\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00227}00227\ \ \ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00228}00228\ \ \ \textcolor{comment}{//\ enable\ all\ Timers}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00229}00229\ \ \ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00230}00230\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00231}00231\ \ \ \textcolor{comment}{//\ Timer1\ enable}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00232}00232\ \ \ \mbox{\hyperlink{group___t_i_m___group1_ga42b44b9fc2b0798d733720dd6bac1ac0}{TIM\_ARRPreloadConfig}}(TIM1,\ ENABLE);}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00233}00233\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00234}00234\ \ \ \textcolor{comment}{//\ Timer2\ enable}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00235}00235\ \ \ \mbox{\hyperlink{group___t_i_m___group1_ga42b44b9fc2b0798d733720dd6bac1ac0}{TIM\_ARRPreloadConfig}}(TIM2,\ ENABLE);}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00236}00236\ \ \ \mbox{\hyperlink{group___t_i_m___group1_ga2bdc275bcbd2ce9d1ba632e6c89896b7}{TIM\_Cmd}}(TIM2,\ ENABLE);}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00237}00237\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00238}00238\ \}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00239}00239\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00240}00240\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00241}00241\ \textcolor{comment}{//\ internal\ Function}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00242}00242\ \textcolor{comment}{//\ init\ Interrupts}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00243}00243\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00244}00244\ \textcolor{keywordtype}{void}\ P\_VGA\_InitINT(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00245}00245\ \{}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00246}00246\ \ \ \mbox{\hyperlink{struct_n_v_i_c___init_type_def}{NVIC\_InitTypeDef}}\ NVIC\_InitStructure;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00247}00247\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00248}00248\ \ \ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00249}00249\ \ \ \textcolor{comment}{//\ init\ from\ DMA\ Interrupt}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00250}00250\ \ \ \textcolor{comment}{//\ for\ TransferComplete\ Interrupt}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00251}00251\ \ \ \textcolor{comment}{//\ DMA2,\ Stream5,\ Channel6}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00252}00252\ \ \ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00253}00253\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00254}00254\ \ \ \mbox{\hyperlink{group___d_m_a___group4_gab9c469a3f5d4aca5c97dee798ffc2f05}{DMA\_ITConfig}}(DMA2\_Stream5,\ DMA\_IT\_TC,\ ENABLE);}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00255}00255\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00256}00256\ \ \ \textcolor{comment}{//\ NVIC\ config}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00257}00257\ \ \ NVIC\_InitStructure.\mbox{\hyperlink{struct_n_v_i_c___init_type_def_afa04cf6e559bb690bdd9fcb7e3d93dcf}{NVIC\_IRQChannel}}\ =\ \mbox{\hyperlink{group___configuration__section__for___c_m_s_i_s_gga666eb0caeb12ec0e281415592ae89083a933d4686213973abc01845a3da1c8a03}{DMA2\_Stream5\_IRQn}};}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00258}00258\ \ \ NVIC\_InitStructure.\mbox{\hyperlink{struct_n_v_i_c___init_type_def_aa3fe262c30188404a6e31f922c5ae513}{NVIC\_IRQChannelPreemptionPriority}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00259}00259\ \ \ NVIC\_InitStructure.\mbox{\hyperlink{struct_n_v_i_c___init_type_def_aecc22a002244e3f1f9448dbe46c1db4b}{NVIC\_IRQChannelSubPriority}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00260}00260\ \ \ NVIC\_InitStructure.\mbox{\hyperlink{struct_n_v_i_c___init_type_def_acb23fabb995fa4980c768825f12f5815}{NVIC\_IRQChannelCmd}}\ =\ ENABLE;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00261}00261\ \ \ \mbox{\hyperlink{group___m_i_s_c___private___functions_ga4ab373ed0870c06fca5eb51d639adf41}{NVIC\_Init}}(\&NVIC\_InitStructure);}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00262}00262\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00263}00263\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00264}00264\ \ \ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00265}00265\ \ \ \textcolor{comment}{//\ init\ of\ Timer2\ Interrupt}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00266}00266\ \ \ \textcolor{comment}{//\ for\ HSync-\/Counter\ using\ Update}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00267}00267\ \ \ \textcolor{comment}{//\ for\ DMA\ Trigger\ START\ using\ CH3}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00268}00268\ \ \ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00269}00269\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00270}00270\ \ \ \mbox{\hyperlink{group___t_i_m___group5_ga70e3d6c09d55ee69002e154c85cd40e4}{TIM\_ITConfig}}(TIM2,TIM\_IT\_CC3,ENABLE);}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00271}00271\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00272}00272\ \ \ \textcolor{comment}{//\ NVIC\ config}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00273}00273\ \ \ NVIC\_InitStructure.\mbox{\hyperlink{struct_n_v_i_c___init_type_def_afa04cf6e559bb690bdd9fcb7e3d93dcf}{NVIC\_IRQChannel}}\ =\ \mbox{\hyperlink{group___configuration__section__for___c_m_s_i_s_gga666eb0caeb12ec0e281415592ae89083a3a4e2095a926e4095d3c846eb1c98afa}{TIM2\_IRQn}};}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00274}00274\ \ \ NVIC\_InitStructure.\mbox{\hyperlink{struct_n_v_i_c___init_type_def_aa3fe262c30188404a6e31f922c5ae513}{NVIC\_IRQChannelPreemptionPriority}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00275}00275\ \ \ NVIC\_InitStructure.\mbox{\hyperlink{struct_n_v_i_c___init_type_def_aecc22a002244e3f1f9448dbe46c1db4b}{NVIC\_IRQChannelSubPriority}}\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00276}00276\ \ \ NVIC\_InitStructure.\mbox{\hyperlink{struct_n_v_i_c___init_type_def_acb23fabb995fa4980c768825f12f5815}{NVIC\_IRQChannelCmd}}\ =\ ENABLE;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00277}00277\ \ \ \mbox{\hyperlink{group___m_i_s_c___private___functions_ga4ab373ed0870c06fca5eb51d639adf41}{NVIC\_Init}}(\&NVIC\_InitStructure);}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00278}00278\ \}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00279}00279\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00280}00280\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00281}00281\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00282}00282\ \textcolor{comment}{//\ internal\ Function}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00283}00283\ \textcolor{comment}{//\ init\ DMA}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00284}00284\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00285}00285\ \textcolor{keywordtype}{void}\ P\_VGA\_InitDMA(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00286}00286\ \{}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00287}00287\ \ \ \mbox{\hyperlink{struct_d_m_a___init_type_def}{DMA\_InitTypeDef}}\ DMA\_InitStructure;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00288}00288\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00289}00289\ \ \ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00290}00290\ \ \ \textcolor{comment}{//\ DMA\ of\ Timer1\ Update}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00291}00291\ \ \ \textcolor{comment}{//\ (look\ at\ page\ 217\ of\ the\ Ref\ Manual)}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00292}00292\ \ \ \textcolor{comment}{//\ DMA=2,\ Channel=6,\ Stream=5}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00293}00293\ \ \ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00294}00294\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00295}00295\ \ \ \textcolor{comment}{//\ Clock\ Enable\ (DMA)}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00296}00296\ \ \ \mbox{\hyperlink{group___r_c_c___group3_ga80c89116820d48bb38db2e7d5e5a49b9}{RCC\_AHB1PeriphClockCmd}}(RCC\_AHB1Periph\_DMA2,\ ENABLE);}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00297}00297\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00298}00298\ \ \ \textcolor{comment}{//\ DMA\ init\ (DMA2,\ Channel6,\ Stream5)}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00299}00299\ \ \ \mbox{\hyperlink{group___d_m_a___group1_gab2bea22f9f6dc62fdd7afb385a0c1f73}{DMA\_Cmd}}(DMA2\_Stream5,\ DISABLE);}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00300}00300\ \ \ \mbox{\hyperlink{group___d_m_a___group1_ga38d4a4ab8990299f8a6cf064e1e811d0}{DMA\_DeInit}}(DMA2\_Stream5);}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00301}00301\ \ \ DMA\_InitStructure.\mbox{\hyperlink{struct_d_m_a___init_type_def_a68cba36c380e7297b23b09a16c809969}{DMA\_Channel}}\ =\ DMA\_Channel\_6;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00302}00302\ \ \ DMA\_InitStructure.\mbox{\hyperlink{struct_d_m_a___init_type_def_a232af556de7c2eec9a82d448730bd86d}{DMA\_PeripheralBaseAddr}}\ =\ (uint32\_t)VGA\_GPIOE\_ODR\_ADDRESS;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00303}00303\ \ \ DMA\_InitStructure.\mbox{\hyperlink{struct_d_m_a___init_type_def_a93227da797b033f9bc87523e1cfd8bbb}{DMA\_Memory0BaseAddr}}\ =\ (uint32\_t)\&VGA\_RAM1;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00304}00304\ \ \ DMA\_InitStructure.\mbox{\hyperlink{struct_d_m_a___init_type_def_a91b47435ccf4a40efa97bbbe631789e1}{DMA\_DIR}}\ =\ DMA\_DIR\_MemoryToPeripheral;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00305}00305\ \ \ DMA\_InitStructure.\mbox{\hyperlink{struct_d_m_a___init_type_def_a999df57215b28b3b1b3b6836c4952ca5}{DMA\_BufferSize}}\ =\ VGA\_DISPLAY\_X+1;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00306}00306\ \ \ DMA\_InitStructure.\mbox{\hyperlink{struct_d_m_a___init_type_def_ad4d427790f9a089ca0257a358fc263c2}{DMA\_PeripheralInc}}\ =\ DMA\_PeripheralInc\_Disable;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00307}00307\ \ \ DMA\_InitStructure.\mbox{\hyperlink{struct_d_m_a___init_type_def_aaf69c680a297ec01a2ed613289e691a1}{DMA\_MemoryInc}}\ =\ DMA\_MemoryInc\_Enable;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00308}00308\ \ \ DMA\_InitStructure.\mbox{\hyperlink{struct_d_m_a___init_type_def_afb46aaadfb80a7e19277c868bd252554}{DMA\_PeripheralDataSize}}\ =\ DMA\_PeripheralDataSize\_Byte;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00309}00309\ \ \ DMA\_InitStructure.\mbox{\hyperlink{struct_d_m_a___init_type_def_a74bb71921c4d198d6cf1979c120f694f}{DMA\_MemoryDataSize}}\ =\ DMA\_MemoryDataSize\_Byte;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00310}00310\ \ \ DMA\_InitStructure.\mbox{\hyperlink{struct_d_m_a___init_type_def_a8adbe6f3e46471d109afaa3111dce220}{DMA\_Mode}}\ =\ DMA\_Mode\_Normal;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00311}00311\ \ \ DMA\_InitStructure.\mbox{\hyperlink{struct_d_m_a___init_type_def_ab9a17bd51778478cbd728c868206dca0}{DMA\_Priority}}\ =\ DMA\_Priority\_VeryHigh;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00312}00312\ \ \ DMA\_InitStructure.\mbox{\hyperlink{struct_d_m_a___init_type_def_a56198043a8d5f2e25a87a79cbe2a3aa5}{DMA\_FIFOMode}}\ =\ DMA\_FIFOMode\_Disable;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00313}00313\ \ \ DMA\_InitStructure.\mbox{\hyperlink{struct_d_m_a___init_type_def_a5dbf46e6177ea71b38119e5442a9fb36}{DMA\_FIFOThreshold}}\ =\ DMA\_FIFOThreshold\_HalfFull;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00314}00314\ \ \ DMA\_InitStructure.\mbox{\hyperlink{struct_d_m_a___init_type_def_a10bdf685aa58035632ead27b61fe4ffd}{DMA\_MemoryBurst}}\ =\ DMA\_MemoryBurst\_Single;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00315}00315\ \ \ DMA\_InitStructure.\mbox{\hyperlink{struct_d_m_a___init_type_def_a331a1d487dba9bcba3f58e136bb91bc1}{DMA\_PeripheralBurst}}\ =\ DMA\_PeripheralBurst\_Single;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00316}00316\ \ \ \mbox{\hyperlink{group___d_m_a___group1_gaced8a4149acfb0a50b50e63273a87148}{DMA\_Init}}(DMA2\_Stream5,\ \&DMA\_InitStructure);}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00317}00317\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00318}00318\ \ \ \textcolor{comment}{//\ DMA-\/Timer1\ enable}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00319}00319\ \ \ \mbox{\hyperlink{group___t_i_m___group5_ga24700389cfa3ea9b42234933b23f1399}{TIM\_DMACmd}}(TIM1,TIM\_DMA\_Update,ENABLE);}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00320}00320\ \}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00321}00321\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00322}00322\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00323}00323\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00324}00324\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00325}00325\ \textcolor{comment}{//\ Interrupt\ of\ Timer2}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00326}00326\ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00327}00327\ \textcolor{comment}{//\ \ \ CC3-\/Interrupt\ \ \ \ -\/>\ starts\ from\ DMA}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00328}00328\ \textcolor{comment}{//\ Watch\ it..\ higher\ troughput\ when\ interrupt\ flag\ is\ left\ alone}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00329}00329\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00330}00330\ \textcolor{keywordtype}{void}\ TIM2\_IRQHandler(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00331}00331\ \{}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00332}00332\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00333}00333\ \ \ \textcolor{comment}{//\ Interrupt\ of\ Timer2\ CH3\ occurred\ (for\ Trigger\ start)}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00334}00334\ \ \ \mbox{\hyperlink{group___t_i_m___group5_ga9eb1e95af71ed380f51a2c6d585cc5d6}{TIM\_ClearITPendingBit}}(TIM2,\ TIM\_IT\_CC3);}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00335}00335\ \textcolor{comment}{//\ \ TIM2-\/>SR\ |=\ \string~TIM\_SR\_CC3IF;\ //Clear\ pending\ bit\ interrupt}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00336}00336\ \textcolor{comment}{//\ \ NVIC-\/>ISPR[0]\ =\ 0x10000000;}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00337}00337\ \textcolor{comment}{//\ \ NVIC-\/>ICPR[0]\ =\ 0x10000000;}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00338}00338\ \textcolor{comment}{//\ \ TIM2-\/>SR\ =\ (uint16\_t)\string~((uint16\_t)0x0008);}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00339}00339\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00340}00340\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00341}00341\ \ \ VGA.hsync\_cnt++;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00342}00342\ \ \ \textcolor{keywordflow}{if}(VGA.hsync\_cnt>=VGA\_VSYNC\_PERIODE)\ \{}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00343}00343\ \ \ \ \ \textcolor{comment}{//\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00344}00344\ \ \ \ \ VGA.hsync\_cnt=0;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00345}00345\ \ \ \ \ \textcolor{comment}{//\ Adresspointer\ first\ dot}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00346}00346\ \ \ \ \ VGA.start\_adr=(uint32\_t)(\&VGA\_RAM1[0]);}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00347}00347\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00348}00348\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00349}00349\ \ \ \textcolor{comment}{//\ HSync-\/Pixel}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00350}00350\ \ \ \textcolor{keywordflow}{if}(VGA.hsync\_cnt<VGA\_VSYNC\_IMP)\ \{}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00351}00351\ \ \ \ \ \textcolor{comment}{//\ HSync\ low}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00352}00352\ \ \ \ \ GPIOB-\/>BSRRH\ =\ GPIO\_Pin\_12;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00353}00353\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00354}00354\ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00355}00355\ \ \ \ \ \textcolor{comment}{//\ HSync\ High}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00356}00356\ \ \ \ \ GPIOB-\/>BSRRL\ =\ GPIO\_Pin\_12;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00357}00357\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00358}00358\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00359}00359\ \ \ \textcolor{comment}{//\ Test\ for\ DMA\ start}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00360}00360\ \ \ \textcolor{keywordflow}{if}((VGA.hsync\_cnt>=VGA\_VSYNC\_BILD\_START)\ \&\&\ (VGA.hsync\_cnt<=VGA\_VSYNC\_BILD\_STOP))\ \{}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00361}00361\ \ \ \ \ \textcolor{comment}{//\ DMA2\ init}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00362}00362\ \ \ \ \ DMA2\_Stream5-\/>CR=VGA.dma2\_cr\_reg;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00363}00363\ \ \ \ \ \textcolor{comment}{//\ set\ address}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00364}00364\ \ \ \ \ DMA2\_Stream5-\/>M0AR=VGA.start\_adr;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00365}00365\ \ \ \ \ \textcolor{comment}{//\ Timer1\ start}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00366}00366\ \ \ \ \ TIM1-\/>CR1|=\mbox{\hyperlink{group___peripheral___registers___bits___definition_ga93d86355e5e3b399ed45e1ca83abed2a}{TIM\_CR1\_CEN}};}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00367}00367\ \ \ \ \ \textcolor{comment}{//\ DMA2\ enable}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00368}00368\ \ \ \ \ DMA2\_Stream5-\/>CR|=DMA\_SxCR\_EN;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00369}00369\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00370}00370\ \ \ \ \ \textcolor{comment}{//\ Test\ Adrespointer\ for\ high}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00371}00371\ \ \ \ \ \textcolor{keywordflow}{if}((VGA.hsync\_cnt\ \&\ 0x01)!=0)\ \{}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00372}00372\ \ \ \ \ \ \ \textcolor{comment}{//\ inc\ after\ Hsync}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00373}00373\ \ \ \ \ \ \ VGA.start\_adr+=(VGA\_DISPLAY\_X+1);}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00374}00374\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00375}00375\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00376}00376\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00377}00377\ \}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00378}00378\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00379}00379\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00380}00380\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00381}00381\ \textcolor{comment}{//\ DMA\ Interrupt\ ISR}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00382}00382\ \textcolor{comment}{//\ \ \ after\ TransferCompleteInterrupt\ -\/>\ stop\ DMA}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00383}00383\ \textcolor{comment}{//}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00384}00384\ \textcolor{comment}{//\ still\ a\ bit\ buggy}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00385}00385\ \textcolor{comment}{//-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00386}00386\ \textcolor{keywordtype}{void}\ DMA2\_Stream5\_IRQHandler(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00387}00387\ \{}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00388}00388\ \ \ \textcolor{keywordflow}{if}(\mbox{\hyperlink{group___d_m_a___group4_gad0ccf5f6548bd7cf8f2cae30393bb716}{DMA\_GetITStatus}}(DMA2\_Stream5,\ DMA\_IT\_TCIF5))}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00389}00389\ \ \ \{}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00390}00390\ \ \ \ \ \textcolor{comment}{//\ TransferInterruptComplete\ Interrupt\ from\ DMA2}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00391}00391\ \ \ \ \ \mbox{\hyperlink{group___d_m_a___group4_gad5433018889cd36140d98bb380c4e76e}{DMA\_ClearITPendingBit}}(DMA2\_Stream5,\ DMA\_IT\_TCIF5);}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00392}00392\ \textcolor{comment}{//\ \ \ \ if(((((DMA\_IT\_TCIF5)\ \&\ 0x30000000)\ !=\ 0x30000000)\ \&\&\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00393}00393\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (((DMA\_IT\_TCIF5)\ \&\ 0x30000000)\ !=\ 0)\ \&\&\ ((DMA\_IT\_TCIF5)\ !=\ 0x00)\ \&\&\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00394}00394\ \textcolor{comment}{//\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (((DMA\_IT\_TCIF5)\ \&\ 0x40820082)\ !=\ 0x00)))\{}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00395}00395\ \textcolor{comment}{//\ \ \ \ \ \ DMA2-\/>HISR\ =\ (uint32\_t)(((uint32\_t)0x20008800)\ \&\ (uint32\_t)0x0F7D0F7D\ );}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00396}00396\ \textcolor{comment}{//\ \ \ \ \}}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00397}00397\ \textcolor{comment}{//\ \ \ \ DMA2-\/>HIFCR\ =\ (uint32\_t)(((uint32\_t)0x20008800)\ \&\ (uint32\_t)0x0F7D0F7D\ );}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00398}00398\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00399}00399\ \textcolor{comment}{//\ \ \ \ DMA\_Hisr\ |=\ \string~DMA\_HISR\_TCIF5;}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00400}00400\ \textcolor{comment}{//\ \ \ \ DMA\_HISR\ |=\ \string~DMA\_HISR\_TCIF5;}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00401}00401\ \textcolor{comment}{//\ \ \ \ DMA2-\/>HISR\ |=\ \string~DMA\_HISR\_TCIF5;}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00402}00402\ \textcolor{comment}{//\ \ \ \ DMA2-\/>HISR\ |=\ (uint32\_t)(DMA\_IT\_TCIF5\ \&\ ((uint32\_t)0x0F7D0F7D\ ));}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00403}00403\ \textcolor{comment}{//\ \ \ \ DMA2-\/>LISR\ |=\ (uint32\_t)(DMA\_IT\_TCIF5\ \&\ ((uint32\_t)0x0F7D0F7D\ ));}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00404}00404\ \textcolor{comment}{//\ \ \ \ DMA2-\/>HISR\ =\ 0x440;}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00405}00405\ \textcolor{comment}{//\ \ \ \ DMA2-\/>HISR\ =\ (uint32\_t)(((uint32\_t)0x20008800)\ \&\ (uint32\_t)0x0F7D0F7D\ );}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00406}00406\ \ \ \ \ \textcolor{comment}{//\ stop\ after\ all\ pixels\ =>\ DMA\ Transfer\ stop}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00407}00407\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00408}00408\ \ \ \ \ \textcolor{comment}{//\ Timer1\ stop}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00409}00409\ \ \ \ \ TIM1-\/>CR1\&=\string~TIM\_CR1\_CEN;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00410}00410\ \ \ \ \ \textcolor{comment}{//\ DMA2\ disable}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00411}00411\ \ \ \ \ DMA2\_Stream5-\/>CR=0;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00412}00412\ \ \ \ \ \textcolor{comment}{//\ switch\ on\ black}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00413}00413\ \ \ \ \ GPIOE-\/>BSRRH\ =\ VGA\_GPIO\_HINIBBLE;}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00414}00414\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00415}00415\ \}}
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00416}00416\ }
+\DoxyCodeLine{\Hypertarget{stm32__ub__vga__screen_8c_source_l00417}00417\ }
+
+\end{DoxyCode}

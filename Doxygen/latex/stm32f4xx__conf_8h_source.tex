@@ -1,0 +1,67 @@
+\doxysection{stm32f4xx\+\_\+conf.\+h}
+\hypertarget{stm32f4xx__conf_8h_source}{}\label{stm32f4xx__conf_8h_source}\index{Core/Inc/stm32f4xx\_conf.h@{Core/Inc/stm32f4xx\_conf.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00001}00001\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00022}00022\ \textcolor{comment}{/*\ Define\ to\ prevent\ recursive\ inclusion\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00023}00023\ \textcolor{preprocessor}{\#ifndef\ \_\_STM32F4xx\_CONF\_H}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00024}00024\ \textcolor{preprocessor}{\#define\ \_\_STM32F4xx\_CONF\_H}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00025}00025\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00026}00026\ \textcolor{comment}{/*\ Includes\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00027}00027\ \textcolor{comment}{/*\ Uncomment\ the\ line\ below\ to\ enable\ peripheral\ header\ file\ inclusion\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00028}00028\ \textcolor{comment}{/*\#include\ "{}stm32f4xx\_adc.h"{}}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00029}00029\ \textcolor{comment}{\#include\ "{}stm32f4xx\_can.h"{}}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00030}00030\ \textcolor{comment}{\#include\ "{}stm32f4xx\_crc.h"{}}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00031}00031\ \textcolor{comment}{\#include\ "{}stm32f4xx\_cryp.h"{}}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00032}00032\ \textcolor{comment}{\#include\ "{}stm32f4xx\_dac.h"{}}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00033}00033\ \textcolor{comment}{\#include\ "{}stm32f4xx\_dbgmcu.h"{}}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00034}00034\ \textcolor{comment}{\#include\ "{}stm32f4xx\_dcmi.h"{}}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00035}00035\ \textcolor{comment}{\#include\ "{}stm32f4xx\_dma.h"{}}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00036}00036\ \textcolor{comment}{\#include\ "{}stm32f4xx\_exti.h"{}}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00037}00037\ \textcolor{comment}{\#include\ "{}stm32f4xx\_flash.h"{}}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00038}00038\ \textcolor{comment}{\#include\ "{}stm32f4xx\_fsmc.h"{}}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00039}00039\ \textcolor{comment}{\#include\ "{}stm32f4xx\_hash.h"{}}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00040}00040\ \textcolor{comment}{\#include\ "{}stm32f4xx\_gpio.h"{}}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00041}00041\ \textcolor{comment}{\#include\ "{}stm32f4xx\_i2c.h"{}}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00042}00042\ \textcolor{comment}{\#include\ "{}stm32f4xx\_iwdg.h"{}}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00043}00043\ \textcolor{comment}{\#include\ "{}stm32f4xx\_pwr.h"{}}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00044}00044\ \textcolor{comment}{\#include\ "{}stm32f4xx\_rcc.h"{}}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00045}00045\ \textcolor{comment}{\#include\ "{}stm32f4xx\_rng.h"{}}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00046}00046\ \textcolor{comment}{\#include\ "{}stm32f4xx\_rtc.h"{}}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00047}00047\ \textcolor{comment}{\#include\ "{}stm32f4xx\_sdio.h"{}}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00048}00048\ \textcolor{comment}{\#include\ "{}stm32f4xx\_spi.h"{}}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00049}00049\ \textcolor{comment}{\#include\ "{}stm32f4xx\_syscfg.h"{}}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00050}00050\ \textcolor{comment}{\#include\ "{}stm32f4xx\_tim.h"{}}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00051}00051\ \textcolor{comment}{\#include\ "{}stm32f4xx\_usart.h"{}}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00052}00052\ \textcolor{comment}{\#include\ "{}stm32f4xx\_wwdg.h"{}}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00053}00053\ \textcolor{comment}{\#include\ "{}misc.h"{}*/}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00054}00054\ \textcolor{comment}{/*\ High\ level\ functions\ for\ NVIC\ and\ SysTick\ (add-\/on\ to\ CMSIS\ functions)\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00055}00055\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00056}00056\ \textcolor{comment}{/*\ Exported\ types\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00057}00057\ \textcolor{comment}{/*\ Exported\ constants\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00058}00058\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00059}00059\ \textcolor{comment}{/*\ If\ an\ external\ clock\ source\ is\ used,\ then\ the\ value\ of\ the\ following\ define\ }}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00060}00060\ \textcolor{comment}{\ \ \ should\ be\ set\ to\ the\ value\ of\ the\ external\ clock\ source,\ else,\ if\ no\ external\ }}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00061}00061\ \textcolor{comment}{\ \ \ clock\ is\ used,\ keep\ this\ define\ commented\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00062}00062\ \textcolor{comment}{/*\#define\ I2S\_EXTERNAL\_CLOCK\_VAL\ \ \ 12288000\ */}\ \textcolor{comment}{/*\ Value\ of\ the\ external\ clock\ in\ Hz\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00063}00063\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00064}00064\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00065}00065\ \textcolor{comment}{/*\ Uncomment\ the\ line\ below\ to\ expanse\ the\ "{}assert\_param"{}\ macro\ in\ the\ }}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00066}00066\ \textcolor{comment}{\ \ \ Standard\ Peripheral\ Library\ drivers\ code\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00067}00067\ \textcolor{comment}{/*\ \#define\ USE\_FULL\_ASSERT\ \ \ \ 1\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00068}00068\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00069}00069\ \textcolor{comment}{/*\ Exported\ macro\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00070}00070\ \textcolor{preprocessor}{\#ifdef\ \ USE\_FULL\_ASSERT}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00071}00071\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00080}00080\ \textcolor{preprocessor}{\ \ \#define\ assert\_param(expr)\ ((expr)\ ?\ (void)0\ :\ assert\_failed((uint8\_t\ *)\_\_FILE\_\_,\ \_\_LINE\_\_))}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00081}00081\ \textcolor{comment}{/*\ Exported\ functions\ -\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\ */}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00082}00082\ \ \ \textcolor{keywordtype}{void}\ assert\_failed(uint8\_t*\ file,\ uint32\_t\ line);}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00083}00083\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00084}00084\ \textcolor{preprocessor}{\ \ \#define\ assert\_param(expr)\ ((void)0)}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00085}00085\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ USE\_FULL\_ASSERT\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00086}00086\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00087}00087\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ \_\_STM32F4xx\_CONF\_H\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00088}00088\ }
+\DoxyCodeLine{\Hypertarget{stm32f4xx__conf_8h_source_l00089}00089\ \textcolor{comment}{/*******************\ (C)\ COPYRIGHT\ 2011\ STMicroelectronics\ *****END\ OF\ FILE****/}}
+
+\end{DoxyCode}

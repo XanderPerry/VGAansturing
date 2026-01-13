@@ -1,0 +1,203 @@
+\doxysection{Core/\+Inc/\+Logic\+Layer.h File Reference}
+\hypertarget{_logic_layer_8h}{}\label{_logic_layer_8h}\index{Core/Inc/LogicLayer.h@{Core/Inc/LogicLayer.h}}
+
+
+Logic layer library header file.  
+
+
+{\ttfamily \#include "{}stm32f4xx.\+h"{}}\newline
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include $<$stdbool.\+h$>$}\newline
+\doxysubsubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{_logic_layer_8h_ad7f184700f120ae11f310d8cd9201448}{ERR\+\_\+\+UNSUPPORTED\+\_\+\+COMMAND}}~300
+\item 
+\#define \mbox{\hyperlink{_logic_layer_8h_afebadddc6952e44a7bcab215fe0cc51c}{ERR\+\_\+\+INVALID\+\_\+\+PARAM\+\_\+\+INPUT}}~301
+\item 
+\#define \mbox{\hyperlink{_logic_layer_8h_ad6cbc3c729f4bedcccc437a93a06a868}{ERR\+\_\+\+X\+\_\+\+OUT\+\_\+\+OF\+\_\+\+BOUND}}~302
+\item 
+\#define \mbox{\hyperlink{_logic_layer_8h_a517dc1d6ae6accce7df3636a2ccaf6d5}{ERR\+\_\+\+Y\+\_\+\+OUT\+\_\+\+OF\+\_\+\+BOUND}}~303
+\item 
+\#define \mbox{\hyperlink{_logic_layer_8h_a518c7eaba990ef7a429262cd712355ac}{ERR\+\_\+\+INVALID\+\_\+\+COLOR\+\_\+\+INPUT}}~304
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{_logic_layer_8h_a4da4baf4d12c6c5d88e073a7ff382226}{Cmd\+To\+Func}} (char \texorpdfstring{$\ast$}{*}cmd)
+\begin{DoxyCompactList}\small\item\em Receives the command string from the Cmd\+Forwarder, extracts the required function and parameters and calls the corresponding API function. \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{_logic_layer_8h_a7a32c3031c9700164fb7f63c80b317f7}{Str\+To\+Col}} (char \texorpdfstring{$\ast$}{*}str)
+\begin{DoxyCompactList}\small\item\em Translates a color string to a color code. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{_logic_layer_8h_a072dbc28a59ba2d90ac3cc86a44ea879}{XOut\+Of\+Bound}} (uint16\+\_\+t x)
+\begin{DoxyCompactList}\small\item\em Checks whether x coordinate is out of bounds. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{_logic_layer_8h_a6e51d6615ef33492f6da2c9aeb8ae8fc}{YOut\+Of\+Bound}} (uint16\+\_\+t y)
+\begin{DoxyCompactList}\small\item\em Checks whether y coordinate is out of bounds. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Logic layer library header file. 
+
+This file contains the code for logic layer functions
+
+\begin{DoxyAuthor}{Author}
+Xander Perry, Daniel Wit Ariza 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+2025-\/12-\/03
+\end{DoxyDate}
+This file contains the prototypes for logic layer functions
+
+\begin{DoxyAuthor}{Author}
+Xander Perry 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+2025-\/12-\/03 
+\end{DoxyDate}
+
+
+Definition in file \mbox{\hyperlink{_logic_layer_8h_source}{Logic\+Layer.\+h}}.
+
+
+
+\doxysubsection{Macro Definition Documentation}
+\Hypertarget{_logic_layer_8h_a518c7eaba990ef7a429262cd712355ac}\index{LogicLayer.h@{LogicLayer.h}!ERR\_INVALID\_COLOR\_INPUT@{ERR\_INVALID\_COLOR\_INPUT}}
+\index{ERR\_INVALID\_COLOR\_INPUT@{ERR\_INVALID\_COLOR\_INPUT}!LogicLayer.h@{LogicLayer.h}}
+\doxysubsubsection{\texorpdfstring{ERR\_INVALID\_COLOR\_INPUT}{ERR\_INVALID\_COLOR\_INPUT}}
+{\footnotesize\ttfamily \label{_logic_layer_8h_a518c7eaba990ef7a429262cd712355ac} 
+\#define ERR\+\_\+\+INVALID\+\_\+\+COLOR\+\_\+\+INPUT~304}
+
+
+
+Definition at line \mbox{\hyperlink{_logic_layer_8h_source_l00023}{23}} of file \mbox{\hyperlink{_logic_layer_8h_source}{Logic\+Layer.\+h}}.
+
+\Hypertarget{_logic_layer_8h_afebadddc6952e44a7bcab215fe0cc51c}\index{LogicLayer.h@{LogicLayer.h}!ERR\_INVALID\_PARAM\_INPUT@{ERR\_INVALID\_PARAM\_INPUT}}
+\index{ERR\_INVALID\_PARAM\_INPUT@{ERR\_INVALID\_PARAM\_INPUT}!LogicLayer.h@{LogicLayer.h}}
+\doxysubsubsection{\texorpdfstring{ERR\_INVALID\_PARAM\_INPUT}{ERR\_INVALID\_PARAM\_INPUT}}
+{\footnotesize\ttfamily \label{_logic_layer_8h_afebadddc6952e44a7bcab215fe0cc51c} 
+\#define ERR\+\_\+\+INVALID\+\_\+\+PARAM\+\_\+\+INPUT~301}
+
+
+
+Definition at line \mbox{\hyperlink{_logic_layer_8h_source_l00020}{20}} of file \mbox{\hyperlink{_logic_layer_8h_source}{Logic\+Layer.\+h}}.
+
+\Hypertarget{_logic_layer_8h_ad7f184700f120ae11f310d8cd9201448}\index{LogicLayer.h@{LogicLayer.h}!ERR\_UNSUPPORTED\_COMMAND@{ERR\_UNSUPPORTED\_COMMAND}}
+\index{ERR\_UNSUPPORTED\_COMMAND@{ERR\_UNSUPPORTED\_COMMAND}!LogicLayer.h@{LogicLayer.h}}
+\doxysubsubsection{\texorpdfstring{ERR\_UNSUPPORTED\_COMMAND}{ERR\_UNSUPPORTED\_COMMAND}}
+{\footnotesize\ttfamily \label{_logic_layer_8h_ad7f184700f120ae11f310d8cd9201448} 
+\#define ERR\+\_\+\+UNSUPPORTED\+\_\+\+COMMAND~300}
+
+
+
+Definition at line \mbox{\hyperlink{_logic_layer_8h_source_l00019}{19}} of file \mbox{\hyperlink{_logic_layer_8h_source}{Logic\+Layer.\+h}}.
+
+\Hypertarget{_logic_layer_8h_ad6cbc3c729f4bedcccc437a93a06a868}\index{LogicLayer.h@{LogicLayer.h}!ERR\_X\_OUT\_OF\_BOUND@{ERR\_X\_OUT\_OF\_BOUND}}
+\index{ERR\_X\_OUT\_OF\_BOUND@{ERR\_X\_OUT\_OF\_BOUND}!LogicLayer.h@{LogicLayer.h}}
+\doxysubsubsection{\texorpdfstring{ERR\_X\_OUT\_OF\_BOUND}{ERR\_X\_OUT\_OF\_BOUND}}
+{\footnotesize\ttfamily \label{_logic_layer_8h_ad6cbc3c729f4bedcccc437a93a06a868} 
+\#define ERR\+\_\+\+X\+\_\+\+OUT\+\_\+\+OF\+\_\+\+BOUND~302}
+
+
+
+Definition at line \mbox{\hyperlink{_logic_layer_8h_source_l00021}{21}} of file \mbox{\hyperlink{_logic_layer_8h_source}{Logic\+Layer.\+h}}.
+
+\Hypertarget{_logic_layer_8h_a517dc1d6ae6accce7df3636a2ccaf6d5}\index{LogicLayer.h@{LogicLayer.h}!ERR\_Y\_OUT\_OF\_BOUND@{ERR\_Y\_OUT\_OF\_BOUND}}
+\index{ERR\_Y\_OUT\_OF\_BOUND@{ERR\_Y\_OUT\_OF\_BOUND}!LogicLayer.h@{LogicLayer.h}}
+\doxysubsubsection{\texorpdfstring{ERR\_Y\_OUT\_OF\_BOUND}{ERR\_Y\_OUT\_OF\_BOUND}}
+{\footnotesize\ttfamily \label{_logic_layer_8h_a517dc1d6ae6accce7df3636a2ccaf6d5} 
+\#define ERR\+\_\+\+Y\+\_\+\+OUT\+\_\+\+OF\+\_\+\+BOUND~303}
+
+
+
+Definition at line \mbox{\hyperlink{_logic_layer_8h_source_l00022}{22}} of file \mbox{\hyperlink{_logic_layer_8h_source}{Logic\+Layer.\+h}}.
+
+
+
+\doxysubsection{Function Documentation}
+\Hypertarget{_logic_layer_8h_a4da4baf4d12c6c5d88e073a7ff382226}\index{LogicLayer.h@{LogicLayer.h}!CmdToFunc@{CmdToFunc}}
+\index{CmdToFunc@{CmdToFunc}!LogicLayer.h@{LogicLayer.h}}
+\doxysubsubsection{\texorpdfstring{CmdToFunc()}{CmdToFunc()}}
+{\footnotesize\ttfamily \label{_logic_layer_8h_a4da4baf4d12c6c5d88e073a7ff382226} 
+int Cmd\+To\+Func (\begin{DoxyParamCaption}\item[{char \texorpdfstring{$\ast$}{*}}]{cmd}{}\end{DoxyParamCaption})}
+
+
+
+Receives the command string from the Cmd\+Forwarder, extracts the required function and parameters and calls the corresponding API function. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em cmd} & Pointer to the command string buffer. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 if no errors occured, otherwise returns the error code. 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_logic_layer_8c_source_l00026}{26}} of file \mbox{\hyperlink{_logic_layer_8c_source}{Logic\+Layer.\+c}}.
+
+\Hypertarget{_logic_layer_8h_a7a32c3031c9700164fb7f63c80b317f7}\index{LogicLayer.h@{LogicLayer.h}!StrToCol@{StrToCol}}
+\index{StrToCol@{StrToCol}!LogicLayer.h@{LogicLayer.h}}
+\doxysubsubsection{\texorpdfstring{StrToCol()}{StrToCol()}}
+{\footnotesize\ttfamily \label{_logic_layer_8h_a7a32c3031c9700164fb7f63c80b317f7} 
+uint8\+\_\+t Str\+To\+Col (\begin{DoxyParamCaption}\item[{char \texorpdfstring{$\ast$}{*}}]{str}{}\end{DoxyParamCaption})}
+
+
+
+Translates a color string to a color code. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em cmd} & Pointer to the color string buffer. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Color code if no errors occured, otherwise returns 1. 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_logic_layer_8c_source_l00344}{344}} of file \mbox{\hyperlink{_logic_layer_8c_source}{Logic\+Layer.\+c}}.
+
+\Hypertarget{_logic_layer_8h_a072dbc28a59ba2d90ac3cc86a44ea879}\index{LogicLayer.h@{LogicLayer.h}!XOutOfBound@{XOutOfBound}}
+\index{XOutOfBound@{XOutOfBound}!LogicLayer.h@{LogicLayer.h}}
+\doxysubsubsection{\texorpdfstring{XOutOfBound()}{XOutOfBound()}}
+{\footnotesize\ttfamily \label{_logic_layer_8h_a072dbc28a59ba2d90ac3cc86a44ea879} 
+bool XOut\+Of\+Bound (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{x}{}\end{DoxyParamCaption})}
+
+
+
+Checks whether x coordinate is out of bounds. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & coordinate. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 if within bounds, 1 if out of bounds. 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_logic_layer_8c_source_l00388}{388}} of file \mbox{\hyperlink{_logic_layer_8c_source}{Logic\+Layer.\+c}}.
+
+\Hypertarget{_logic_layer_8h_a6e51d6615ef33492f6da2c9aeb8ae8fc}\index{LogicLayer.h@{LogicLayer.h}!YOutOfBound@{YOutOfBound}}
+\index{YOutOfBound@{YOutOfBound}!LogicLayer.h@{LogicLayer.h}}
+\doxysubsubsection{\texorpdfstring{YOutOfBound()}{YOutOfBound()}}
+{\footnotesize\ttfamily \label{_logic_layer_8h_a6e51d6615ef33492f6da2c9aeb8ae8fc} 
+bool YOut\+Of\+Bound (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{y}{}\end{DoxyParamCaption})}
+
+
+
+Checks whether y coordinate is out of bounds. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em y} & coordinate. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 if within bounds, 1 if out of bounds. 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_logic_layer_8c_source_l00405}{405}} of file \mbox{\hyperlink{_logic_layer_8c_source}{Logic\+Layer.\+c}}.
+

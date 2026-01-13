@@ -1,0 +1,104 @@
+\chapter{VGA Display Terminal Manual}
+\hypertarget{index}{}\label{index}\index{VGA Display Terminal Manual@{VGA Display Terminal Manual}}
+\hypertarget{index_intro_sec}{}\doxysection{\texorpdfstring{Introduction}{Introduction}}\label{index_intro_sec}
+Welcome to the VGA Display Terminal documentation. This project utilizes an {\bfseries{STM32\+F4}} to drive a VGA screen. The system operates as a serial terminal\+: it receives ASCII string commands via UART2 and renders graphics accordingly.\hypertarget{index_arch_sec}{}\doxysection{\texorpdfstring{Architecture}{Architecture}}\label{index_arch_sec}
+The software is divided into three distinct layers\+:
+
+
+\begin{DoxyEnumerate}
+\item {\bfseries{Front Layer}}\+: Parses incoming comma-\/separated strings (e.\+g., {\ttfamily lijn,0,0,100,100,rood}).
+\item {\bfseries{Logic Layer}}\+: Mathematical implementations of drawing algorithms (Bresenham lines, Midpoint circles).
+\item {\bfseries{I/O Layer}}\+: Hardware interface for UART interrupts and VGA pixel pushing.
+\end{DoxyEnumerate}
+
+ 
+\begin{DoxyImage}
+\includegraphics[width=\textwidth,height=\textheight/2,keepaspectratio=true]{architecture.jpeg}
+\doxyfigcaption{Software Architecture Diagram}
+\end{DoxyImage}
+   \hypertarget{index_usage_sec}{}\doxysection{\texorpdfstring{Hardware \& Software Setup}{Hardware \& Software Setup}}\label{index_usage_sec}
+To use the VGA Display Terminal, you need to set up the motherboard connections and configure a serial terminal on your PC.\hypertarget{index_hw_req}{}\doxysubsection{\texorpdfstring{Hardware Requirements}{Hardware Requirements}}\label{index_hw_req}
+
+\begin{DoxyItemize}
+\item {\bfseries{STM32\+F407G Board}} mounted on the VGA Motherboard.
+\item {\bfseries{VGA Monitor}} and VGA Cable.
+\item {\bfseries{USB Cables}} (One for flashing/debug, one for UART communication).
+\end{DoxyItemize}\hypertarget{index_connect_sec}{}\doxysubsection{\texorpdfstring{Connections}{Connections}}\label{index_connect_sec}
+The motherboard handles the physical signal routing. Follow these steps\+:
+
+
+\begin{DoxyEnumerate}
+\item {\bfseries{VGA}}\+: Connect the VGA Monitor to the VGA port on the motherboard.
+\item {\bfseries{UART}}\+: Connect the motherboard\textquotesingle{}s {\bfseries{UART USB port}} to your PC.
+\item {\bfseries{Flashing}}\+: Connect the board\textquotesingle{}s {\bfseries{ST-\/\+Link/\+Programming USB port}} to your PC.
+\end{DoxyEnumerate}\hypertarget{index_term_setup}{}\doxysubsection{\texorpdfstring{Terminal Configuration}{Terminal Configuration}}\label{index_term_setup}
+
+\begin{DoxyEnumerate}
+\item Open a terminal program (e.\+g., {\bfseries{Tera Term}}, {\bfseries{Pu\+TTY}}, or {\bfseries{Real\+Term}}).
+\item Select the COM port associated with the {\bfseries{UART connection}} (not the ST-\/\+Link).
+\item Configure the serial port with the following settings\+:
+\begin{DoxyItemize}
+\item {\bfseries{Baud Rate\+:}} 115200
+\item {\bfseries{Data Bits\+:}} 8
+\item {\bfseries{Parity\+:}} None
+\item {\bfseries{Stop Bits\+:}} 1
+\item {\bfseries{New Line\+:}} CR+\+LF (Ensure sending {\ttfamily \textbackslash{}n} on Enter)
+\end{DoxyItemize}
+\end{DoxyEnumerate}\hypertarget{index_send_cmd}{}\doxysubsection{\texorpdfstring{Sending Commands}{Sending Commands}}\label{index_send_cmd}
+Once connected, the screen may appear black or white depending on initialization.
+\begin{DoxyEnumerate}
+\item Click into the terminal window.
+\item Type a command string (e.\+g., {\ttfamily clearscherm,wit}).
+\item Press {\bfseries{Enter}}.
+\item The parser expects a newline character ({\ttfamily \textbackslash{}n}) to execute the command.
+\end{DoxyEnumerate}\hypertarget{index_file_sec}{}\doxysection{\texorpdfstring{File Structure}{File Structure}}\label{index_file_sec}
+The project files are organized as follows\+:
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{3}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ File   }&\cellcolor{\tableheadbgcolor}\textbf{ Location   }&\cellcolor{\tableheadbgcolor}\textbf{ Description    }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ File   }&\cellcolor{\tableheadbgcolor}\textbf{ Location   }&\cellcolor{\tableheadbgcolor}\textbf{ Description    }\\\cline{1-3}
+\endhead
+{\bfseries{{\ttfamily \doxylink{main_8c}{main.\+c}}}}   &Core/\+Src   &Main entry point, system initialization, and infinite loop.    \\\cline{1-3}
+{\bfseries{{\ttfamily \doxylink{_logic_layer_8c_source}{Logic\+Layer.\+c}}}}   &Core/\+Src   &{\bfseries{Logic Layer\+:}} Parses incoming ASCII commands from the UART buffer.    \\\cline{1-3}
+{\bfseries{{\ttfamily \doxylink{_a_p_i___l_i_b_8c}{API\+\_\+\+LIB.\+c}}}}   &Core/\+Src   &{\bfseries{API Layer\+:}} Contains the API functionality of the program. All functions are visible in the table under UART Command Protocol.    \\\cline{1-3}
+{\bfseries{{\ttfamily \doxylink{_u_a_r_t_8c}{UART.\+c}}}}   &Core/\+Src   &{\bfseries{Driver Layer\+:}} Handles UART interrupts and circular buffer management.   \\\cline{1-3}
+\end{longtabu}
+\hypertarget{index_cmd_sec}{}\doxysection{\texorpdfstring{UART Command Protocol}{UART Command Protocol}}\label{index_cmd_sec}
+Commands must be sent via UART ({\bfseries{115200 baud, 8N1}}).
+
+{\bfseries{Format\+:}} {\ttfamily command,param1,param2,...\textbackslash{}n}
+
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{4}{|X[-1]}|}
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ Command   }&\cellcolor{\tableheadbgcolor}\textbf{ Function   }&\cellcolor{\tableheadbgcolor}\textbf{ Parameters   }&\cellcolor{\tableheadbgcolor}\textbf{ Description    }\\\cline{1-4}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\cellcolor{\tableheadbgcolor}\textbf{ Command   }&\cellcolor{\tableheadbgcolor}\textbf{ Function   }&\cellcolor{\tableheadbgcolor}\textbf{ Parameters   }&\cellcolor{\tableheadbgcolor}\textbf{ Description    }\\\cline{1-4}
+\endhead
+{\bfseries{{\ttfamily pixel}}}   &UB\+\_\+\+VGA\+\_\+\+Set\+Pixel()   &{\ttfamily x,y,color}   &Draws a single pixel.    \\\cline{1-4}
+{\bfseries{{\ttfamily lijn}}}   &\doxylink{_a_p_i___l_i_b_8c_a77fe59a28c36c982d8e744469b6f75a7}{API\+\_\+draw\+\_\+line()}   &{\ttfamily x1,y1,x2,y2,color,weight}   &Draws a line between two points.    \\\cline{1-4}
+{\bfseries{{\ttfamily rechthoek}}}   &\doxylink{_a_p_i___l_i_b_8c_a62957deeb57f3a25c8d0727c8c9a8b40}{API\+\_\+draw\+\_\+rectangle()}   &{\ttfamily x,y,w,h,color,fill}   &Draws a rectangle (fill\+: 1=yes, 0=no).    \\\cline{1-4}
+{\bfseries{{\ttfamily cirkel}}}   &\doxylink{_a_p_i___l_i_b_8c_a970082c425e5df1b713a39b66adbf37a}{API\+\_\+draw\+\_\+circle()}   &{\ttfamily x,y,r,color}   &Draws a circle with radius r.    \\\cline{1-4}
+{\bfseries{{\ttfamily bitmap}}}   &\doxylink{_a_p_i___l_i_b_8c_a2ea495971b1f8a9158ff7c5a824eec5a}{API\+\_\+draw\+\_\+bitmap()}   &{\ttfamily id,x,y}   &Draws a pre-\/loaded bitmap (IDs 0-\/11).    \\\cline{1-4}
+{\bfseries{{\ttfamily tekst}}}   &\doxylink{_a_p_i___l_i_b_8c_ae0803eadbc03323e0bd22ba2412340f5}{API\+\_\+draw\+\_\+text()}   &{\ttfamily x,y,color,"{}text"{},font,size}   &Draws text. Font\+: "{}arial"{}, "{}consolas"{}, "{}comicsans"{}.    \\\cline{1-4}
+{\bfseries{{\ttfamily figuur}}}   &\doxylink{_a_p_i___l_i_b_8c_ab66114c6716ff8496f4bf615af6bd60e}{API\+\_\+draw\+\_\+figure()}   &{\ttfamily x1,y1,...,x5,y5,color}   &Draws a polygon connecting 5 points.    \\\cline{1-4}
+{\bfseries{{\ttfamily clearscherm}}}   &\doxylink{_a_p_i___l_i_b_8c_ac5d34bcb0d84db1190d4b876a3f65944}{API\+\_\+clearscreen()}   &{\ttfamily color}   &Fills the entire screen with a color.   \\\cline{1-4}
+\end{longtabu}
+\hypertarget{index_color_subsec}{}\doxysubsection{\texorpdfstring{Color Reference}{Color Reference}}\label{index_color_subsec}
+The following Dutch color strings are accepted by the parser\+:
+
+
+\begin{DoxyItemize}
+\item {\bfseries{Monochrome}}\+: {\ttfamily zwart}, {\ttfamily wit}, {\ttfamily grijs}
+\item {\bfseries{Primary}}\+: {\ttfamily rood}, {\ttfamily lichtrood}, {\ttfamily groen}, {\ttfamily lichtgroen}, {\ttfamily blauw}, {\ttfamily lichtblauw}
+\item {\bfseries{Secondary}}\+: {\ttfamily geel}, {\ttfamily magenta}, {\ttfamily cyaan}, {\ttfamily bruin} 
+\end{DoxyItemize}
