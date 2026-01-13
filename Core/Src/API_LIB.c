@@ -308,17 +308,17 @@ int API_draw_text(int x_lup, int y_lup, int color, char *text,
     const unsigned short *font_base = NULL;
     int step_size = 0;
 
-    if (strcmp(fontname, "consolas") == 0)
+    if (strcmp(fontname, "consolas") == 0||strcmp(fontname, " consolas")==0)
     {
         font_base = Consolas;
         step_size = 13;
     }
-    else if (strcmp(fontname, "comicsans") == 0)
+    else if (strcmp(fontname, "comicsans") == 0||strcmp(fontname, " comicsans") == 0)
     {
         font_base = ComicSans;
         step_size = 17;
     }
-    else if (strcmp(fontname, "arial") == 0)
+    else if (strcmp(fontname, "arial") == 0||strcmp(fontname, " arial") == 0)
     {
         font_base = Arial;
         step_size = 21;
@@ -328,8 +328,9 @@ int API_draw_text(int x_lup, int y_lup, int color, char *text,
         return ERR_FONT_INVALID;
     }
 
-    if (strcmp(fontstyle, "vet") == 0)       style = 2;
-    else if (strcmp(fontstyle, "cursief") == 0) style = 3;
+    if (strcmp(fontstyle, "vet") == 0||strcmp(fontstyle, " vet")==0)       style = 2;
+    else if (strcmp(fontstyle, "cursief") == 0||strcmp(fontstyle, " cursief")==0) style = 3;
+
 
 
     while (*text != '\0')
@@ -346,20 +347,21 @@ int API_draw_text(int x_lup, int y_lup, int color, char *text,
             char *peek = text;
             int bold_padding = (style == 2) ? 1 : 0;
 
-            while (*peek && *peek != ' ' && *peek != '\n')
+            /* Measure pixel width of the word */
+            while (*peek && *peek != ' ')
             {
                 uint8_t idx = (uint8_t)(*peek - 32);
                 const unsigned short *ptr = &font_base[idx * step_size];
                 word_width += (ptr[0] + 1 + bold_padding) * fontsize;
                 peek++;
             }
-
+            /*move to next line if does not fit*/
             if (current_x + word_width > 320)
             {
                 current_x = x_lup;
-                current_y += (font_size_average * fontsize) + 2;
+                current_y += (step_size*fontsize/2) + 2;
 
-                if (current_y + (font_size_average * fontsize) > 240)
+                if (current_y + (step_size) > 240)
                     return ERR_OBJ_OUT_OF_BOUNDS;
             }
         }
